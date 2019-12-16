@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://www.tim12.com/sema/naucni_rad"
+    xmlns:mp="http://www.tim12.com/sema/metapodaci" xmlns:nr="http://www.tim12.com/sema/naucni_rad"
+    xmlns:os="http://www,tim12.com/sema/osoba">
+
+    <xs:import id="mp" namespace="http://www.tim12.com/sema/metapodaci"
+        schemaLocation="Metapodaci.xsd"/>
+    <xs:import namespace="http://www,tim12.com/sema/osoba" schemaLocation="Osoba.xsd"/>
+    <xs:element name="Naucni_rad">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Metapodaci" type="mp:TMetapodaci"/>
+                <xs:element name="Naslov">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:whiteSpace value="preserve"/>
+                            <xs:pattern value=".+(\s.+){0,15}"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="Autori">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element maxOccurs="unbounded" name="Autor" type="os:TOsoba"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Apstrakt">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Svrha"/>
+                            <xs:element name="Zakljucak"/>
+                            <xs:element name="Dizajn_metodologija_pristup"/>
+                            <xs:element name="Ogranicenja_istrazivanja"/>
+                            <xs:element name="Prakticne_posledice"/>
+                            <xs:element name="Drustvene_posledice"/>
+                            <xs:element name="Znacajnost_rada"/>
+                            <xs:element name="Kljucne_reci">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="12" name="Kljucna_rec"
+                                            type="xs:string"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Tip_rada" type="nr:TTip_rada"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Sadrzaj">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Uvod">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Naslov" type="nr:TNaslov"/>
+                                        <xs:element maxOccurs="unbounded" name="Pasus"
+                                            type="nr:TTeksualni_sadrzaj"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Razrada">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="unbounded" name="Poglavlje"
+                                            type="nr:TPoglavlje"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Zakljucak">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="Naslov" type="nr:TNaslov"/>
+                                        <xs:element maxOccurs="unbounded" name="Pasus"
+                                            type="nr:TTeksualni_sadrzaj"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Reference">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element maxOccurs="unbounded" name="Referenca" type="nr:TReferenca"
+                            />
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="TTip_rada">
+        <xs:choice>
+            <xs:element name="Istrazivacki_rad"/>
+            <xs:element name="Licni_rad"/>
+            <xs:element name="Tehnicki_rad"/>
+            <xs:element name="Konceptualni_rad"/>
+            <xs:element name="Istrazivanje_slucaja"/>
+            <xs:element name="Pregled_literature"/>
+            <xs:element name="Generalni_pregled"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:simpleType name="TNaslov">
+        <xs:restriction base="xs:string"/>
+    </xs:simpleType>
+    <xs:simpleType name="TTeksualni_sadrzaj">
+        <xs:restriction base="xs:string"/>
+    </xs:simpleType>
+    <xs:complexType mixed="true" name="TSadrzaj">
+        <xs:choice>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="Figura" type="nr:TFigura"/>
+            <xs:element name="Poglavlje" type="nr:TPoglavlje"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="TFigura">
+        <xs:choice>
+            <xs:element name="Slika"/>
+            <xs:element name="Tabela"/>
+            <xs:element name="Dijagram"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="TPoglavlje">
+        <xs:sequence>
+            <xs:element name="Naslov" type="nr:TNaslov"/>
+            <xs:element maxOccurs="unbounded" name="Pasus" type="nr:TSadrzaj"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TReferenca">
+        <xs:choice>
+            <xs:element name="Knjiga"/>
+            <xs:element name="Poglavlje_knjige"/>
+            <xs:element name="Casopis"/>
+            <xs:element name="Objavljena_konferencija"/>
+            <xs:element name="Neobjavljena_konferencija"/>
+            <xs:element name="Radni_dokument"/>
+            <xs:element name="Enciklopedija"/>
+            <xs:element name="Novinski_clanak_bez_autora"/>
+            <xs:element name="Novinski_clanak_sa_autorom"/>
+            <xs:element name="Arhivirani_ili_neobjavljeni_izvor"/>
+            <xs:element name="Elektronski_izvor"/>
+            <xs:element name="Podaci"/>
+        </xs:choice>
+    </xs:complexType>
+</xs:schema>
