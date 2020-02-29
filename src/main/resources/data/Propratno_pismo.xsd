@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
-    targetNamespace="http://www,tim12.com/propratno_pismo" xmlns:os="http://www.tim12.com/osoba"
-    xmlns:pp="http://www,tim12.com/propratno_pismo">
+    targetNamespace="http://www.tim12.com/propratno_pismo" xmlns:os="http://www.tim12.com/osoba">
     <xs:import namespace="http://www.tim12.com/osoba" schemaLocation="Osoba.xsd"/>
     <xs:element name="Propratno_pismo">
         <xs:complexType>

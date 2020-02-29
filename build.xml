@@ -39,15 +39,15 @@
 		<xjc schema="${data.dir}/Osoba.xsd" destdir="${gen.dir}"/>
 	</target>
 	
-<!--	<target name="generate_classes_2" depends="init">-->
-<!--		<xjc schema="${data.dir}/Naucni_rad.xsd" destdir="${gen.dir}"/>-->
-<!--	</target>-->
+	<target name="generate_classes_2" depends="init">
+		<xjc schema="${data.dir}/Naucni_rad.xsd" destdir="${gen.dir}"/>
+	</target>
 
 	<target name="generate_classes_3" depends="init">
 		<xjc schema="${data.dir}/Propratno_pismo.xsd" destdir="${gen.dir}"/>
 	</target>
 
-	<target name="generate_all" depends="generate_classes_1,generate_classes_3"/>
+	<target name="generate_all" depends="generate_classes_1, generate_classes_2, generate_classes_3"/>
 
 	<target name="main" depends="generate_all"/>
   
