@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://www.tim12.com/naucni_rad" xmlns:nr="http://www.tim12.com/naucni_rad"
+    xmlns:os="http://www.tim12.com/osoba">
+    <xs:import namespace="http://www.tim12.com/osoba" schemaLocation="Osoba.xsd"/>
+    <xs:element name="Naucni_rad">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Naslov">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:whiteSpace value="preserve"/>
+                            <xs:pattern value=".+(\s.+){0,15}"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="Autori">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element maxOccurs="unbounded" name="Autor" type="os:TOsoba"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Recezenti">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element maxOccurs="unbounded" minOccurs="0" name="Recezent"
+                                type="os:TOsoba"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Sadrzaj">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Poglavlje" type="nr:TPoglavlje" maxOccurs="unbounded"
+                            />
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Apstrakt">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="Svrha" type="xs:string"/>
+                            <xs:element name="Zakljucak" type="xs:string"/>
+                            <xs:element name="Dizajn_metodologija_pristup" type="xs:string"/>
+                            <xs:element name="Ogranicenja_istrazivanja" type="xs:string"/>
+                            <xs:element name="Prakticne_posledice" type="xs:string"/>
+                            <xs:element name="Drustvene_posledice" type="xs:string"/>
+                            <xs:element name="Znacajnost_rada" type="xs:string"/>
+                            <xs:element name="Kljucne_reci">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element maxOccurs="12" name="Kljucna_rec"
+                                            type="xs:string"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                            <xs:element name="Tip_rada" type="nr:TTip_rada"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Reference">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element maxOccurs="unbounded" name="Referenca" type="nr:TReferenca"
+                            />
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="Id">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern value=""/>
+                        <xs:pattern value="http://www.tim12.com/naucni_rad/\d+"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="Kreiran" type="xs:date"/>
+            <xs:attribute name="Reviziran" type="xs:date"/>
+            <xs:attribute name="Prihvacen" type="xs:date"/>
+            <xs:attribute name="Odbijen" type="xs:date"/>
+            <xs:attribute default="cekanje" name="Stanje">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="cekanje"/>
+                        <xs:enumeration value="obrada"/>
+                        <xs:enumeration value="odbijen"/>
+                        <xs:enumeration value="prihvacen"/>
+                        <xs:enumeration value="obrisan"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="TTip_rada">
+        <xs:choice>
+            <xs:element name="Istrazivacki_rad"/>
+            <xs:element name="Licni_rad"/>
+            <xs:element name="Tehnicki_rad"/>
+            <xs:element name="Konceptualni_rad"/>
+            <xs:element name="Istrazivanje_slucaja"/>
+            <xs:element name="Pregled_literature"/>
+            <xs:element name="Generalni_pregled"/>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType mixed="true" name="TPasus">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element maxOccurs="1" minOccurs="0" name="Tabela" type="nr:TTabela"> </xs:element>
+            <xs:element maxOccurs="1" minOccurs="0" name="Slika" type="nr:TSlika"> </xs:element>
+        </xs:choice>
+        <xs:attribute name="Id">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="http://www.tim12.com/naucni_rad/\d+/poglavlje/\d+/pasus/\d+"/>
+                    <xs:pattern value=""/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="TTabela">
+        <xs:attribute name="Id">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern
+                        value="http://www.tim12.com/naucni_rad/poglavlje/\d+/pasus/\d+/slika/\d+"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="TSlika">
+        <xs:attribute name="Id">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern
+                        value="http://www.tim12.com/naucni_rad/poglavlje/\d+/pasus/\d+/slika/\d+"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="TPoglavlje" block="">
+        <xs:sequence>
+            <xs:element name="Naslov">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="Id">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:pattern
+                                            value="http://www.tim12.com/naucni_rad/\d+/poglavlje/\d+/naslov"
+                                        />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element maxOccurs="unbounded" name="Pasus" type="nr:TPasus"/>
+        </xs:sequence>
+        <xs:attribute name="Id">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="http://www.tim12.com/naucni_rad/\d+/poglavlje/\d+"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="TReferenca">
+        <xs:choice>
+            <xs:element name="Knjiga"/>
+            <xs:element name="Poglavlje_knjige"/>
+            <xs:element name="Casopis"/>
+            <xs:element name="Objavljena_konferencija"/>
+            <xs:element name="Neobjavljena_konferencija"/>
+            <xs:element name="Radni_dokument"/>
+            <xs:element name="Enciklopedija"/>
+            <xs:element name="Novinski_clanak_bez_autora"/>
+            <xs:element name="Novinski_clanak_sa_autorom"/>
+            <xs:element name="Arhivirani_ili_neobjavljeni_izvor"/>
+            <xs:element name="Elektronski_izvor"/>
+            <xs:element name="Podaci"/>
+        </xs:choice>
+    </xs:complexType>
+</xs:schema>

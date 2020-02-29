@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://www,tim12.com/propratno_pismo" xmlns:os="http://www.tim12.com/osoba"
+    xmlns:pp="http://www,tim12.com/propratno_pismo">
+    <xs:import namespace="http://www.tim12.com/osoba" schemaLocation="Osoba.xsd"/>
+    <xs:element name="Propratno_pismo">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="Autor" type="os:TOsoba"/>
+                <xs:element name="Sadrzaj"/>
+                <xs:element name="Urednik" type="os:TOsoba"/>
+            </xs:sequence>
+            <xs:attribute name="Datum" type="xs:date"/>
+            <xs:attribute name="Id">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern value="http://www.tim12.com/sema/id/\d+"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

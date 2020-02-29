@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
-    targetNamespace="http://www,tim12.com/sema/osoba" xmlns:os="http://www,tim12.com/sema/osoba">
+    targetNamespace="http://www.tim12.com/osoba" xmlns:os="http://www.tim12.com/osoba">
     <xs:complexType name="TOsoba">
         <xs:sequence>
             <xs:element name="Ime">
@@ -39,6 +39,20 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
+            <xs:element name="Uloga" type="os:TUloga"/>
+        </xs:sequence>
+        <xs:attribute name="Id">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="htttp://www.tim12/com/sema/osoba/\d+"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="TUloga">
+        <xs:sequence>
+            <xs:element name="Autor"/>
+            <xs:element name="Urednik"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="TRadno_mesto">
