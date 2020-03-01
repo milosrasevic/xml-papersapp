@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://www.tim12.com/cover_letter" xmlns:cl="http://www.tim12.com/cover_letter"
+    xmlns:us="http://www.tim12.com/user">
+    <xs:import namespace="http://www.tim12.com/user" schemaLocation="User.xsd"/>
+    <xs:element name="CoverLetter">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="author" type="us:TUser"/>
+                <xs:element name="content" type="xs:string"/>
+                <xs:element name="editor" type="us:TUser"/>
+            </xs:sequence>
+            <xs:attribute name="date" type="xs:date"/>
+            <xs:attribute name="id">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern value="http://www.tim12.com/cover_letter/\d+"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
