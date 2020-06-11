@@ -38,12 +38,19 @@ public class SciencePaperController {
         }
     }
 
-    @GetMapping("/author/{authorsEmail}")
-    public ResponseEntity getSciencePapersByAuthorsEmail(@PathVariable("authorsEmail") String authorsEmail) {
+    @GetMapping("/my/all")
+    public ResponseEntity getUsersScientificPapers(HttpServletRequest request) {
+
+        Principal principal = request.getUserPrincipal();
+
+        String email = "";
+        if (principal != null) {
+            email = principal.getName();
+        }
 
         List<SciencePaper> paperList = null;
         try {
-            paperList = sciencePaperService.getSciencePaperByAuthorsEmail(authorsEmail);
+            paperList = sciencePaperService.getSciencePaperByAuthorsEmail(email);
         } catch (XMLDBException | SAXException | JAXBException e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
