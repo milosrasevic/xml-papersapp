@@ -324,12 +324,12 @@ public class TAbstract {
      */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
-        "kljucnaRec"
+        "keyword"
     })
     public static class Keywords {
 
-        @XmlElement(name = "Kljucna_rec", required = true)
-        protected List<String> kljucnaRec;
+        @XmlElement(name = "keyword", required = true)
+        protected List<String> keyword;
 
         /**
          * Gets the value of the kljucnaRec property.
@@ -353,11 +353,11 @@ public class TAbstract {
          * 
          * 
          */
-        public List<String> getKljucnaRec() {
-            if (kljucnaRec == null) {
-                kljucnaRec = new ArrayList<String>();
+        public List<String> getKeyword() {
+            if (keyword == null) {
+                keyword = new ArrayList<String>();
             }
-            return this.kljucnaRec;
+            return this.keyword;
         }
 
     }

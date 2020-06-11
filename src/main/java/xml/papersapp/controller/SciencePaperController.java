@@ -38,19 +38,22 @@ public class SciencePaperController {
         }
     }
 
-    @GetMapping("/my/all")
-    public ResponseEntity getUsersScientificPapers(HttpServletRequest request) {
-
+    @GetMapping("/search")
+    public ResponseEntity getUsersScientificPapers(HttpServletRequest request,
+                                                   @RequestParam("text") String text) {
         Principal principal = request.getUserPrincipal();
 
         String email = "";
         if (principal != null) {
             email = principal.getName();
+        } else {
+            email = "";
         }
 
+        System.out.println(email);
         List<SciencePaper> paperList = null;
         try {
-            paperList = sciencePaperService.getSciencePaperByAuthorsEmail(email);
+            paperList = sciencePaperService.searchForMySciencePapers(email, text);
         } catch (XMLDBException | SAXException | JAXBException e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.BAD_REQUEST);

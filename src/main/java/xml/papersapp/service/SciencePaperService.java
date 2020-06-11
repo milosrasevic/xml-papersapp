@@ -69,6 +69,12 @@ public class SciencePaperService {
 
     }
 
+    public List<SciencePaper> searchForMySciencePapers(String email, String text) throws XMLDBException, JAXBException, SAXException {
+
+        return sciencePaperRepository.searchSciencePapers(email, text);
+
+    }
+
 
 //    private SciencePaper validateSciencePaperXML(String xml) throws JAXBException, SAXException {
 //

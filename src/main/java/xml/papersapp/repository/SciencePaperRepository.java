@@ -160,4 +160,54 @@ public class SciencePaperRepository {
         return papers;
 
     }
+
+    public List<SciencePaper> searchSciencePapers(String email, String text) throws XMLDBException, JAXBException, SAXException {
+
+        xPathQueryService.setNamespace("spp", SCIENCE_PAPERS_NAMESPACE);
+        xPathQueryService.setNamespace("", SCIENCE_PAPER_NAMESPACE);
+
+        String query = "//spp:SciencePapers/SciencePaper";
+        boolean addAnd = false;
+        boolean closeParentheses = false;
+
+        if (!email.equals("")) {
+            query += "[";
+            String queryEmail = "./authors//author[email='" + email + "']";
+            query += queryEmail;
+            addAnd = true;
+            closeParentheses = true;
+        }
+
+        if (!text.equals("")) {
+            if (addAnd) {
+                query += " and ";
+            } else {
+                query += "[";
+                closeParentheses = true;
+            }
+//            query += ".//*[text() ='" + text + "']"; // text match
+            query += ".//*[contains(text(), '" + text +"')]"; // text contains
+        }
+
+        if (closeParentheses) {
+            query += "]";
+        }
+
+        System.out.println(query);
+
+
+        ResourceSet result = xPathQueryService.query(query);
+
+        ResourceIterator i = result.getIterator();
+
+        List<SciencePaper> papers = new ArrayList<>();
+
+        while(i.hasMoreResources()) {
+            papers.add(getSciencePaperFromResource(i.nextResource().getContent().toString()));
+        }
+
+        return papers;
+
+
+    }
 }
