@@ -31,17 +31,8 @@ public class SciencePaperController {
         try {
             SciencePaper createdSciencePaper = sciencePaperService.create(sciencePaper);
             return new ResponseEntity(createdSciencePaper, HttpStatus.OK);
-        } catch (SciencePaperAlreadyExist sciencePaperAlreadyExist) {
+        } catch (SciencePaperAlreadyExist | JAXBException | XMLDBException | SAXException sciencePaperAlreadyExist) {
             sciencePaperAlreadyExist.printStackTrace();
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        } catch (SAXException e) {
-            e.printStackTrace();
-            return new ResponseEntity("Bad format 2",HttpStatus.BAD_REQUEST);
-        } catch (JAXBException e) {
-            e.printStackTrace();
-            return new ResponseEntity("Bad format", HttpStatus.BAD_REQUEST);
-        } catch (XMLDBException e) {
-            e.printStackTrace();
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }

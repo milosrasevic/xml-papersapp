@@ -44,7 +44,6 @@ public class SciencePaperService {
     public SciencePaper create(String xml) throws JAXBException, XMLDBException, SciencePaperAlreadyExist, SAXException {
 
         // validate xml
-
         SciencePaper sciencePaper = sciencePaperRepository.getSciencePaperFromResource(xml);
 
         // check if paper with that title already exist
