@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://www.tim12.com/users" xmlns:user="http://www.tim12.com/user"
+    xmlns:users="http://www.tim12.com/users">
+    <xs:import namespace="http://www.tim12.com/user" schemaLocation="User.xsd"/>
+    <xs:element name="Users">
+        <xs:complexType>
+            <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="user:User"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

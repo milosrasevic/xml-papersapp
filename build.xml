@@ -38,16 +38,24 @@
 	<target name="generate_user" depends="init">
 		<xjc schema="${data.dir}/User.xsd" destdir="${gen.dir}"/>
 	</target>
+
+	<target name="generate_users" depends="init">
+		<xjc schema="${data.dir}/Users.xsd" destdir="${gen.dir}"/>
+	</target>
 	
 	<target name="generate_science_paper" depends="init">
 		<xjc schema="${data.dir}/SciencePaper.xsd" destdir="${gen.dir}"/>
+	</target>
+
+	<target name="generate_science_papers" depends="init">
+		<xjc schema="${data.dir}/SciencePapers.xsd" destdir="${gen.dir}"/>
 	</target>
 
 	<target name="generate_cover_letter" depends="init">
 		<xjc schema="${data.dir}/CoverLetter.xsd" destdir="${gen.dir}"/>
 	</target>
 
-	<target name="generate_all" depends="generate_user, generate_science_paper, generate_cover_letter"/>
+	<target name="generate_all" depends="generate_user, generate_science_paper, generate_cover_letter, generate_science_papers, generate_users"/>
 
 	<target name="main" depends="generate_all"/>
   

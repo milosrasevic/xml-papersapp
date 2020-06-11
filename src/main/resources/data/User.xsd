@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
-    targetNamespace="http://www.tim12.com/user" xmlns:os="http://www.tim12.com/user">
+    targetNamespace="http://www.tim12.com/user" xmlns:user="http://www.tim12.com/user">
     <xs:complexType name="TUser">
         <xs:sequence>
             <xs:element name="firstName">
@@ -17,12 +17,20 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
+            <xs:element name="password">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:minLength value="3"/>
+                        <xs:maxLength value="100"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
             <xs:element name="profession">
                 <xs:simpleType>
                     <xs:restriction base="xs:string"/>
                 </xs:simpleType>
             </xs:element>
-            <xs:element name="workplace" type="os:TWorkplace" minOccurs="0" nillable="false"/>
+            <xs:element name="workplace" type="user:TWorkplace" minOccurs="0" nillable="false"/>
             <xs:element name="phoneNumber">
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
@@ -39,7 +47,7 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
-            <xs:element name="role" type="os:TRole"/>
+            <xs:element name="roles" type="user:TRoles"/>
         </xs:sequence>
         <xs:attribute name="id">
             <xs:simpleType>
@@ -49,12 +57,18 @@
             </xs:simpleType>
         </xs:attribute>
     </xs:complexType>
-    <xs:simpleType name="TRole">
-        <xs:restriction base="xs:string">
-            <xs:enumeration value="editor"/>
-            <xs:enumeration value="author"/>
-        </xs:restriction>
-    </xs:simpleType>
+    <xs:complexType name="TRoles">
+        <xs:sequence maxOccurs="unbounded">
+            <xs:element name="role" default="author">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="ROLE_AUTHOR"/>
+                        <xs:enumeration value="ROLE_EDITOR"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
     <xs:complexType name="TWorkplace">
         <xs:sequence>
             <xs:element name="name" type="xs:string"/>
@@ -70,4 +84,5 @@
             </xs:element>
         </xs:sequence>
     </xs:complexType>
+    <xs:element name="User" type="user:TUser"/>
 </xs:schema>

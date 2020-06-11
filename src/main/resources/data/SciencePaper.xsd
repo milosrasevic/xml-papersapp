@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
     targetNamespace="http://www.tim12.com/science_paper"
-    xmlns:sp="http://www.tim12.com/science_paper" xmlns:us="http://www.tim12.com/user">
-    <xs:import namespace="http://www.tim12.com/user" schemaLocation="User.xsd"/>
+    xmlns:sp="http://www.tim12.com/science_paper">
     <xs:element name="SciencePaper">
         <xs:complexType>
             <xs:sequence>
@@ -45,13 +44,21 @@
         </xs:restriction>
     </xs:simpleType>
     <xs:complexType name="TAuthors">
+        <xs:sequence maxOccurs="unbounded" minOccurs="1">
+            <xs:element name="author" type="sp:TAuthor"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TAuthor">
         <xs:sequence>
-            <xs:element maxOccurs="unbounded" name="author" type="us:TUser"/>
+            <xs:element name="firstName"/>
+            <xs:element name="email"/>
+            <xs:element name="lastName"/>
+            <xs:element name="profession"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="TReviewers">
         <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="reviewer" type="us:TUser"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="reviewer" type="sp:TAuthor"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="TAbstract">
