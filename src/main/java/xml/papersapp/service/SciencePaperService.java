@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.OutputStream;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Optional;
 
 import static xml.papersapp.constants.Files.SCHEME_SCIENCE_PAPER_PATH;
@@ -60,6 +61,12 @@ public class SciencePaperService {
         sciencePaper = sciencePaperRepository.save(sciencePaper);
 
         return sciencePaper;
+    }
+
+    public List<SciencePaper> getSciencePaperByAuthorsEmail(String email) throws XMLDBException, JAXBException, SAXException {
+
+        return sciencePaperRepository.findAllByAuthorsEmail(email);
+
     }
 
 
