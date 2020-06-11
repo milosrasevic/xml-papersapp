@@ -5,14 +5,14 @@
     <title>title0</title>
     <authors>
         <author>
-            <firstName></firstName>
-            <email>email0</email>
+            <firstName>firstName0</firstName>
+            <email>author1@gmail.com</email>
             <lastName>lastName0</lastName>
             <profession>profession0</profession>
         </author>
         <author>
-            <firstName></firstName>
-            <email>email1</email>
+            <firstName>firstName1</firstName>
+            <email>author2@gmail.com</email>
             <lastName>lastName1</lastName>
             <profession>profession1</profession>
         </author>

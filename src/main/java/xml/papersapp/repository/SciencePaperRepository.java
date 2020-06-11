@@ -20,6 +20,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static xml.papersapp.constants.DocumentIDs.SCIENCE_PAPER_ID_DOCUMENT;
@@ -135,6 +137,27 @@ public class SciencePaperRepository {
         marshaller.marshal(object, os);
 
         return os;
+
+    }
+
+    public List<SciencePaper> findAllByAuthorsEmail(String email) throws XMLDBException, JAXBException, SAXException {
+
+        xPathQueryService.setNamespace("spp", SCIENCE_PAPERS_NAMESPACE);
+        xPathQueryService.setNamespace("", SCIENCE_PAPER_NAMESPACE);
+
+        String query = "//spp:SciencePapers/SciencePaper[./authors//author[email='" + email + "']]";
+
+        ResourceSet result = xPathQueryService.query(query);
+
+        ResourceIterator i = result.getIterator();
+
+        List<SciencePaper> papers = new ArrayList<>();
+
+        while(i.hasMoreResources()) {
+            papers.add(getSciencePaperFromResource(i.nextResource().getContent().toString()));
+        }
+
+        return papers;
 
     }
 }

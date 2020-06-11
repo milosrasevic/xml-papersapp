@@ -52,8 +52,16 @@
     </xs:complexType>
     <xs:complexType name="TAuthor">
         <xs:sequence>
-            <xs:element name="firstName" default="" nillable="false" type="xs:string"/>
-            <xs:element name="email" type="xs:string"/>
+            <xs:element name="firstName" nillable="false" type="xs:string"/>
+            <xs:element name="email">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern
+                            value="([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})"
+                        />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
             <xs:element name="lastName" type="xs:string"/>
             <xs:element name="profession" type="xs:string"/>
         </xs:sequence>
