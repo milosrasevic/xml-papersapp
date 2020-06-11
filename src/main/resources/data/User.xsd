@@ -52,14 +52,14 @@
         <xs:attribute name="id">
             <xs:simpleType>
                 <xs:restriction base="xs:string">
-                    <xs:pattern value="htttp://www.tim12.com/user/\d+"/>
+                    <xs:pattern value="htttp://www.tim12.com/user/.+"/>
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
     </xs:complexType>
     <xs:complexType name="TRoles">
         <xs:sequence maxOccurs="unbounded">
-            <xs:element name="role" default="author">
+            <xs:element name="role" default="ROLE_AUTHOR">
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
                         <xs:enumeration value="ROLE_AUTHOR"/>

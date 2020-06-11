@@ -14,7 +14,7 @@
             <xs:attribute name="id">
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
-                        <xs:pattern value="http://www.tim12.com/cover_letter/\d+"/>
+                        <xs:pattern value="http://www.tim12.com/cover_letter/.+"/>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>

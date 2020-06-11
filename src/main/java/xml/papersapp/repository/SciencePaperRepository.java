@@ -1,6 +1,7 @@
 package xml.papersapp.repository;
 
 import org.springframework.stereotype.Repository;
+import org.xml.sax.SAXException;
 import org.xmldb.api.base.*;
 import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XPathQueryService;
@@ -8,16 +9,21 @@ import org.xmldb.api.modules.XUpdateQueryService;
 import xml.papersapp.model.science_paper.SciencePaper;
 import xml.papersapp.model.science_papers.SciencePapers;
 
+import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.util.Optional;
 
 import static xml.papersapp.constants.DocumentIDs.SCIENCE_PAPER_ID_DOCUMENT;
+import static xml.papersapp.constants.Files.SCHEME_SCIENCE_PAPER_PATH;
 import static xml.papersapp.constants.Namespaces.SCIENCE_PAPERS_NAMESPACE;
 import static xml.papersapp.constants.Namespaces.SCIENCE_PAPER_NAMESPACE;
 import static xml.papersapp.constants.Packages.SCIENCE_PAPER_PACKAGE;
@@ -41,15 +47,15 @@ public class SciencePaperRepository {
         this.xPathQueryService = xPathQueryService;
     }
 
-    public void save(SciencePaper sciencePaper) throws JAXBException, XMLDBException {
-
+    public SciencePaper save(SciencePaper sciencePaper) throws JAXBException, XMLDBException {
 
         OutputStream xml = getXMLFromObject(sciencePaper, "xml.papersapp.model.science_paper");
 
-
-
         long mods = xUpdateQueryService.updateResource(SCIENCE_PAPER_ID_DOCUMENT, String.format(APPEND, SCIENCE_PAPERS_NAMESPACE, CONTEXT_PATH_APPEND, xml.toString()));
         System.out.println("[INFO] " + mods + " modifications processed.");
+
+        return sciencePaper;
+
 
 
         // all xml documents
@@ -77,7 +83,7 @@ public class SciencePaperRepository {
 
     }
 
-    public Optional<SciencePaper> findOneByTitle(String title) throws XMLDBException, JAXBException {
+    public Optional<SciencePaper> findOneByTitle(String title) throws XMLDBException, JAXBException, SAXException {
 
 
         xPathQueryService.setNamespace("spp", SCIENCE_PAPERS_NAMESPACE);
@@ -90,24 +96,31 @@ public class SciencePaperRepository {
         ResourceIterator i = result.getIterator();
         Resource res = i.nextResource();
 
-        return res != null ? Optional.of(getSciencePaperFromResource(res, SCIENCE_PAPER_PACKAGE)) : Optional.empty();
+        return res != null ? Optional.of(getSciencePaperFromResource(res.getContent().toString())) : Optional.empty();
     }
 
 
-    private SciencePapers getSciencePapersFromXMLResource(XMLResource resource, String pckg) throws JAXBException, XMLDBException {
-        JAXBContext context = JAXBContext.newInstance(pckg);
+//    private SciencePapers getSciencePapersFromXMLResource(XMLResource resource, String pckg) throws JAXBException, XMLDBException {
+//        JAXBContext context = JAXBContext.newInstance(pckg);
+//
+//        Unmarshaller unmarshaller = context.createUnmarshaller();
+//
+//        return (SciencePapers) unmarshaller.unmarshal(resource.getContentAsDOM());
+//    }
+
+    public SciencePaper getSciencePaperFromResource(String resource) throws JAXBException, XMLDBException, SAXException {
+        JAXBContext context = JAXBContext.newInstance(SCIENCE_PAPER_PACKAGE);
 
         Unmarshaller unmarshaller = context.createUnmarshaller();
 
-        return (SciencePapers) unmarshaller.unmarshal(resource.getContentAsDOM());
-    }
+        // XML schema validacija
+        SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+        Schema schema = schemaFactory.newSchema(new File(SCHEME_SCIENCE_PAPER_PATH));
 
-    private SciencePaper getSciencePaperFromResource(Resource resource, String pckg) throws JAXBException, XMLDBException {
-        JAXBContext context = JAXBContext.newInstance(pckg);
+        // Podešavanje unmarshaller-a za XML schema validaciju
+        unmarshaller.setSchema(schema);
 
-        Unmarshaller unmarshaller = context.createUnmarshaller();
-
-        return (SciencePaper) unmarshaller.unmarshal(new StringReader(resource.getContent().toString()));
+        return (SciencePaper) unmarshaller.unmarshal(new StringReader(resource));
 
     }
 

@@ -23,7 +23,7 @@
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
                         <xs:pattern value=""/>
-                        <xs:pattern value="http://www.tim12.com/naucni_rad/\d+"/>
+                        <xs:pattern value="http://www.tim12.com/science_paper/.+"/>
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
@@ -37,10 +37,12 @@
     <xs:simpleType name="TState">
         <xs:restriction base="xs:string">
             <xs:enumeration value="waiting"/>
-            <xs:enumeration value="in_process"/>
+            <xs:enumeration value="review_in_progress"/>
             <xs:enumeration value="rejected"/>
             <xs:enumeration value="accepted"/>
             <xs:enumeration value="deleted"/>
+            <xs:enumeration value="waiting_for_approval"/>
+            <xs:enumeration value="revision_needed"/>
         </xs:restriction>
     </xs:simpleType>
     <xs:complexType name="TAuthors">
@@ -50,10 +52,10 @@
     </xs:complexType>
     <xs:complexType name="TAuthor">
         <xs:sequence>
-            <xs:element name="firstName"/>
-            <xs:element name="email"/>
-            <xs:element name="lastName"/>
-            <xs:element name="profession"/>
+            <xs:element name="firstName" default="" nillable="false" type="xs:string"/>
+            <xs:element name="email" type="xs:string"/>
+            <xs:element name="lastName" type="xs:string"/>
+            <xs:element name="profession" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="TReviewers">
