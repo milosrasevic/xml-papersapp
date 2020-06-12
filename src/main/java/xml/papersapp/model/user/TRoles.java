@@ -9,6 +9,7 @@
 package xml.papersapp.model.user;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -50,6 +51,10 @@ public class TRoles {
 
     @XmlElement(required = true, defaultValue = "ROLE_AUTHOR")
     protected List<String> role;
+
+    public TRoles() {
+        this.role = new ArrayList<String>(Arrays.asList("ROLE_AUTHOR"));
+    }
 
     /**
      * Gets the value of the role property.

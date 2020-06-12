@@ -3,6 +3,8 @@ package xml.papersapp.util;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.UUID;
@@ -24,5 +26,13 @@ public class Util {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static Date getDateFromString(String s) throws ParseException {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+        return sdf.parse(s);
+
     }
 }

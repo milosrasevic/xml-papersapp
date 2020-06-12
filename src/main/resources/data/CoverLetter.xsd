@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
     targetNamespace="http://www.tim12.com/cover_letter" xmlns:cl="http://www.tim12.com/cover_letter"
-    xmlns:us="http://www.tim12.com/user">
+    xmlns:us="http://www.tim12.com/user" xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+    jxb:version="2.0">
     <xs:import namespace="http://www.tim12.com/user" schemaLocation="User.xsd"/>
     <xs:element name="CoverLetter">
         <xs:complexType>
@@ -10,7 +11,19 @@
                 <xs:element name="content" type="xs:string"/>
                 <xs:element name="editor" type="us:TUser"/>
             </xs:sequence>
-            <xs:attribute name="date" type="xs:date"/>
+            <xs:attribute name="date">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:javaType name="java.util.Date" parseMethod="src/main/java/xml/papersapp/util/MyDatatypeConverter.parseDate" printMethod="src/main/java/xml/papersapp/util/MyDatatypeConverter.printDate"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                    <xs:restriction base="xs:date">
+                        <xs:minInclusive value="1900-01-01"/>
+                        <xs:maxInclusive value="2200-01-01"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
             <xs:attribute name="id">
                 <xs:simpleType>
                     <xs:restriction base="xs:string">

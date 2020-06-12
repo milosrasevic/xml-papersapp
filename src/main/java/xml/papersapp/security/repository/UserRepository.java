@@ -2,29 +2,24 @@ package xml.papersapp.security.repository;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.xmldb.api.base.*;
-import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XPathQueryService;
 import org.xmldb.api.modules.XUpdateQueryService;
-import xml.papersapp.model.science_paper.SciencePaper;
 import xml.papersapp.model.user.TRoles;
 import xml.papersapp.model.user.TUser;
-import xml.papersapp.util.AuthenticationUtilities;
 
 import javax.xml.bind.*;
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Optional;
 
+import static xml.papersapp.constants.DocumentIDs.USERS_ID_DOCUMENT;
 import static xml.papersapp.constants.Namespaces.USERS_NAMESPACE;
 import static xml.papersapp.constants.Namespaces.USER_NAMESPACE;
 import static xml.papersapp.constants.Packages.*;
+import static xml.papersapp.util.XUpdateTemplate.APPEND;
 
 @Component
 public class UserRepository{
@@ -35,7 +30,12 @@ public class UserRepository{
     @Autowired
     private XPathQueryService xPathQueryService;
 
-    public TUser findByUsername(String email) {
+    @Autowired
+    private XUpdateQueryService xUpdateQueryService;
+
+    private final String CONTEXT_PATH_APPEND = "//Users";
+
+    public Optional<TUser> findByUsername(String email) {
         try {
 
             xPathQueryService.setNamespace("users", USERS_NAMESPACE);
@@ -47,13 +47,12 @@ public class UserRepository{
 
             TUser tUser =  res != null ? getUserFromResource(res) : null;
             TRoles tRoles = new TRoles();
-            return tUser;
-
+            return tUser != null ? Optional.of(tUser) : Optional.empty();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return Optional.empty();
     }
 
     private TUser getUserFromResource(Resource resource) throws JAXBException, XMLDBException {
@@ -65,6 +64,29 @@ public class UserRepository{
         TUser tUser = (TUser) res.getValue();
         return tUser;
 //        return (TUser) unmarshaller.unmarshal(new StringReader(resource.getContent().toString()));
+
+    }
+
+    public TUser save(TUser user) throws JAXBException, XMLDBException {
+        OutputStream xml = getXMLFromObject(user, "xml.papersapp.model.user");
+
+        long mods = xUpdateQueryService.updateResource(USERS_ID_DOCUMENT, String.format(APPEND, USERS_NAMESPACE,
+                CONTEXT_PATH_APPEND, xml.toString()));
+        System.out.println("[INFO] " + mods + " modifications processed.");
+        return user;
+    }
+
+    private OutputStream getXMLFromObject(Object object, String pckg) throws JAXBException {
+
+        JAXBContext context = JAXBContext.newInstance(pckg);
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+
+        OutputStream os = new ByteArrayOutputStream();
+
+        marshaller.marshal(object, os);
+
+        return os;
 
     }
 

@@ -1,10 +1,12 @@
 package xml.papersapp.repository;
 
+import org.exist.xmldb.EXistResource;
 import org.springframework.stereotype.Repository;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.*;
 import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XPathQueryService;
+import org.xmldb.api.modules.XQueryService;
 import org.xmldb.api.modules.XUpdateQueryService;
 import xml.papersapp.model.science_paper.SciencePaper;
 import xml.papersapp.model.science_papers.SciencePapers;
@@ -16,11 +18,14 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.OutputStream;
-import java.io.StringReader;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +34,7 @@ import static xml.papersapp.constants.Files.SCHEME_SCIENCE_PAPER_PATH;
 import static xml.papersapp.constants.Namespaces.SCIENCE_PAPERS_NAMESPACE;
 import static xml.papersapp.constants.Namespaces.SCIENCE_PAPER_NAMESPACE;
 import static xml.papersapp.constants.Packages.SCIENCE_PAPER_PACKAGE;
+import static xml.papersapp.util.Util.getDateFromString;
 import static xml.papersapp.util.XUpdateTemplate.APPEND;
 
 
@@ -40,13 +46,16 @@ public class SciencePaperRepository {
     private final Collection collection;
     private final XUpdateQueryService xUpdateQueryService;
     private final XPathQueryService xPathQueryService;
+    private final XQueryService xQueryService;
 
     private final String CONTEXT_PATH_APPEND = "//SciencePapers";
 
-    public SciencePaperRepository(Collection collection, XUpdateQueryService xUpdateQueryService, XPathQueryService xPathQueryService) {
+    public SciencePaperRepository(Collection collection, XUpdateQueryService xUpdateQueryService,
+                                  XPathQueryService xPathQueryService, XQueryService xQueryService) {
         this.collection = collection;
         this.xUpdateQueryService = xUpdateQueryService;
         this.xPathQueryService = xPathQueryService;
+        this.xQueryService = xQueryService;
     }
 
     public SciencePaper save(SciencePaper sciencePaper) throws JAXBException, XMLDBException {
@@ -161,44 +170,73 @@ public class SciencePaperRepository {
 
     }
 
-    public List<SciencePaper> searchSciencePapers(String email, String text) throws XMLDBException, JAXBException, SAXException {
+    public List<SciencePaper> searchSciencePapers(String email, String text, String dateFromString, String dateToString) throws XMLDBException, JAXBException, SAXException, IOException, ParseException {
 
-        xPathQueryService.setNamespace("spp", SCIENCE_PAPERS_NAMESPACE);
-        xPathQueryService.setNamespace("", SCIENCE_PAPER_NAMESPACE);
+//        xPathQueryService.setNamespace("spp", SCIENCE_PAPERS_NAMESPACE);
+//        xPathQueryService.setNamespace("", SCIENCE_PAPER_NAMESPACE);
 
-        String query = "//spp:SciencePapers/SciencePaper";
-        boolean addAnd = false;
-        boolean closeParentheses = false;
+//        String query = "//spp:SciencePapers/SciencePaper";
+//        boolean addAnd = false;
+//        boolean closeParentheses = false;
+//
+//        if (!email.equals("")) {
+//            query += "[";
+//            String queryEmail = "./authors//author[email='" + email + "']";
+//            query += queryEmail;
+//            addAnd = true;
+//            closeParentheses = true;
+//        }
+//
+//        if (!text.equals("")) {
+//            if (addAnd) {
+//                query += " and ";
+//            } else {
+//                query += "[";
+//                closeParentheses = true;
+//            }
+////            query += ".//*[text() ='" + text + "']"; // text match
+//            query += ".//*[contains(text(), '" + text +"')]"; // text contains
+//        }
+//
+//        if (closeParentheses) {
+//            query += "]";
+//        }
+//
+//        System.out.println(query);
+//
+//
+//        ResourceSet result = xPathQueryService.query(query);
+//
+//        ResourceIterator i = result.getIterator();
+//
+//
+//        while(i.hasMoreResources()) {
+//            papers.add(getSciencePaperFromResource(i.nextResource().getContent().toString()));
+//        }
 
-        if (!email.equals("")) {
-            query += "[";
-            String queryEmail = "./authors//author[email='" + email + "']";
-            query += queryEmail;
-            addAnd = true;
-            closeParentheses = true;
-        }
+        String xqueryFilePath = "src/main/resources/xquery/find_science_papers.xqy";
 
-        if (!text.equals("")) {
-            if (addAnd) {
-                query += " and ";
-            } else {
-                query += "[";
-                closeParentheses = true;
-            }
-//            query += ".//*[text() ='" + text + "']"; // text match
-            query += ".//*[contains(text(), '" + text +"')]"; // text contains
-        }
+        xQueryService.setNamespace("spp", SCIENCE_PAPERS_NAMESPACE);
+        xQueryService.setNamespace("", SCIENCE_PAPER_NAMESPACE);
 
-        if (closeParentheses) {
-            query += "]";
-        }
+//        Date dateFrom = getDateFromString(dateFromString);
+//        Date dateTo = getDateFromString(dateToString);
 
-        System.out.println(query);
+        xQueryService.declareVariable("authorsEmail", email);
+        xQueryService.declareVariable("text", text);
+        xQueryService.declareVariable("dateFrom", dateFromString);
+        xQueryService.declareVariable("dateTo", dateToString);
 
+        // read xquery
+        System.out.println("[INFO] Invoking XQuery service for: " + xqueryFilePath);
+        String xqueryExpression = readFile(xqueryFilePath, StandardCharsets.UTF_8);
+        System.out.println(xqueryExpression);
 
-        ResourceSet result = xPathQueryService.query(query);
+        // compile and execute the expression
+        CompiledExpression compiledXquery = xQueryService.compile(xqueryExpression);
+        ResourceSet resourceSet = xQueryService.execute(compiledXquery);
 
-        ResourceIterator i = result.getIterator();
+        ResourceIterator i = resourceSet.getIterator();
 
         List<SciencePaper> papers = new ArrayList<>();
 
@@ -209,5 +247,10 @@ public class SciencePaperRepository {
         return papers;
 
 
+    }
+
+    public static String readFile(String path, Charset encoding) throws IOException {
+        byte[] encoded = Files.readAllBytes(Paths.get(path));
+        return new String(encoded, encoding);
     }
 }

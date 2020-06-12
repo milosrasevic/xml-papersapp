@@ -19,11 +19,10 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Optional;
+import java.text.ParseException;
+import java.util.*;
 
 import static xml.papersapp.constants.Files.SCHEME_SCIENCE_PAPER_PATH;
 import static xml.papersapp.constants.Namespaces.SCIENCE_PAPERS_NAMESPACE;
@@ -56,7 +55,8 @@ public class SciencePaperService {
         String id = createId(SCIENCE_PAPER_NAMESPACE);
         sciencePaper.setId(id);
         sciencePaper.setState(TState.WAITING);
-        sciencePaper.setDateCreated(getXMLGregorianCalendar());
+        sciencePaper.setDateCreated(Calendar.getInstance().getTime());
+//        sciencePaper.setDateCreated(getXMLGregorianCalendar());
         sciencePaper = sciencePaperRepository.save(sciencePaper);
 
         return sciencePaper;
@@ -68,9 +68,9 @@ public class SciencePaperService {
 
     }
 
-    public List<SciencePaper> searchForMySciencePapers(String email, String text) throws XMLDBException, JAXBException, SAXException {
+    public List<SciencePaper> searchForMySciencePapers(String email, String text, String dateFrom, String dateTo) throws XMLDBException, JAXBException, SAXException, IOException, ParseException {
 
-        return sciencePaperRepository.searchSciencePapers(email, text);
+        return sciencePaperRepository.searchSciencePapers(email, text, dateFrom, dateTo);
 
     }
 

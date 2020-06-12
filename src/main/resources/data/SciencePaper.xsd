@@ -3,7 +3,8 @@
     xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
     jxb:version="2.0"
     targetNamespace="http://www.tim12.com/science_paper"
-    xmlns:sp="http://www.tim12.com/science_paper">
+    xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+    jxb:version="2.0" xmlns:sp="http://www.tim12.com/science_paper">
     <xs:element name="SciencePaper">
         <xs:complexType>
             <xs:sequence>
@@ -29,10 +30,58 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:attribute>
-            <xs:attribute name="dateCreated" type="xs:date"/>
-            <xs:attribute name="dateRevised" type="xs:date"/>
-            <xs:attribute name="dateAccepted" type="xs:date"/>
-            <xs:attribute name="dateRejected" type="xs:date"/>
+            <xs:attribute name="dateCreated">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:javaType name="java.util.Date" parseMethod="src/main/java/xml/papersapp/util/MyDatatypeConverter.parseDate" printMethod="src/main/java/xml/papersapp/util/MyDatatypeConverter.printDate"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                    <xs:restriction base="xs:date">
+                        <xs:minInclusive value="1900-01-01"/>
+                        <xs:maxInclusive value="2200-01-01"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="dateRevised">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:javaType name="java.util.Date" parseMethod="src/main/java/xml/papersapp/util/MyDatatypeConverter.parseDate" printMethod="src/main/java/xml/papersapp/util/MyDatatypeConverter.printDate"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                    <xs:restriction base="xs:date">
+                        <xs:minInclusive value="1900-01-01"/>
+                        <xs:maxInclusive value="2200-01-01"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="dateAccepted">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:javaType name="java.util.Date" parseMethod="src/main/java/xml/papersapp/util/MyDatatypeConverter.parseDate" printMethod="src/main/java/xml/papersapp/util/MyDatatypeConverter.printDate"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                    <xs:restriction base="xs:date">
+                        <xs:minInclusive value="1900-01-01"/>
+                        <xs:maxInclusive value="2200-01-01"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="dateRejected">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:javaType name="java.util.Date" parseMethod="src/main/java/xml/papersapp/util/MyDatatypeConverter.parseDate" printMethod="src/main/java/xml/papersapp/util/MyDatatypeConverter.printDate"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                    <xs:restriction base="xs:date">
+                        <xs:minInclusive value="1900-01-01"/>
+                        <xs:maxInclusive value="2200-01-01"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
             <xs:attribute name="state" type="sp:TState"/>
         </xs:complexType>
     </xs:element>
