@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    xmlns:jxb="http://java.sun.com/xml/ns/jaxb" jxb:version="2.0"
+    targetNamespace="http://www.tim12.com/reviews" xmlns:rw="http://www.tim12.com/review"
+    xmlns:rws="http://www.tim12.com/reviews">
+    <xs:import namespace="http://www.tim12.com/review" schemaLocation="Review.xsd"/>
+    <xs:element name="reviews">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" ref="rw:Review"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

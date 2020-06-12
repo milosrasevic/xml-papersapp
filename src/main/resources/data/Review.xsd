@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://www.tim12.com/review" xmlns:rw="http://www.tim12.com/review"
+    xmlns:user="http://www.tim12.com/user" xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+    jxb:version="2.0">
+    <xs:import namespace="http://www.tim12.com/user" schemaLocation="User.xsd"/>
+    <xs:complexType name="TReview">
+        <xs:sequence>
+            <xs:element ref="rw:Authors"/>
+            <xs:element ref="rw:Reviewer"/>
+            <xs:element ref="rw:Comments"/>
+            <xs:element name="finalDecision" type="xs:string"/>
+            <xs:element name="overallOpinion" type="xs:string"/>
+        </xs:sequence>
+        <xs:attribute name="blinded">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="DOUBLE_BLINDED"/>
+                    <xs:enumeration value="AUTHOR_BLINDED"/>
+                    <xs:enumeration value="REVIEWER_BLINDED"/>
+                    <xs:enumeration value="STANDARD"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="Id">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="http://www.tim12.com/review/.+"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="status" type="xs:string"/>
+        <xs:attribute name="sciencePaperId">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="http://www.tim12.com/science_paper/.+"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="dateCreated">
+            <xs:simpleType>
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:javaType name="java.util.Date" parseMethod="src/main/java/xml/papersapp/util/MyDatatypeConverter.parseDate" printMethod="src/main/java/xml/papersapp/util/MyDatatypeConverter.printDate"/>
+                    </xs:appinfo>
+                </xs:annotation>
+                <xs:restriction base="xs:date">
+                    <xs:minInclusive value="1900-01-01"/>
+                    <xs:maxInclusive value="2200-01-01"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="TAuthors">
+        <xs:sequence maxOccurs="1" minOccurs="1">
+            <xs:element name="Author" type="rw:TAuthor" maxOccurs="unbounded" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TAuthor">
+        <xs:sequence>
+            <xs:element name="firstName" type="xs:string"/>
+            <xs:element name="lastName" type="xs:string"/>
+            <xs:element name="email">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern
+                            value="([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})"
+                        />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TReviewer">
+        <xs:sequence>
+            <xs:element name="firstName" type="xs:string"/>
+            <xs:element name="lastName" type="xs:string"/>
+            <xs:element name="email">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern
+                            value="([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})"
+                        />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TComments">
+        <xs:sequence>
+            <xs:element ref="rw:Comment" maxOccurs="unbounded" minOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:element name="Authors" type="rw:TAuthors"/>
+    <xs:element name="Reviewer" type="rw:TReviewer"/>
+    <xs:element name="Comments" type="rw:TComments"/>
+    <xs:element name="Comment">
+        <xs:complexType>
+            <xs:simpleContent>
+                <xs:extension base="xs:string">
+                    <xs:attribute name="paragraphRef">
+                        <xs:simpleType>
+                            <xs:restriction base="xs:string">
+                                <xs:pattern
+                                    value="http://www.tim12.com/naucni_rad/\d+/poglavlje/\d+/pasus/\d+"
+                                />
+                            </xs:restriction>
+                        </xs:simpleType>
+                    </xs:attribute>
+                </xs:extension>
+            </xs:simpleContent>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="Review" type="rw:TReview"/>
+</xs:schema>

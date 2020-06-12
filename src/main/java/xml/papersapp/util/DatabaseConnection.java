@@ -91,14 +91,16 @@ public class DatabaseConnection {
 
     private static void createUsers() {
         String documentId = "users_xml";
-        String filePath = "/home/classicdocs/Documents/Workspace/xml/xml-papersapp/src/main/resources/data/users.xml";
+//        String filePath = "/home/classicdocs/Documents/Workspace/xml/xml-papersapp/src/main/resources/data/users.xml";
+        String filePath = "src/main/resources/data/users.xml";
 
         create(documentId, filePath);
     }
 
     private static void createSciencePapers() {
         String documentId = "science_papers.xml";
-        String filePath = "/home/classicdocs/Documents/Workspace/xml/xml-papersapp/src/main/resources/data/science_papers.xml";
+//        String filePath = "/home/classicdocs/Documents/Workspace/xml/xml-papersapp/src/main/resources/data/science_papers.xml";
+        String filePath = "src/main/resources/data/science_papers.xml";
 
         create(documentId, filePath);
     }
