@@ -20,6 +20,8 @@ public class DatabaseConnection {
     private static Collection col;
 
     private static final String COLLECTION_ID = "db/apps/papersapp";
+    private static final String USERS_PATH = "src\\main\\resources\\data\\users.xml";
+    private static final String SCIENCE_PAPERS_PATH = "src\\main\\resources\\data\\science_papers.xml";
 
     public static void createDBConnection() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, XMLDBException {
 
@@ -87,17 +89,13 @@ public class DatabaseConnection {
 
 
     private static void createUsers() {
-        String documentId = "users_xml";
-        String filePath = "/home/classicdocs/Documents/Workspace/xml/xml-papersapp/src/main/resources/data/users.xml";
-
-        create(documentId, filePath);
+        String documentId = "users.xml";
+        create(documentId, USERS_PATH);
     }
 
     private static void createSciencePapers() {
         String documentId = "science_papers.xml";
-        String filePath = "/home/classicdocs/Documents/Workspace/xml/xml-papersapp/src/main/resources/data/science_papers.xml";
-
-        create(documentId, filePath);
+        create(documentId, SCIENCE_PAPERS_PATH);
     }
 
     private static Collection getOrCreateCollection(String collectionUri) throws XMLDBException {

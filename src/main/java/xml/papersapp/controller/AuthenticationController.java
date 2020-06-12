@@ -10,13 +10,19 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.xmldb.api.base.XMLDBException;
+import xml.papersapp.dto.user.RegistrationDTO;
 import xml.papersapp.dto.user.UserDTO;
+import xml.papersapp.dto.user.WorkplaceDTO;
+import xml.papersapp.exceptions.users.EmailTaken;
 import xml.papersapp.model.user.TUser;
+import xml.papersapp.model.user.TWorkplace;
 import xml.papersapp.security.TokenUtils;
 import xml.papersapp.security.auth.JwtAuthenticationRequest;
 import xml.papersapp.security.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.JAXBException;
 
 @RestController
 @RequestMapping(value = "/auth")
@@ -54,27 +60,37 @@ public class AuthenticationController {
         return ResponseEntity.ok(new UserDTO(user.getEmail(), token, user.getFirstName(), user.getLastName()));
     }
 
-//    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<?> register(@RequestBody UserDTO userDTO){
-//    	try {
-//            Long res = userService.registerUser(userDTO);
-//            if (res != null) {
-//            	if (res != -1) {
-//                	return ResponseEntity.status(HttpStatus.CREATED).build();
-//                } else if (res == -1) {
-//                	return ResponseEntity.status(HttpStatus.CONFLICT).build();
-//                }
-//            	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//            }
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//    	} catch (Exception e) {
-//    		e.printStackTrace();
-//    		if (e.getClass() == ResourceNotFoundException.class) {
-//				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-//			}
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-//    	}
-//    }
+    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> register(@RequestBody RegistrationDTO registrationDTO){
+
+        try {
+            TUser registeredUser = userService.register(registrationDTO);
+
+            TWorkplace workplace = registeredUser.getWorkplace();
+
+            return ResponseEntity.ok(new RegistrationDTO(
+                    registeredUser.getEmail(),
+                    registeredUser.getFirstName(),
+                    registeredUser.getLastName(),
+                    registeredUser.getProfession(),
+                    new WorkplaceDTO(workplace.getName(),
+                            workplace.getAddress(),
+                            workplace.getCountry(),
+                            workplace.getCity(),
+                            Integer.toString(workplace.getZip())
+                    ) ,
+                    registeredUser.getPhoneNumber()));
+
+        } catch (JAXBException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (XMLDBException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (EmailTaken et) {
+            return new ResponseEntity<>(et.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @GetMapping(value = "/testUser")
     @PreAuthorize("hasRole('USER')")

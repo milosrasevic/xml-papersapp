@@ -96,6 +96,7 @@ import java.util.stream.Collectors;
     "email",
     "roles"
 })
+@XmlRootElement(name = "User")
 public class TUser implements UserDetails {
 
     @XmlElement(required = true)
@@ -116,6 +117,19 @@ public class TUser implements UserDetails {
     @XmlAttribute(name = "id")
     protected String id;
 
+    public TUser() {
+    }
+
+    public TUser(String firstName, String lastName, String password, String profession, TWorkplace workplace,
+                 String phoneNumber, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+        this.profession = profession;
+        this.workplace = workplace;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+    }
 
     /**
      * Gets the value of the firstName property.
