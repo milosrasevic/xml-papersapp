@@ -27,7 +27,7 @@
 	    <fileset dir="${lib.dir}" includes="*.jar" />
 	  </classpath>
 	</taskdef>
-	
+
 	<target name="init">
 	    <echo message="basedir = ${basedir}"/>
 	    <echo message="build.compiler = ${build.compiler}"/>

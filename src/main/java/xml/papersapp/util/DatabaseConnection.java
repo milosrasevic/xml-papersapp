@@ -7,10 +7,7 @@ import org.xmldb.api.DatabaseManager;
 import org.xmldb.api.base.Collection;
 import org.xmldb.api.base.Database;
 import org.xmldb.api.base.XMLDBException;
-import org.xmldb.api.modules.CollectionManagementService;
-import org.xmldb.api.modules.XMLResource;
-import org.xmldb.api.modules.XPathQueryService;
-import org.xmldb.api.modules.XUpdateQueryService;
+import org.xmldb.api.modules.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -191,5 +188,22 @@ public class DatabaseConnection {
         }
 
         return xupdateService;
+    }
+
+    @Bean
+    public XQueryService xQueryService() {
+        XQueryService xqueryService = null;
+        try {
+            xqueryService = (XQueryService) col.getService("XQueryService", "1.0");
+        } catch (XMLDBException e) {
+            e.printStackTrace();
+        }
+        try {
+            xqueryService.setProperty("indent", "yes");
+        } catch (XMLDBException e) {
+            e.printStackTrace();
+        }
+
+        return xqueryService;
     }
 }
