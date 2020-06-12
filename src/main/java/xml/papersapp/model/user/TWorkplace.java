@@ -63,6 +63,17 @@ public class TWorkplace {
     protected String city;
     protected int zip;
 
+    public TWorkplace() {
+    }
+
+    public TWorkplace(String name, String address, String country, String city, int zip) {
+        this.name = name;
+        this.address = address;
+        this.country = country;
+        this.city = city;
+        this.zip = zip;
+    }
+
     /**
      * Gets the value of the name property.
      * 
