@@ -65,22 +65,7 @@ public class AuthenticationController {
 
         try {
             TUser registeredUser = userService.register(registrationDTO);
-
-            TWorkplace workplace = registeredUser.getWorkplace();
-
-            return ResponseEntity.ok(new RegistrationDTO(
-                    registeredUser.getEmail(),
-                    registeredUser.getFirstName(),
-                    registeredUser.getLastName(),
-                    registeredUser.getProfession(),
-                    new WorkplaceDTO(workplace.getName(),
-                            workplace.getAddress(),
-                            workplace.getCountry(),
-                            workplace.getCity(),
-                            Integer.toString(workplace.getZip())
-                    ) ,
-                    registeredUser.getPhoneNumber()));
-
+            return ResponseEntity.ok(new RegistrationDTO(registeredUser));
         } catch (JAXBException e) {
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
