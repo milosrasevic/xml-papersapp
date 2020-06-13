@@ -10,4 +10,7 @@ public class Namespaces {
     public static final String USERS_NAMESPACE = "http://www.tim12.com/users";
     public static final String USER_NAMESPACE = "http://www.tim12.com/user";
 
+    public static final String REVIEW_NAMESPACE = "http://www.tim12.com/review";
+    public static final String REVIEWS_NAMESPACE = "http://www.tim12.com/reviews";
+
 }

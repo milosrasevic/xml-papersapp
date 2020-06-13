@@ -6,29 +6,27 @@
 //
 
 
-package com.tim12.reviews;
+package xml.papersapp.model.review;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import com.tim12.review.TReview;
 
 
 /**
- * <p>Java class for anonymous complex type.
+ * <p>Java class for TAuthors complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType>
+ * &lt;complexType name="TAuthors">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element ref="{http://www.tim12.com/review}Review" maxOccurs="unbounded"/>
+ *         &lt;element name="Author" type="{http://www.tim12.com/review}TAuthor" maxOccurs="unbounded" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -38,42 +36,41 @@ import com.tim12.review.TReview;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "review"
+@XmlType(name = "TAuthors", propOrder = {
+    "author"
 })
-@XmlRootElement(name = "reviews")
-public class Reviews {
+public class TAuthors {
 
-    @XmlElement(name = "Review", namespace = "http://www.tim12.com/review", required = true)
-    protected List<TReview> review;
+    @XmlElement(name = "Author")
+    protected List<TAuthor> author;
 
     /**
-     * Gets the value of the review property.
+     * Gets the value of the author property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the review property.
+     * This is why there is not a <CODE>set</CODE> method for the author property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getReview().add(newItem);
+     *    getAuthor().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link TReview }
+     * {@link TAuthor }
      * 
      * 
      */
-    public List<TReview> getReview() {
-        if (review == null) {
-            review = new ArrayList<TReview>();
+    public List<TAuthor> getAuthor() {
+        if (author == null) {
+            author = new ArrayList<TAuthor>();
         }
-        return this.review;
+        return this.author;
     }
 
 }

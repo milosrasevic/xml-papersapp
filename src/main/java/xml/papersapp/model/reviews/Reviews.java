@@ -6,7 +6,7 @@
 //
 
 
-package com.tim12.reviews;
+package xml.papersapp.model.reviews;
 
 import java.util.ArrayList;
 import java.util.List;

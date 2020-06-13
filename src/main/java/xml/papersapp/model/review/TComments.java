@@ -6,29 +6,27 @@
 //
 
 
-package com.tim12.reviews;
+package xml.papersapp.model.review;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import com.tim12.review.TReview;
 
 
 /**
- * <p>Java class for anonymous complex type.
+ * <p>Java class for TComments complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType>
+ * &lt;complexType name="TComments">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element ref="{http://www.tim12.com/review}Review" maxOccurs="unbounded"/>
+ *         &lt;element ref="{http://www.tim12.com/review}Comment" maxOccurs="unbounded"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -38,42 +36,41 @@ import com.tim12.review.TReview;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "review"
+@XmlType(name = "TComments", propOrder = {
+    "comment"
 })
-@XmlRootElement(name = "reviews")
-public class Reviews {
+public class TComments {
 
-    @XmlElement(name = "Review", namespace = "http://www.tim12.com/review", required = true)
-    protected List<TReview> review;
+    @XmlElement(name = "Comment", required = true)
+    protected List<Comment> comment;
 
     /**
-     * Gets the value of the review property.
+     * Gets the value of the comment property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the review property.
+     * This is why there is not a <CODE>set</CODE> method for the comment property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getReview().add(newItem);
+     *    getComment().add(newItem);
      * </pre>
      * 
      * 
      * <p>
      * Objects of the following type(s) are allowed in the list
-     * {@link TReview }
+     * {@link Comment }
      * 
      * 
      */
-    public List<TReview> getReview() {
-        if (review == null) {
-            review = new ArrayList<TReview>();
+    public List<Comment> getComment() {
+        if (comment == null) {
+            comment = new ArrayList<Comment>();
         }
-        return this.review;
+        return this.comment;
     }
 
 }

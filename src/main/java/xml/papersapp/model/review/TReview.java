@@ -6,7 +6,7 @@
 //
 
 
-package com.tim12.review;
+package xml.papersapp.model.review;
 
 import java.util.Date;
 import javax.xml.bind.annotation.XmlAccessType;

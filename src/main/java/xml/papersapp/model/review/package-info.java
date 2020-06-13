@@ -6,4 +6,4 @@
 //
 
 @javax.xml.bind.annotation.XmlSchema(namespace = "http://www.tim12.com/review", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
-package com.tim12.review;
+package xml.papersapp.model.review;

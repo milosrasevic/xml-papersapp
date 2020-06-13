@@ -14,12 +14,7 @@
         </xs:sequence>
         <xs:attribute name="blinded">
             <xs:simpleType>
-                <xs:restriction base="xs:string">
-                    <xs:enumeration value="DOUBLE_BLINDED"/>
-                    <xs:enumeration value="AUTHOR_BLINDED"/>
-                    <xs:enumeration value="REVIEWER_BLINDED"/>
-                    <xs:enumeration value="STANDARD"/>
-                </xs:restriction>
+                <xs:restriction base="rw:TBlinded"> </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
         <xs:attribute name="Id">
@@ -29,7 +24,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="status" type="xs:string"/>
+        <xs:attribute name="status" type="rw:TStatus"/>
         <xs:attribute name="sciencePaperId">
             <xs:simpleType>
                 <xs:restriction base="xs:string">
@@ -51,6 +46,21 @@
             </xs:simpleType>
         </xs:attribute>
     </xs:complexType>
+    <xs:simpleType name="TStatus">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="REJECTED"/>
+            <xs:enumeration value="ACCEPTED"/>
+            <xs:enumeration value="REVISED"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TBlinded">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="DOUBLE_BLINDED"/>
+            <xs:enumeration value="AUTHOR_BLINDED"/>
+            <xs:enumeration value="REVIEWER_BLINDED"/>
+            <xs:enumeration value="STANDARD"/>
+        </xs:restriction>
+    </xs:simpleType>
     <xs:complexType name="TAuthors">
         <xs:sequence maxOccurs="1" minOccurs="1">
             <xs:element name="Author" type="rw:TAuthor" maxOccurs="unbounded" minOccurs="0"/>

@@ -6,7 +6,7 @@
 //
 
 
-package com.tim12.reviews;
+package xml.papersapp.model.reviews;
 
 import javax.xml.bind.annotation.XmlRegistry;
 

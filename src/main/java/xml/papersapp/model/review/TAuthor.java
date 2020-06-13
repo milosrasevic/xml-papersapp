@@ -6,7 +6,7 @@
 //
 
 
-package com.tim12.review;
+package xml.papersapp.model.review;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -15,12 +15,12 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for TReviewer complex type.
+ * <p>Java class for TAuthor complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="TReviewer">
+ * &lt;complexType name="TAuthor">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
@@ -42,12 +42,12 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TReviewer", propOrder = {
+@XmlType(name = "TAuthor", propOrder = {
     "firstName",
     "lastName",
     "email"
 })
-public class TReviewer {
+public class TAuthor {
 
     @XmlElement(required = true)
     protected String firstName;
