@@ -84,4 +84,15 @@ public class SciencePaperController {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/papers-to-review")
+    public ResponseEntity<?> getPapersToReview(HttpServletRequest request) {
+        try {
+            List<SciencePaper> papersToReview = sciencePaperService.getPapersToReview(request.getUserPrincipal().getName());
+            return new ResponseEntity<List<SciencePaper>>(papersToReview, HttpStatus.OK);
+        } catch (XMLDBException | SAXException | JAXBException e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

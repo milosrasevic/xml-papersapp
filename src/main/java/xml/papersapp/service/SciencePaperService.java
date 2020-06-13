@@ -12,6 +12,7 @@ import xml.papersapp.model.science_paper.SciencePaper;
 import xml.papersapp.model.science_paper.TState;
 import xml.papersapp.repository.SciencePaperRepository;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -97,5 +98,9 @@ public class SciencePaperService {
 
     public SciencePaper delete(String title, String email) throws XMLDBException, SciencePaperNotFound, JAXBException, SAXException {
         return sciencePaperRepository.delete(title, email);
+    }
+
+    public List<SciencePaper> getPapersToReview(String email) throws XMLDBException, JAXBException, SAXException {
+        return sciencePaperRepository.getPapersToReview(email);
     }
 }
