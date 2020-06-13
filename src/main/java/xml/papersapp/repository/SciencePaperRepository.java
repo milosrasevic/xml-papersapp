@@ -280,4 +280,24 @@ public class SciencePaperRepository {
 
         return getSciencePaperFromResource(resourceString);
     }
+
+    public List<SciencePaper> getPapersToReview(String email) throws XMLDBException, JAXBException, SAXException {
+
+        xPathQueryService.setNamespace("spp", SCIENCE_PAPERS_NAMESPACE);
+        xPathQueryService.setNamespace("sp", SCIENCE_PAPER_NAMESPACE);
+
+        String query = "//spp:SciencePapers/sp:SciencePaper[./sp:reviewers//sp:reviewer[sp:email='" + email + "']]";
+
+        ResourceSet result = xPathQueryService.query(query);
+
+        ResourceIterator i = result.getIterator();
+
+        List<SciencePaper> papers = new ArrayList<>();
+
+        while(i.hasMoreResources()) {
+            papers.add(getSciencePaperFromResource(i.nextResource().getContent().toString()));
+        }
+
+        return papers;
+    }
 }
