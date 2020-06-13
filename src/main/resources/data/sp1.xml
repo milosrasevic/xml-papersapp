@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SciencePaper xmlns="http://www.tim12.com/science_paper"
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- state=""
+ state="waiting"
  xsi:schemaLocation="http://www.tim12.com/science_paper file:/home/classicdocs/Documents/Workspace/xml/xml-papersapp/src/main/resources/data/SciencePaper.xsd">
     <title>title0</title>
     <authors>
