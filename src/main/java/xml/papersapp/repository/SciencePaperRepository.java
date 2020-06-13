@@ -8,6 +8,7 @@ import org.xmldb.api.modules.XMLResource;
 import org.xmldb.api.modules.XPathQueryService;
 import org.xmldb.api.modules.XQueryService;
 import org.xmldb.api.modules.XUpdateQueryService;
+import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
 import xml.papersapp.model.science_paper.SciencePaper;
 import xml.papersapp.model.science_papers.SciencePapers;
 
@@ -36,6 +37,7 @@ import static xml.papersapp.constants.Namespaces.SCIENCE_PAPER_NAMESPACE;
 import static xml.papersapp.constants.Packages.SCIENCE_PAPER_PACKAGE;
 import static xml.papersapp.util.Util.getDateFromString;
 import static xml.papersapp.util.XUpdateTemplate.APPEND;
+import static xml.papersapp.util.XUpdateTemplate.REMOVE;
 
 
 @Repository
@@ -252,5 +254,30 @@ public class SciencePaperRepository {
     public static String readFile(String path, Charset encoding) throws IOException {
         byte[] encoded = Files.readAllBytes(Paths.get(path));
         return new String(encoded, encoding);
+    }
+
+    public SciencePaper delete(String title, String email) throws XMLDBException, SciencePaperNotFound, JAXBException, SAXException {
+
+        xPathQueryService.setNamespace("spp", SCIENCE_PAPERS_NAMESPACE);
+        xPathQueryService.setNamespace("sp", SCIENCE_PAPER_NAMESPACE);
+
+        String query = "//spp:SciencePapers/sp:SciencePaper[sp:title='" + title
+                + "' and .//sp:author[sp:email='" + email + "'] and (@state='waiting' or @state='revision_needed')]";
+        ResourceSet result = xPathQueryService.query(query);
+
+        ResourceIterator i = result.getIterator();
+        Resource res = i.nextResource();
+
+        if (res == null) {
+            throw new SciencePaperNotFound();
+        }
+
+        String resourceString = res.getContent().toString();
+
+        long mods = xUpdateQueryService.updateResource(SCIENCE_PAPER_ID_DOCUMENT, String.format(REMOVE,
+                SCIENCE_PAPERS_NAMESPACE, query));
+        System.out.println("[INFO] " + mods + " modifications processed.");
+
+        return getSciencePaperFromResource(resourceString);
     }
 }

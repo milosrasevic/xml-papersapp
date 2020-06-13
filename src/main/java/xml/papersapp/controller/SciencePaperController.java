@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.XMLDBException;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperAlreadyExist;
+import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
 import xml.papersapp.model.science_paper.SciencePaper;
 import xml.papersapp.service.SciencePaperService;
 
@@ -68,5 +69,19 @@ public class SciencePaperController {
 
 
         return new ResponseEntity(paperList, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/cancel-submission")
+    public ResponseEntity<?> cancelSubmission(HttpServletRequest request, @RequestParam("title") String title) throws XMLDBException {
+        try {
+            String email = request.getUserPrincipal().getName();
+            SciencePaper sp = sciencePaperService.delete(title, email);
+            return new ResponseEntity<SciencePaper>(sp, HttpStatus.OK);
+        } catch (SciencePaperNotFound e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (JAXBException | SAXException e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 }

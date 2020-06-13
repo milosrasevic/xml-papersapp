@@ -3,6 +3,7 @@ package xml.papersapp.dto.user;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import xml.papersapp.model.user.TUser;
 
 @Data
 @NoArgsConstructor
@@ -17,12 +18,12 @@ public class RegistrationDTO {
     private WorkplaceDTO workplace;
     private String phoneNumber;
 
-    public RegistrationDTO(String email, String firstName, String lastName, String profession, WorkplaceDTO workplace, String phoneNumber) {
-        this.email = email;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.profession = profession;
-        this.workplace = workplace;
-        this.phoneNumber = phoneNumber;
+    public RegistrationDTO(TUser registeredUser) {
+        this.email = registeredUser.getEmail();
+        this.firstName = registeredUser.getFirstName();
+        this.lastName = registeredUser.getLastName();
+        this.profession = registeredUser.getProfession();
+        this.workplace = new WorkplaceDTO(registeredUser.getWorkplace());
+        this.phoneNumber = registeredUser.getPhoneNumber();
     }
 }
