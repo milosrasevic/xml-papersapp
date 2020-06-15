@@ -6,6 +6,8 @@ declare variable $text as xs:string external;
 declare variable $authorsEmail as xs:string external;
 declare variable $dateFrom as xs:string external;
 declare variable $dateTo as xs:string external;
+declare variable $state as xs:string external;
+
 
 (:let $text := "":)
 (:let $text := "":)
@@ -69,7 +71,20 @@ let $SciencePapersAfterDate :=
         return $sp
     )
 
-return $SciencePapersAfterDate
+
+let $SciencePapersAfterState :=
+    if ($state = "") then (
+        let $sp := $SciencePapersAfterDate
+        return $sp
+    ) else (
+
+        for $SciencePaper in $SciencePapersAfterDate
+        let $stateOfSp := data($SciencePaper/@state)
+        where $stateOfSp = $state
+        return $SciencePaper
+    )
+
+return $SciencePapersAfterState
 
 
 
