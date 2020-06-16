@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <SciencePaper xmlns="http://www.tim12.com/science_paper"
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation=
- "http://www.tim12.com/science_paper file:/home/classicdocs/Documents/Workspace/xml/xml-papersapp/src/main/resources/data/SciencePaper.xsd">
+ state="waiting"
+ xsi:schemaLocation="http://www.tim12.com/science_paper file:/home/classicdocs/Documents/Workspace/xml/xml-papersapp/src/main/resources/data/SciencePaper.xsd">
     <title>title0</title>
     <authors>
         <author>
@@ -19,6 +19,12 @@
         </author>
     </authors>
     <reviewers>
+        <reviewer>
+            <firstName>firstName2</firstName>
+            <email>author3@gmail.com</email>
+            <lastName>lastName2</lastName>
+            <profession>profession2</profession>
+        </reviewer>
     </reviewers>
     <content>
         <section>
