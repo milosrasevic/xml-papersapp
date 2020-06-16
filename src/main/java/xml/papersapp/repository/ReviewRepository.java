@@ -9,21 +9,24 @@ import org.xmldb.api.modules.XPathQueryService;
 import org.xmldb.api.modules.XQueryService;
 import org.xmldb.api.modules.XUpdateQueryService;
 import xml.papersapp.model.review.TReview;
-import xml.papersapp.model.science_paper.SciencePaper;
 
 import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.*;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.OutputStream;
 import java.io.StringReader;
 
-import static xml.papersapp.constants.Files.SCHEME_SCIENCE_PAPER_PATH;
-import static xml.papersapp.constants.Packages.SCIENCE_PAPER_PACKAGE;
+import static xml.papersapp.constants.DocumentIDs.REVIEWS_ID_DOCUMENT;
+import static xml.papersapp.constants.Files.SCHEME_REVIEW_PATH;
+import static xml.papersapp.constants.Namespaces.REVIEW_NAMESPACE;
+import static xml.papersapp.constants.Packages.REVIEW_PACKAGE;
+import static xml.papersapp.util.XUpdateTemplate.APPEND;
 
 @Repository
+@RequiredArgsConstructor
 public class ReviewRepository {
 
     private final Collection collection;
@@ -33,27 +36,49 @@ public class ReviewRepository {
 
     private final String CONTEXT_PATH_APPEND = "//Review";
 
-    public ReviewRepository(Collection collection, XUpdateQueryService xUpdateQueryService,
-                                  XPathQueryService xPathQueryService, XQueryService xQueryService) {
-        this.collection = collection;
-        this.xUpdateQueryService = xUpdateQueryService;
-        this.xPathQueryService = xPathQueryService;
-        this.xQueryService = xQueryService;
-    }
-
     public TReview getReviewFromResource(String resource) throws JAXBException, XMLDBException, SAXException {
-        JAXBContext context = JAXBContext.newInstance(SCIENCE_PAPER_PACKAGE);
+        JAXBContext context = JAXBContext.newInstance(REVIEW_PACKAGE);
 
         Unmarshaller unmarshaller = context.createUnmarshaller();
 
         // XML schema validacija
         SchemaFactory schemaFactory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-        Schema schema = schemaFactory.newSchema(new File(SCHEME_SCIENCE_PAPER_PATH));
+        Schema schema = schemaFactory.newSchema(new File(SCHEME_REVIEW_PATH));
 
         // Podešavanje unmarshaller-a za XML schema validaciju
         unmarshaller.setSchema(schema);
 
-        return (TReview) unmarshaller.unmarshal(new StringReader(resource));
+        JAXBElement<TReview> jaxbElement = (JAXBElement<TReview>) unmarshaller.unmarshal(new StringReader(resource));
+        TReview tReview = jaxbElement.getValue();
+        return tReview;
+
+    }
+
+    /*
+     *   duplicated
+     * */
+    private OutputStream getXMLFromObject(Object object, String pckg) throws JAXBException {
+
+        JAXBContext context = JAXBContext.newInstance(pckg);
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
+
+        OutputStream os = new ByteArrayOutputStream();
+
+        marshaller.marshal(object, os);
+
+        return os;
+
+    }
+
+    public TReview save(TReview review) throws JAXBException, XMLDBException {
+
+        OutputStream xml = getXMLFromObject(review, "xml.papersapp.model.review");
+
+        long mods = xUpdateQueryService.updateResource(REVIEWS_ID_DOCUMENT, String.format(APPEND, REVIEW_NAMESPACE, CONTEXT_PATH_APPEND, xml.toString()));
+        System.out.println("[INFO] " + mods + " modifications processed.");
+
+        return review;
 
     }
 }

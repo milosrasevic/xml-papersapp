@@ -10,7 +10,7 @@ public interface ReviewService {
     /**
      * Method used for submitting editors review on some scientific paper.
      *
-     * @param review -   String representation of paper review
+     * @param resource -   String representation of paper review
      * @return -   Review object representation of created review
      */
     TReview create(String resource) throws XMLDBException, JAXBException, SAXException;

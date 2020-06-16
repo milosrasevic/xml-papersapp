@@ -8,6 +8,8 @@
 
 package xml.papersapp.model.review;
 
+import xml.papersapp.util.MyDatatypeConverter;
+
 import java.util.Date;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
@@ -17,11 +19,11 @@ public class Adapter1
 
 
     public Date unmarshal(String value) {
-        return (src/main/java/xml/papersapp/util/MyDatatypeConverter.parseDate(value));
+        return (MyDatatypeConverter.parseDate(value));
     }
 
     public String marshal(Date value) {
-        return (src/main/java/xml/papersapp/util/MyDatatypeConverter.printDate(value));
+        return (MyDatatypeConverter.printDate(value));
     }
 
 }
