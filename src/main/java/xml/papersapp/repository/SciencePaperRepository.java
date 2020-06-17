@@ -113,6 +113,22 @@ public class SciencePaperRepository {
         return res != null ? Optional.of(getSciencePaperFromResource(res.getContent().toString())) : Optional.empty();
     }
 
+    public Optional<SciencePaper> findOneByDocumentId(String documentId) throws XMLDBException, JAXBException, SAXException {
+
+
+        xPathQueryService.setNamespace("spp", SCIENCE_PAPERS_NAMESPACE);
+        xPathQueryService.setNamespace("sp", SCIENCE_PAPER_NAMESPACE);
+
+        String query = "//spp:SciencePapers/sp:SciencePaper[@id='" + documentId + "']";
+
+        ResourceSet result = xPathQueryService.query(query);
+
+        ResourceIterator i = result.getIterator();
+        Resource res = i.nextResource();
+
+        return res != null ? Optional.of(getSciencePaperFromResource(res.getContent().toString())) : Optional.empty();
+    }
+
 
 //    private SciencePapers getSciencePapersFromXMLResource(XMLResource resource, String pckg) throws JAXBException, XMLDBException {
 //        JAXBContext context = JAXBContext.newInstance(pckg);
@@ -138,7 +154,7 @@ public class SciencePaperRepository {
 
     }
 
-    private OutputStream getXMLFromObject(Object object, String pckg) throws JAXBException {
+    public OutputStream getXMLFromObject(Object object, String pckg) throws JAXBException {
 
         JAXBContext context = JAXBContext.newInstance(pckg);
         Marshaller marshaller = context.createMarshaller();
