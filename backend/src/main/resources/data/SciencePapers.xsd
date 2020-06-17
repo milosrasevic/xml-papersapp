@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://www.tim12.com/science_papers"
+    xmlns:spp="http://www.tim12.com/science_papers"
+    xmlns:sp="http://www.tim12.com/science_paper"
+    xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" vc:minVersion="1.0" vc:maxVersion="1.1">
+    <xs:import namespace="http://www.tim12.com/science_paper" schemaLocation="SciencePaper.xsd"/>
+    <xs:element name="SciencePapers">
+        <xs:complexType>
+            <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="sp:SciencePaper"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
