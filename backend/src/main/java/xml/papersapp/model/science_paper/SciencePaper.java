@@ -131,6 +131,16 @@ public class SciencePaper {
     @XmlAttribute(name = "state")
     protected TState state;
 
+    private String downloadId;
+
+    public String getDownloadId() {
+        return downloadId;
+    }
+
+    public void setDownloadId(String downloadId) {
+        this.downloadId = downloadId;
+    }
+
     /**
      * Gets the value of the title property.
      * 

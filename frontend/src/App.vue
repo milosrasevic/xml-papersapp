@@ -8,7 +8,6 @@
         </v-btn>
         <v-divider class="mx-4" vertical ></v-divider>
           <v-spacer></v-spacer>
-          <v-btn v-if="isUser == true" @click="goTo('/profile')"><v-icon>mdi-account</v-icon></v-btn>
           <v-divider class="mx-4" vertical ></v-divider>
           <v-btn v-if="isLoggedIn == false" @click="goTo('/signup')">Sign up</v-btn>
           <v-btn v-if="isLoggedIn == false" @click="goTo('/login')">Login</v-btn>
