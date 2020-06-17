@@ -1,5 +1,7 @@
 package xml.papersapp.controller;
 
+import com.itextpdf.text.DocumentException;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.XMLDBException;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperAlreadyExist;
+import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
 import xml.papersapp.model.science_paper.SciencePaper;
 import xml.papersapp.model.science_paper.TState;
@@ -19,6 +22,8 @@ import javax.naming.Context;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.xml.bind.JAXBException;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.Principal;
 import java.text.ParseException;
@@ -98,6 +103,71 @@ public class SciencePaperController {
         } catch (XMLDBException | SAXException | JAXBException e) {
             e.printStackTrace();
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+    @GetMapping(path = "getHTML/{documentId}", produces = MediaType.APPLICATION_XHTML_XML_VALUE)
+    public ResponseEntity<?> generateHTML(@PathVariable String documentId) {
+
+        documentId = "http://www.tim12.com/science_paper/" + documentId;
+
+        try {
+            ByteArrayOutputStream out = sciencePaperService.generateHTML(documentId);
+            InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(out.toByteArray()));
+            return ResponseEntity.ok()
+                    .contentLength(out.size())
+                    .contentType(MediaType.parseMediaType("application/xhtml+xml"))
+                    .body(resource);
+        } catch (SciencePaperDoesntExist sciencePaperDoesntExist) {
+            sciencePaperDoesntExist.printStackTrace();
+            return new ResponseEntity<>(sciencePaperDoesntExist.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(path = "getPDF/{documentId}", produces = MediaType.APPLICATION_XHTML_XML_VALUE)
+    public ResponseEntity<?> generatePDF(@PathVariable String documentId) {
+
+        documentId = "http://www.tim12.com/science_paper/" + documentId;
+
+        try {
+            ByteArrayOutputStream out = sciencePaperService.generatePDF(documentId);
+            InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(out.toByteArray()));
+            return ResponseEntity.ok()
+                    .contentLength(out.size())
+                    .contentType(MediaType.parseMediaType("application/pdf"))
+                    .body(resource);
+        } catch (SciencePaperDoesntExist sciencePaperDoesntExist) {
+            sciencePaperDoesntExist.printStackTrace();
+            return new ResponseEntity<>(sciencePaperDoesntExist.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    @GetMapping(path = "getXML/{documentId}", produces = MediaType.APPLICATION_XHTML_XML_VALUE)
+    public ResponseEntity<?> generateXML(@PathVariable String documentId) {
+
+        documentId = "http://www.tim12.com/science_paper/" + documentId;
+
+        try {
+            ByteArrayOutputStream out = sciencePaperService.generateXML(documentId);
+            InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(out.toByteArray()));
+            return ResponseEntity.ok()
+                    .contentLength(out.size())
+                    .contentType(MediaType.parseMediaType("application/xml"))
+                    .body(resource);
+        } catch (SciencePaperDoesntExist sciencePaperDoesntExist) {
+            sciencePaperDoesntExist.printStackTrace();
+            return new ResponseEntity<>(sciencePaperDoesntExist.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
