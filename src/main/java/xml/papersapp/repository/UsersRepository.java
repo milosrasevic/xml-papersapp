@@ -4,11 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.Collection;
+import org.xmldb.api.base.ResourceIterator;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XPathQueryService;
 import org.xmldb.api.modules.XUpdateQueryService;
+import xml.papersapp.model.science_paper.SciencePaper;
 import xml.papersapp.model.user.TUser;
+import xml.papersapp.model.users.Users;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
@@ -19,10 +22,12 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import java.io.File;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import static xml.papersapp.constants.Files.SCHEME_USER_PATH;
-import static xml.papersapp.constants.Namespaces.USERS_NAMESPACE;
-import static xml.papersapp.constants.Namespaces.USER_NAMESPACE;
+import static xml.papersapp.constants.Namespaces.*;
+import static xml.papersapp.constants.Namespaces.SCIENCE_PAPER_NAMESPACE;
 import static xml.papersapp.constants.Packages.USER_PACKAGE;
 
 @Repository
@@ -52,8 +57,6 @@ public class UsersRepository {
 
     public TUser findUserByEmail(String email) throws XMLDBException, JAXBException, SAXException {
 
-        xPathQueryService.setNamespace("users", USERS_NAMESPACE);
-        xPathQueryService.setNamespace("user", USER_NAMESPACE);
 
         String query = "//users:Users/user:User[user:email='" + email + "']";
 
@@ -65,5 +68,24 @@ public class UsersRepository {
             return new TUser();
         }
 
+    }
+
+    public Users getAll() throws XMLDBException, JAXBException, SAXException {
+        xPathQueryService.setNamespace("users", USERS_NAMESPACE);
+        xPathQueryService.setNamespace("user", USER_NAMESPACE);
+
+        String query = "//users:Users/user:User";
+
+        ResourceSet result = xPathQueryService.query(query);
+
+        ResourceIterator i = result.getIterator();
+
+        Users users = new Users();
+
+        while(i.hasMoreResources()) {
+            users.getUser().add(getUserFromResource(i.nextResource().getContent().toString()));
+        }
+
+        return users;
     }
 }
