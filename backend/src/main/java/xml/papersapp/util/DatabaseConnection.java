@@ -20,9 +20,9 @@ public class DatabaseConnection {
     private static Collection col;
 
     private static final String COLLECTION_ID = "db/apps/papersapp";
-    private static final String USERS_PATH = "src/main/resources/data/users.xml";
-    private static final String REVIEWS_PATH = "src/main/resources/data/reviews.xml";
-    private static final String SCIENCE_PAPERS_PATH = "src/main/resources/data/science_papers.xml";
+    private static final String USERS_PATH = "src\\main\\resources\\data\\users.xml";
+    private static final String REVIEWS_PATH = "src\\main\\resources\\data\\reviews.xml";
+    private static final String SCIENCE_PAPERS_PATH = "src\\main\\resources\\data\\science_papers.xml";
 
     public static void createDBConnection() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, XMLDBException {
 
