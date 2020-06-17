@@ -12,6 +12,17 @@
                 </v-toolbar>
                 <v-card-text>
                   <v-layout wrap>
+                    <v-flex xs12 sm12>
+                     <label>Fill your personal information: </label>
+                    </v-flex>
+                    <v-flex xs12>
+                      <v-text-field
+                        label="Email*"
+                        v-model="registration.email"
+                        :rules="email_rules"
+                        required
+                      ></v-text-field>
+                    </v-flex>
                     <v-flex xs12 sm6>
                       <v-text-field
                         label="First name*"
@@ -28,14 +39,7 @@
                         required
                       ></v-text-field>
                     </v-flex>
-                    <v-flex xs12>
-                      <v-text-field
-                        label="Username*"
-                        v-model="registration.username"
-                        :rules="username_rules"
-                        required
-                      ></v-text-field>
-                    </v-flex>
+                     
                     <v-flex xs12 sm6>
                       <v-text-field
                         label="Password*"
@@ -55,52 +59,67 @@
                         required
                       ></v-text-field>
                     </v-flex>
-                    <v-flex xs12>
+                    <v-flex xs12 sm6>
                       <v-text-field
-                        label="Email*"
-                        v-model="registration.email"
-                        :rules="email_rules"
+                        label="Profession*"
+                        v-model="registration.profession"
+                        :rules="required_rule"
                         required
                       ></v-text-field>
                     </v-flex>
-
-                    <v-flex xs12 sm6>
+                     <v-flex xs12 sm6>
                       <v-text-field
-                        type="number"
-                        label="Age*"
-                        v-model="registration.age"
-                        :rules="age_rules"
+                        label="Phone number*"
+                        v-model="registration.phoneNumber"
+                        :rules="required_rule"
                         required
                       ></v-text-field>
                     </v-flex>
-                    <v-flex xs12 sm6>
-                      <v-text-field
-                        type="number"
-                        label="Weight*"
-                        v-model="registration.weight"
-                        :rules="weight_rules"
-                        required
-                      ></v-text-field>
+                    <v-flex xs12 sm12>
+                     <label>Fill workplace information: </label>
                     </v-flex>
-                    <v-flex xs12 sm6>
+                   <v-flex xs12 sm6>
                       <v-text-field
-                        type="number"
-                        label="Height*"
-                        v-model="registration.height"
-                        :rules="height_rules"
+                        label="Name*"
+                        v-model="registration.workplace.name"
+                        :rules="required_rule"
                         required
                       ></v-text-field>
                     </v-flex>
                     <v-flex xs12 sm6>
-                      Sex*
-                      <v-radio-group v-model="radios" :mandatory="false">
-                        <v-radio label="Male" value="male" required></v-radio>
-                        <v-radio label="Female" value="female" required></v-radio>
-                      </v-radio-group>
+                      <v-text-field
+                        label="Address*"
+                        v-model="registration.workplace.address"
+                        :rules="required_rule"
+                        required
+                      ></v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                      <v-text-field
+                        label="Country*"
+                        v-model="registration.workplace.country"
+                        :rules="required_rule"
+                        required
+                      ></v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                      <v-text-field
+                        label="City*"
+                        v-model="registration.workplace.city"
+                        :rules="required_rule"
+                        required
+                      ></v-text-field>
+                    </v-flex>
+                    <v-flex xs12 sm6>
+                      <v-text-field
+                        label="Zip*"
+                        v-model="registration.workplace.zip"
+                        :rules="required_rule"
+                        required
+                      ></v-text-field>
                     </v-flex>
                   </v-layout>
                 </v-card-text>
-                <small>*indicates required field</small>
                 <v-card-actions>
                   <v-spacer></v-spacer>
                   <v-btn color="white" @click="back">Back</v-btn>
@@ -135,10 +154,9 @@ export default {
     passwordConfirmation: null,
     firstname_rules: [v => !!v || "First name is required"],
     lastname_rules: [v => !!v || "Last name is required"],
-    username_rules: [v => !!v || "Username is required"],
     password_rules: [
       v => !!v || "Password is required",
-      v => (v && v.length >= 5) || "Password is too short"
+      v => (v && v.length >= 3) || "Password is too short"
     ],
     email_rules: [
       v => !!v || "Email is required",
@@ -146,15 +164,8 @@ export default {
         /[0-9]*[A-Z]*[0-9]*[a-z]+[0-9]*[A-Z]*[0-9]*@[a-z]+\.[a-z]+/.test(v) ||
         "Please enter a valid email"
     ],
-    age_rules: [v => !!v || "Age is required"],
-    weight_rules: [
-      v => !!v || "Weight is required",
-      v => (v && v > 30) || "You need to be heavier than 30 kg.",
-      v => (v && v > 30) || "You need to be lighter than 100 kg."
-    ],
-    height_rules: [
-      v => !!v || "Height is required",
-      v => (v && v > 130) || "You need to be higher than 130 cm."
+    required_rule: [
+      v => !!v || "Required"
     ],
     confirm_password_rules: [v => !!v || "Password confirmation is required"],
     registration: new Registration(),
@@ -181,7 +192,6 @@ export default {
     },
     onSubmit() {
       console.log(this.registration);
-      this.registration.sex = this.radios == "male";
       AuthService.register(this.registration)
         .then(response => {
           console.log(response);
