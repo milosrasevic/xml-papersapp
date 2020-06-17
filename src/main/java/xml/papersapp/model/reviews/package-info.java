@@ -5,5 +5,5 @@
 // Generated on: 2020.06.13 at 02:20:43 AM CEST 
 //
 
-@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.tim12.com/user", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
-package com.tim12.user;
+@javax.xml.bind.annotation.XmlSchema(namespace = "http://www.tim12.com/reviews", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+package xml.papersapp.model.reviews;

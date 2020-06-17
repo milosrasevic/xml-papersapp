@@ -55,7 +55,16 @@
 		<xjc schema="${data.dir}/CoverLetter.xsd" destdir="${gen.dir}"/>
 	</target>
 
-	<target name="generate_all" depends="generate_user, generate_science_paper, generate_cover_letter, generate_science_papers, generate_users"/>
+	<target name="generate_review" depends="init">
+		<xjc schema="${data.dir}/Review.xsd" destdir="${gen.dir}"/>
+	</target>
+
+	<target name="generate_reviews" depends="init">
+		<xjc schema="${data.dir}/Reviews.xsd" destdir="${gen.dir}"/>
+	</target>
+
+<!--	<target name="generate_all" depends="generate_user, generate_science_paper, generate_cover_letter, generate_science_papers, generate_users"/>-->
+	<target name="generate_all" depends="generate_review, generate_reviews"/>
 
 	<target name="main" depends="generate_all"/>
   

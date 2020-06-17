@@ -21,6 +21,7 @@ public class DatabaseConnection {
 
     private static final String COLLECTION_ID = "db/apps/papersapp";
     private static final String USERS_PATH = "src\\main\\resources\\data\\users.xml";
+    private static final String REVIEWS_PATH = "src\\main\\resources\\data\\reviews.xml";
     private static final String SCIENCE_PAPERS_PATH = "src\\main\\resources\\data\\science_papers.xml";
 
     public static void createDBConnection() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, XMLDBException {
@@ -40,6 +41,7 @@ public class DatabaseConnection {
 
             createUsers();
             createSciencePapers();
+            createReviews();
 
 
         }catch (Exception e){
@@ -87,6 +89,10 @@ public class DatabaseConnection {
         }
     }
 
+    private static void createReviews() {
+        String documentId = "reviews.xml";
+        create(documentId, REVIEWS_PATH);
+    }
 
     private static void createUsers() {
         String documentId = "users.xml";
