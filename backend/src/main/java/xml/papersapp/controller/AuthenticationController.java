@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBException;
 
 @RestController
-@RequestMapping(value = "/auth")
+@RequestMapping(value = "/api/auth")
 public class AuthenticationController {
 
     @Autowired
@@ -57,7 +57,7 @@ public class AuthenticationController {
         TUser user = (TUser) authentication.getPrincipal();
 
         String token = tokenUtils.generateToken(user.getEmail());
-        return ResponseEntity.ok(new UserDTO(user.getEmail(), token, user.getFirstName(), user.getLastName()));
+        return ResponseEntity.ok(new UserDTO(user.getEmail(), token, user.getFirstName(), user.getLastName(), user.getRoles().getRole().get(0)));
     }
 
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
