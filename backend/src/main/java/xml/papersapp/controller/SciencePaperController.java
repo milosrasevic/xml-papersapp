@@ -9,9 +9,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.XMLDBException;
+import xml.papersapp.dto.sciencePaper.DecisionDto;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperAlreadyExist;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
+import xml.papersapp.exceptions.sciencePapers.UnableToChangePaperState;
 import xml.papersapp.model.science_paper.SciencePaper;
 import xml.papersapp.model.science_paper.TState;
 import xml.papersapp.model.user.TUser;
@@ -170,4 +172,18 @@ public class SciencePaperController {
             return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+    @PostMapping("/decide")
+    public ResponseEntity decideOnSciencePaper(@RequestBody DecisionDto decisionDto) {
+        try {
+            return new ResponseEntity<>(
+                    sciencePaperService.decideOnSciencePaper(decisionDto.getPaperTitle(), decisionDto.isAccepted()),
+                    HttpStatus.OK);
+        } catch (XMLDBException | SAXException | JAXBException | SciencePaperNotFound | UnableToChangePaperState e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
