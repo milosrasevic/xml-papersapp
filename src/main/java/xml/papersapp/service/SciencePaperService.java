@@ -1,5 +1,6 @@
 package xml.papersapp.service;
 
+import com.itextpdf.text.DocumentException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
@@ -8,6 +9,7 @@ import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XPathQueryService;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperAlreadyExist;
+import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
 import xml.papersapp.model.science_paper.SciencePaper;
 import xml.papersapp.model.science_paper.TState;
@@ -15,6 +17,7 @@ import xml.papersapp.model.user.TRoles;
 import xml.papersapp.model.user.TUser;
 import xml.papersapp.repository.SciencePaperRepository;
 import xml.papersapp.security.repository.UserRepository;
+import xml.papersapp.util.XSLFOTransformer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.XMLConstants;
@@ -24,9 +27,7 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.text.ParseException;
 import java.util.*;
 
@@ -42,10 +43,13 @@ public class SciencePaperService {
 
     private final SciencePaperRepository sciencePaperRepository;
     private final UserRepository userRepository;
+    private final XSLFOTransformer xslfoTransformer;
 
-    public SciencePaperService(SciencePaperRepository sciencePaperRepository, UserRepository userRepository) {
+    public SciencePaperService(SciencePaperRepository sciencePaperRepository, UserRepository userRepository,
+                               XSLFOTransformer xslfoTransformer) {
         this.sciencePaperRepository = sciencePaperRepository;
         this.userRepository = userRepository;
+        this.xslfoTransformer = xslfoTransformer;
     }
 
     public SciencePaper create(String xml) throws JAXBException, XMLDBException, SciencePaperAlreadyExist, SAXException {
@@ -121,5 +125,34 @@ public class SciencePaperService {
 
     public List<SciencePaper> getPapersToReview(String email) throws XMLDBException, JAXBException, SAXException {
         return sciencePaperRepository.getPapersToReview(email);
+    }
+
+    public ByteArrayOutputStream generateHTML(String documentId) throws XMLDBException, JAXBException, SAXException, FileNotFoundException, SciencePaperDoesntExist {
+
+        SciencePaper found = sciencePaperRepository.findOneByDocumentId(documentId).orElseThrow(SciencePaperDoesntExist::new);
+
+        OutputStream outputStream = sciencePaperRepository.getXMLFromObject(found, SCIENCE_PAPER_PACKAGE);
+        String xslPath = "src/main/resources/xsl/science_paper_html.xsl";
+        return xslfoTransformer.generateHTML(outputStream, xslPath);
+
+    }
+
+    public ByteArrayOutputStream generatePDF(String documentId) throws XMLDBException, JAXBException, SAXException, IOException, DocumentException, SciencePaperDoesntExist {
+
+        ByteArrayOutputStream html = generateHTML(documentId);
+
+
+        return xslfoTransformer.generatePDF(html);
+
+    }
+
+    public ByteArrayOutputStream generateXML(String documentId) throws XMLDBException, JAXBException, SAXException, SciencePaperDoesntExist {
+
+        SciencePaper found = sciencePaperRepository.findOneByDocumentId(documentId).orElseThrow(SciencePaperDoesntExist::new);
+
+        OutputStream outputStream = sciencePaperRepository.getXMLFromObject(found, SCIENCE_PAPER_PACKAGE);
+
+        return (ByteArrayOutputStream) outputStream;
+
     }
 }
