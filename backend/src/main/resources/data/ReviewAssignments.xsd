@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://www.tim12.com/review_assignments"
+    xmlns:ra="http://www.tim12.com/review_assignment"
+    xmlns:ras="http://www.tim12.com/review_assignments">
+
+    <xs:import namespace="http://www.tim12.com/review_assignment"
+        schemaLocation="ReviewAssignment.xsd"/>
+    <xs:element name="ReviewAssignments">
+        <xs:complexType>
+            <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="ra:ReviewAssignment"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ReviewAssignment xmlns="http://www.tim12.com/review_assignment"
+ xmlns:user="http://www.tim12.com/user"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.tim12.com/review_assignment file:/D:/Faks/XML/Projekat/xml-papersapp/backend/src/main/resources/data/ReviewAssignment.xsd">
+    <sciencePaperTitle>sciencePaperTitle0</sciencePaperTitle>
+    <Reviewer>
+        <user:firstName>firstName0</user:firstName>
+        <user:lastName>lastName0</user:lastName>
+        <user:password>password0</user:password>
+        <user:profession>profession0</user:profession>
+        <user:phoneNumber>000-000-0000</user:phoneNumber>
+        <user:email>0@00.AA</user:email>
+        <user:roles>
+            <user:role>ROLE_AUTHOR</user:role>
+        </user:roles>
+    </Reviewer>
+</ReviewAssignment>
