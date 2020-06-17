@@ -6,14 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.XMLDBException;
+import xml.papersapp.dto.sciencePaper.DecisionDto;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperAlreadyExist;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
+import xml.papersapp.exceptions.sciencePapers.UnableToChangePaperState;
 import xml.papersapp.model.science_paper.SciencePaper;
 import xml.papersapp.service.SciencePaperService;
 
-import javax.naming.Context;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.security.Principal;
@@ -95,4 +95,17 @@ public class SciencePaperController {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("/decide")
+    public ResponseEntity decideOnSciencePaper(@RequestBody DecisionDto decisionDto) {
+        try {
+            return new ResponseEntity<>(
+                    sciencePaperService.decideOnSciencePaper(decisionDto.getPaperTitle(), decisionDto.isAccepted()),
+                    HttpStatus.OK);
+        } catch (XMLDBException | SAXException | JAXBException | SciencePaperNotFound | UnableToChangePaperState e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

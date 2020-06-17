@@ -36,8 +36,7 @@ import static xml.papersapp.constants.Namespaces.SCIENCE_PAPERS_NAMESPACE;
 import static xml.papersapp.constants.Namespaces.SCIENCE_PAPER_NAMESPACE;
 import static xml.papersapp.constants.Packages.SCIENCE_PAPER_PACKAGE;
 import static xml.papersapp.util.Util.getDateFromString;
-import static xml.papersapp.util.XUpdateTemplate.APPEND;
-import static xml.papersapp.util.XUpdateTemplate.REMOVE;
+import static xml.papersapp.util.XUpdateTemplate.*;
 
 
 @Repository
@@ -58,6 +57,16 @@ public class SciencePaperRepository {
         this.xUpdateQueryService = xUpdateQueryService;
         this.xPathQueryService = xPathQueryService;
         this.xQueryService = xQueryService;
+    }
+
+    public SciencePaper update(SciencePaper sciencePaper) throws JAXBException, XMLDBException{
+        OutputStream xml = getXMLFromObject(sciencePaper, "xml.papersapp.model.science_paper");
+
+        long mods = xUpdateQueryService.updateResource(SCIENCE_PAPER_ID_DOCUMENT, String.format(UPDATE, SCIENCE_PAPERS_NAMESPACE, CONTEXT_PATH_APPEND, xml.toString()));
+        System.out.println("[INFO] " + mods + " modifications processed.");
+
+        return sciencePaper;
+
     }
 
     public SciencePaper save(SciencePaper sciencePaper) throws JAXBException, XMLDBException {
@@ -300,4 +309,5 @@ public class SciencePaperRepository {
 
         return papers;
     }
+
 }
