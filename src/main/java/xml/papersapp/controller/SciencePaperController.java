@@ -3,6 +3,7 @@ package xml.papersapp.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.XMLDBException;
@@ -11,6 +12,9 @@ import xml.papersapp.exceptions.sciencePapers.SciencePaperAlreadyExist;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
 import xml.papersapp.exceptions.sciencePapers.UnableToChangePaperState;
 import xml.papersapp.model.science_paper.SciencePaper;
+import xml.papersapp.model.science_paper.TState;
+import xml.papersapp.model.user.TUser;
+import xml.papersapp.security.repository.UserRepository;
 import xml.papersapp.service.SciencePaperService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,13 +46,14 @@ public class SciencePaperController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity getUsersScientificPapers(HttpServletRequest request,
+    public ResponseEntity searchSciencePapers(HttpServletRequest request,
                                                    @RequestParam("text") String text,
                                                    @RequestParam("date-from") String dateFrom,
                                                    @RequestParam("date-to") String dateTo) {
         Principal principal = request.getUserPrincipal();
 
         String email = "";
+        String state = "";
         if (principal != null) {
             email = principal.getName();
         } else {
@@ -58,7 +63,7 @@ public class SciencePaperController {
         System.out.println(email);
         List<SciencePaper> paperList = null;
         try {
-            paperList = sciencePaperService.searchForMySciencePapers(email, text, dateFrom, dateTo);
+            paperList = sciencePaperService.searchForSciencePapers(email, text, dateFrom, dateTo);
         } catch (XMLDBException | SAXException | JAXBException | IOException e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.BAD_REQUEST);

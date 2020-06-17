@@ -10,6 +10,7 @@ import org.xmldb.api.modules.XQueryService;
 import org.xmldb.api.modules.XUpdateQueryService;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
 import xml.papersapp.model.science_paper.SciencePaper;
+import xml.papersapp.model.science_paper.TState;
 import xml.papersapp.model.science_papers.SciencePapers;
 
 import javax.xml.XMLConstants;
@@ -181,67 +182,22 @@ public class SciencePaperRepository {
 
     }
 
-    public List<SciencePaper> searchSciencePapers(String email, String text, String dateFromString, String dateToString) throws XMLDBException, JAXBException, SAXException, IOException, ParseException {
-
-//        xPathQueryService.setNamespace("spp", SCIENCE_PAPERS_NAMESPACE);
-//        xPathQueryService.setNamespace("", SCIENCE_PAPER_NAMESPACE);
-
-//        String query = "//spp:SciencePapers/SciencePaper";
-//        boolean addAnd = false;
-//        boolean closeParentheses = false;
-//
-//        if (!email.equals("")) {
-//            query += "[";
-//            String queryEmail = "./authors//author[email='" + email + "']";
-//            query += queryEmail;
-//            addAnd = true;
-//            closeParentheses = true;
-//        }
-//
-//        if (!text.equals("")) {
-//            if (addAnd) {
-//                query += " and ";
-//            } else {
-//                query += "[";
-//                closeParentheses = true;
-//            }
-////            query += ".//*[text() ='" + text + "']"; // text match
-//            query += ".//*[contains(text(), '" + text +"')]"; // text contains
-//        }
-//
-//        if (closeParentheses) {
-//            query += "]";
-//        }
-//
-//        System.out.println(query);
-//
-//
-//        ResourceSet result = xPathQueryService.query(query);
-//
-//        ResourceIterator i = result.getIterator();
-//
-//
-//        while(i.hasMoreResources()) {
-//            papers.add(getSciencePaperFromResource(i.nextResource().getContent().toString()));
-//        }
+    public List<SciencePaper> searchSciencePapers(String email, String text, String dateFromString, String dateToString, String state) throws XMLDBException, JAXBException, SAXException, IOException, ParseException {
 
         String xqueryFilePath = "src/main/resources/xquery/find_science_papers.xqy";
 
         xQueryService.setNamespace("spp", SCIENCE_PAPERS_NAMESPACE);
         xQueryService.setNamespace("", SCIENCE_PAPER_NAMESPACE);
 
-//        Date dateFrom = getDateFromString(dateFromString);
-//        Date dateTo = getDateFromString(dateToString);
-
         xQueryService.declareVariable("authorsEmail", email);
         xQueryService.declareVariable("text", text);
         xQueryService.declareVariable("dateFrom", dateFromString);
         xQueryService.declareVariable("dateTo", dateToString);
+        xQueryService.declareVariable("state", state);
 
         // read xquery
         System.out.println("[INFO] Invoking XQuery service for: " + xqueryFilePath);
         String xqueryExpression = readFile(xqueryFilePath, StandardCharsets.UTF_8);
-        System.out.println(xqueryExpression);
 
         // compile and execute the expression
         CompiledExpression compiledXquery = xQueryService.compile(xqueryExpression);

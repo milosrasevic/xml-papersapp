@@ -1,5 +1,6 @@
 package xml.papersapp.service;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.Resource;
@@ -11,7 +12,10 @@ import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
 import xml.papersapp.exceptions.sciencePapers.UnableToChangePaperState;
 import xml.papersapp.model.science_paper.SciencePaper;
 import xml.papersapp.model.science_paper.TState;
+import xml.papersapp.model.user.TRoles;
+import xml.papersapp.model.user.TUser;
 import xml.papersapp.repository.SciencePaperRepository;
+import xml.papersapp.security.repository.UserRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.XMLConstants;
@@ -38,9 +42,11 @@ import static xml.papersapp.util.Util.getXMLGregorianCalendar;
 public class SciencePaperService {
 
     private final SciencePaperRepository sciencePaperRepository;
+    private final UserRepository userRepository;
 
-    public SciencePaperService(SciencePaperRepository sciencePaperRepository) {
+    public SciencePaperService(SciencePaperRepository sciencePaperRepository, UserRepository userRepository) {
         this.sciencePaperRepository = sciencePaperRepository;
+        this.userRepository = userRepository;
     }
 
     public SciencePaper create(String xml) throws JAXBException, XMLDBException, SciencePaperAlreadyExist, SAXException {
@@ -71,9 +77,22 @@ public class SciencePaperService {
 
     }
 
-    public List<SciencePaper> searchForMySciencePapers(String email, String text, String dateFrom, String dateTo) throws XMLDBException, JAXBException, SAXException, IOException, ParseException {
+    public List<SciencePaper> searchForSciencePapers(String email, String text, String dateFrom, String dateTo) throws XMLDBException, JAXBException, SAXException, IOException, ParseException {
 
-        return sciencePaperRepository.searchSciencePapers(email, text, dateFrom, dateTo);
+        String state = "";
+        if (email.equals("")) {
+            // nonauthenticated user search only accepted sps
+            state = TState.ACCEPTED.toString().toLowerCase();
+        } else {
+            Optional<TUser> user = userRepository.findByUsername(email);
+            if (user.isPresent()) {
+                if (user.get().getRoles().getRole().contains("ROLE_EDITOR")) {
+                    email = "";
+                }
+            }
+        }
+
+        return sciencePaperRepository.searchSciencePapers(email, text, dateFrom, dateTo, state);
 
     }
 
