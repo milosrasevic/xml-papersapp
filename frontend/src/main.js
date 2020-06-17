@@ -9,7 +9,7 @@ Vue.config.productionTip = false
 
 function configureHttp () {
   //TODO ovde treba dinamicki proslediti na kom portu je CA
-  Axios.defaults.baseURL = "http://localhost:8088/api/"
+  Axios.defaults.baseURL = "http://localhost:8081/api/"
   Axios.defaults.headers.Accept = 'application/json'
   Axios.defaults.headers['Access-Control-Allow-Origin'] = '*'
 }

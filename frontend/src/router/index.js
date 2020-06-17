@@ -24,7 +24,7 @@ Vue.use(VueRouter)
     component: Logout
   },
   {
-    path: '/signIn',
+    path: '/signup',
     name: 'SignIn',
     component: SignIn
   }

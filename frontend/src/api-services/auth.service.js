@@ -14,8 +14,7 @@ const ENDPOINTS = {
 export default {
 
     setLocalStorageAuthData(data) {
-        localStorage.setItem('accessToken',data.accessToken);  
-        localStorage.setItem('userId', data.userDTO ? data.userDTO.id : null);
+        localStorage.setItem('accessToken',data.token);  
       },
 
     setAuthHeader(unset = false) {
@@ -49,10 +48,8 @@ export default {
             Object.assign(user, response.data);
             this.setLocalStorageAuthData(user);
             this.setAuthHeader();
-            store.commit('userLoggedIn', true)
-            store.commit('login')
-            store.commit('setUserId', response.data.userWithAuthoritiesDTO.id);
-            store.commit('setUser', response.data.userWithAuthoritiesDTO);
+            store.commit('login');
+            store.commit('setUser', response.data);
             return response;
         });
       },

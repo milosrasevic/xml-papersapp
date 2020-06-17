@@ -76,14 +76,9 @@ export default {
       LoginService.login(this.loginData)
         .then(response => {
           console.log(store.state.userLoggedIn);
-          console.log(response.data.userWithAuthoritiesDTO.id);
           console.log(response.data);
           this.showSnackbar("Successful login!", "success");
-          if(response.data.userWithAuthoritiesDTO.authorities[0].authority == "ROLE_ADMIN") {
-            this.$router.push("/adminPage")
-          } else {
-            this.$router.push("/");
-          }
+          this.$router.push("/");
         })
         .catch(() => {
           this.showSnackbar("Bad credentials", "error");
@@ -95,7 +90,7 @@ export default {
       this.snackbar.show = true;
     },
     signIn() {
-      this.$router.push("signIn");
+      this.$router.push("signup");
     }
   }
 };
