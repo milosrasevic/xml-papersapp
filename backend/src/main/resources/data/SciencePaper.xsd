@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+    jxb:version="2.0"
+    targetNamespace="http://www.tim12.com/science_paper"
+    xmlns:sp="http://www.tim12.com/science_paper">
+    <xs:element name="SciencePaper">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="title">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:whiteSpace value="preserve"/>
+                            <xs:pattern value=".+(\s.+){0,15}"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="authors" type="sp:TAuthors"> </xs:element>
+                <xs:element name="reviewers" type="sp:TReviewers"> </xs:element>
+                <xs:element name="content" type="sp:TContent"> </xs:element>
+                <xs:element name="abstract" type="sp:TAbstract"> </xs:element>
+                <xs:element name="references" type="sp:TReferences"> </xs:element>
+            </xs:sequence>
+            <xs:attribute name="id">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern value=""/>
+                        <xs:pattern value="http://www.tim12.com/science_paper/.+"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="dateCreated">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:javaType name="java.util.Date" parseMethod="src/main/java/xml/papersapp/util/MyDatatypeConverter.parseDate" printMethod="src/main/java/xml/papersapp/util/MyDatatypeConverter.printDate"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                    <xs:restriction base="xs:date">
+                        <xs:minInclusive value="1900-01-01"/>
+                        <xs:maxInclusive value="2200-01-01"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="dateRevised">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:javaType name="java.util.Date" parseMethod="src/main/java/xml/papersapp/util/MyDatatypeConverter.parseDate" printMethod="src/main/java/xml/papersapp/util/MyDatatypeConverter.printDate"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                    <xs:restriction base="xs:date">
+                        <xs:minInclusive value="1900-01-01"/>
+                        <xs:maxInclusive value="2200-01-01"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="dateAccepted">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:javaType name="java.util.Date" parseMethod="src/main/java/xml/papersapp/util/MyDatatypeConverter.parseDate" printMethod="src/main/java/xml/papersapp/util/MyDatatypeConverter.printDate"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                    <xs:restriction base="xs:date">
+                        <xs:minInclusive value="1900-01-01"/>
+                        <xs:maxInclusive value="2200-01-01"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="dateRejected">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:javaType name="java.util.Date" parseMethod="src/main/java/xml/papersapp/util/MyDatatypeConverter.parseDate" printMethod="src/main/java/xml/papersapp/util/MyDatatypeConverter.printDate"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                    <xs:restriction base="xs:date">
+                        <xs:minInclusive value="1900-01-01"/>
+                        <xs:maxInclusive value="2200-01-01"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="state" type="sp:TState"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:simpleType name="TState">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="waiting"/>
+            <xs:enumeration value="review_in_progress"/>
+            <xs:enumeration value="rejected"/>
+            <xs:enumeration value="accepted"/>
+            <xs:enumeration value="deleted"/>
+            <xs:enumeration value="waiting_for_approval"/>
+            <xs:enumeration value="revision_needed"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="TAuthors">
+        <xs:sequence maxOccurs="unbounded" minOccurs="1">
+            <xs:element name="author" type="sp:TAuthor"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TAuthor">
+        <xs:sequence>
+            <xs:element name="firstName" nillable="false" type="xs:string"/>
+            <xs:element name="email">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern
+                            value="([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})"
+                        />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="lastName" type="xs:string"/>
+            <xs:element name="profession" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TReviewers">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="reviewer" type="sp:TAuthor"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TAbstract">
+        <xs:sequence>
+            <xs:element name="purpose" type="xs:string"/>
+            <xs:element name="findings" type="xs:string"/>
+            <xs:element name="designMethodologyApproach" type="xs:string"/>
+            <xs:element name="researchLimitationsAndImplications" type="xs:string"/>
+            <xs:element name="practicalImplications" type="xs:string"/>
+            <xs:element name="socialImlications" type="xs:string"/>
+            <xs:element name="originalityAndValue" type="xs:string"/>
+            <xs:element name="keywords">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="12" name="keyword" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="type" type="sp:TType"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="TType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="research_paper"/>
+            <xs:enumeration value="viewpoint"/>
+            <xs:enumeration value="technical_paper"/>
+            <xs:enumeration value="conceptual_paper"/>
+            <xs:enumeration value="case_study"/>
+            <xs:enumeration value="literature_review"/>
+            <xs:enumeration value="general_review"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="TContent">
+        <xs:sequence>
+            <xs:element name="section" type="sp:TSection" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TReferences">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="Referenca" type="sp:TReference"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TTable">
+        <xs:sequence maxOccurs="unbounded">
+            <xs:element name="row" type="sp:TRow"/>
+        </xs:sequence>
+        <xs:attribute name="id">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern
+                        value="http://www.tim12.com/naucni_rad/poglavlje/\d+/pasus/\d+/slika/\d+"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="TRow">
+        <xs:sequence maxOccurs="unbounded">
+            <xs:element name="cell" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="TPicture">
+        <xs:attribute name="id">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern
+                        value="http://www.tim12.com/naucni_rad/poglavlje/\d+/pasus/\d+/slika/\d+"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="url" type="xs:string"/>
+    </xs:complexType>
+    <xs:complexType name="TSection" block="">
+        <xs:sequence>
+            <xs:element name="title">
+                <xs:complexType>
+                    <xs:simpleContent>
+                        <xs:extension base="xs:string">
+                            <xs:attribute name="Id">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                        <xs:pattern
+                                            value="http://www.tim12.com/naucni_rad/\d+/poglavlje/\d+/naslov"
+                                        />
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:attribute>
+                        </xs:extension>
+                    </xs:simpleContent>
+                </xs:complexType>
+            </xs:element>
+            <xs:element maxOccurs="unbounded" name="paragraph" type="sp:TParagraph"/>
+        </xs:sequence>
+        <xs:attribute name="id">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="http://www.tim12.com/naucni_rad/\d+/poglavlje/\d+"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType mixed="true" name="TParagraph">
+        <xs:choice maxOccurs="unbounded">
+            <xs:element maxOccurs="1" minOccurs="0" name="table" type="sp:TTable"> </xs:element>
+            <xs:element maxOccurs="1" minOccurs="0" name="picture" type="sp:TPicture"> </xs:element>
+        </xs:choice>
+        <xs:attribute name="Id">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="http://www.tim12.com/naucni_rad/\d+/poglavlje/\d+/pasus/\d+"/>
+                    <xs:pattern value=""/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="TReference">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="type" type="sp:TReferenceType"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="TReferenceType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="book"/>
+            <xs:enumeration value="book_chapter"/>
+            <xs:enumeration value="journal"/>
+            <xs:enumeration value="published_conference_proceeding"/>
+            <xs:enumeration value="unpublished_conference_proceeding"/>
+            <xs:enumeration value="working_paper"/>
+            <xs:enumeration value="encyclopedia"/>
+            <xs:enumeration value="newspaper_article_authored"/>
+            <xs:enumeration value="newspaper_article_unauthored"/>
+            <xs:enumeration value="electronic_source"/>
+            <xs:enumeration value="data"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>
