@@ -70,8 +70,16 @@
           <v-btn color="success" @click="download('xml', item)" style="margin-left: 5px">XML</v-btn>
         </a>
       </template>
+      <template v-slot:item.action="{item}">
+        <v-btn style="color: red" v-if="isCancelPossible(item)" @click="cancelSubmission(item)">Cancel</v-btn>
+      </template>
     </v-data-table>
+     <v-snackbar v-model="snackbar.show" :timeout="5000" :color="snackbar.color" :top="true">
+      {{snackbar.msg}}
+      <v-btn dark @click="snackbar.show = false">Close</v-btn>
+    </v-snackbar>
   </v-container>
+  
 </template>
 
 <script>
@@ -104,7 +112,8 @@ export default {
         { text: "Type", value: "type", align: "center" },
         { text: "Keywords", value: "keywords", align: "center" },
         { text: "State", value: "state", align: "center" },
-        { text: "Download", value: "download", align: "center" }
+        { text: "Download", value: "download", align: "center" },
+        { text: "Action", value: "action", align: "center" }
       ],
       sciencePapers: [],
       searchParam: {
@@ -121,7 +130,13 @@ export default {
         { text: "deleted", value: "deleted" },
         { text: "waiting_for_approval", value: "waiting_for_approval" },
         { text: "revision_needed", value: "revision_needed" }
-      ]
+      ],
+      snackbar: {
+      show: false,
+      color: "",
+      msg: ""
+    }
+      
     };
   },
   computed: {
@@ -202,7 +217,30 @@ export default {
     },
     goToAddPage() {
       this.$router.push("/submit-paper-and-letter");
-    }
+    },
+    isCancelPossible(item) {
+      console.log(item.state);
+      
+      switch(item.state) {
+        case "WAITING": return true;
+        case "REVISION_NEEDED": return true;
+      }
+
+      return false;
+    },
+    cancelSubmission(item) {
+      SciencePapersService.cancel(item.title).then(() => {
+        this.showSnackbar("Submission successfully canceled!", "success");
+        this.search();
+      }).catch(() => {
+        this.showSnackbar("Error occured!", "error");
+      })
+    },
+    showSnackbar(message, color) {
+      this.snackbar.color = color;
+      this.snackbar.msg = message;
+      this.snackbar.show = true;
+    },
   }
 };
 </script>
