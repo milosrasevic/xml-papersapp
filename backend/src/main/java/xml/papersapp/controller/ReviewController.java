@@ -24,8 +24,8 @@ public class ReviewController {
 
     private final ReviewService reviewService;
 
-    @PostMapping(consumes = {MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_XML_VALUE})
-    public ResponseEntity create(@RequestBody String resource) {
+    @PostMapping()
+    public ResponseEntity create(@RequestBody TReview resource) {
         try {
             return new ResponseEntity<>(reviewService.createFromObject(resource), HttpStatus.OK);
         } catch (XMLDBException | JAXBException | SAXException e) {
