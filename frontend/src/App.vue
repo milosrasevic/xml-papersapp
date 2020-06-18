@@ -6,6 +6,9 @@
         <v-btn @click="goTo('/')" >
           <v-icon>mdi-home</v-icon>
         </v-btn>
+         <v-btn @click="goTo('/profile')" v-if="isAuthor">
+          <v-icon>mdi-face</v-icon>
+        </v-btn>
         <v-divider class="mx-4" vertical ></v-divider>
           <v-spacer></v-spacer>
           <v-divider class="mx-4" vertical ></v-divider>
@@ -33,6 +36,9 @@ export default {
       console.log(store.state.userLoggedIn)
       return store.state.userLoggedIn;
     },
+    isAuthor() {
+      return this.$store.getters.isAuthor;
+    }
     // isUser() {
     //   return store.state.user.authorities ? store.state.user.authorities[0].authority == "ROLE_REGISTERED" : true;
     // }
