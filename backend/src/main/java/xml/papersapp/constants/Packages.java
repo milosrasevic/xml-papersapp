@@ -15,4 +15,7 @@ public class Packages {
     public static final String REVIEW_ASSIGNMENT_PACKAGE = "xml.papersapp.model.review_assignment";
     public static final String REVIEW_ASSIGNMENTS_PACKAGE = "xml.papersapp.model.review_assignments";
 
+
+    public static final String COVER_LETTER_PACKAGE = "xml.papersapp.model.cover_letter";
+    public static final String COVER_LETTERS_PACKAGE = "xml.papersapp.model.cover_letters";
 }

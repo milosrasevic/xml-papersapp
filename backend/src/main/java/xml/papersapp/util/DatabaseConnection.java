@@ -25,11 +25,13 @@ public class DatabaseConnection {
 //    private static final String REVIEWS_PATH = "src\\main\\resources\\data\\reviews.xml";
 //    private static final String SCIENCE_PAPERS_PATH = "src\\main\\resources\\data\\science_papers.xml";
 //    private static final String REVIEW_ASSIGNMENTS_PATH = "src\\main\\resources\\data\\review_assignments.xml";
+//    private static final String COVER_LETTERS_PATH = "src\\main\\resources\\data\\cover_letters.xml";
 
     private static final String USERS_PATH = "src/main/resources/data/users.xml";
     private static final String REVIEWS_PATH = "src/main/resources/data/reviews.xml";
     private static final String SCIENCE_PAPERS_PATH = "src/main/resources/data/science_papers.xml";
     private static final String REVIEW_ASSIGNMENTS_PATH = "src/main/resources/data/review_assignments.xml";
+    private static final String COVER_LETTERS_PATH = "src/main/resources/data/cover_letters.xml";
 
     public static void createDBConnection() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, XMLDBException {
 
@@ -50,6 +52,7 @@ public class DatabaseConnection {
             createSciencePapers();
             createReviews();
             createReviewAssignments();
+            createCoverLetters();
 
         }catch (Exception e){
             e.printStackTrace();
@@ -114,6 +117,11 @@ public class DatabaseConnection {
     private static void createReviewAssignments() {
         String documentId = "review_assignments.xml";
         create(documentId, REVIEW_ASSIGNMENTS_PATH);
+    }
+
+    private static void createCoverLetters() {
+        String documentId = "cover_letters.xml";
+        create(documentId, COVER_LETTERS_PATH);
     }
 
     private static Collection getOrCreateCollection(String collectionUri) throws XMLDBException {
