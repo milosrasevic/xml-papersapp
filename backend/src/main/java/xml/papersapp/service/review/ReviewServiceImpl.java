@@ -4,8 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.XMLDBException;
+import xml.papersapp.exceptions.review.ReviewAssignmenAlreadyExists;
+import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
+import xml.papersapp.exceptions.users.UserNotFound;
 import xml.papersapp.model.review.*;
+import xml.papersapp.model.review_assignment.TBlinded;
+import xml.papersapp.model.review_assignment.TReviewAssignment;
 import xml.papersapp.model.user.TUser;
+import xml.papersapp.repository.ReviewAssignmentRepository;
 import xml.papersapp.repository.ReviewRepository;
 import xml.papersapp.repository.UsersRepository;
 
@@ -20,6 +26,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     private final ReviewRepository reviewRepository;
     private final UsersRepository usersRepository;
+    private final ReviewAssignmentRepository reviewAssignmentRepository;
 
 
     @Override
@@ -78,5 +85,13 @@ public class ReviewServiceImpl implements ReviewService {
         reviewRepository.save(review);
 
         return review;
+    }
+
+    @Override
+    public TReviewAssignment createReviewAssignment(String title, String email, TBlinded blinded) throws XMLDBException,
+            SAXException, SciencePaperDoesntExist, JAXBException, UserNotFound, ReviewAssignmenAlreadyExists {
+
+        return reviewAssignmentRepository.createReviewAssignment(title, email, blinded);
+
     }
 }

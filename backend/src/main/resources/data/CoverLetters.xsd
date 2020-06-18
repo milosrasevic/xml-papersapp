@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    xmlns:cl="http://www.tim12.com/cover_letter"
+    targetNamespace="http://www.tim12.com/cover_letters"
+    xmlns:cls="http://www.tim12.com/cover_letters">
+    <xs:import namespace="http://www.tim12.com/cover_letter" schemaLocation="CoverLetter.xsd"/>
+    <xs:element name="CoverLetters">
+        <xs:complexType>
+            <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="cl:CoverLetter"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

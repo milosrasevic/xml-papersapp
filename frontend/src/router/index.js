@@ -6,6 +6,7 @@ import Logout from '../views/Logout.vue'
 import SignIn from '../views/SignIn.vue'
 import CreateReview from '../views/CreateReview.vue'
 import AuthorsProfile from "../views/AuthorsProfile";
+import SubmitPaperAndLetter from "../views/SubmitPaperAndLetter";
 
 Vue.use(VueRouter)
 
@@ -40,6 +41,11 @@ Vue.use(VueRouter)
     path: '/profile',
     name: 'AuthorsProfile',
     component: AuthorsProfile
+  },
+  {
+    path: '/submit-paper-and-letter',
+    name: 'SubmitPaperAndLetter',
+    component: SubmitPaperAndLetter
   }
   
 ]

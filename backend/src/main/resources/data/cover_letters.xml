@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cls:CoverLetters xmlns:user="http://www.tim12.com/user"
+ xmlns:cl="http://www.tim12.com/cover_letter"
+ xmlns:cls="http://www.tim12.com/cover_letters"
+ xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.tim12.com/cover_letters file:/home/classicdocs/Documents/Workspace/xml/xml-papersapp/backend/src/main/resources/data/CoverLetters.xsd"/>

@@ -1,8 +1,9 @@
 import Axios from 'axios';
 const ENDPOINTS = {
-    SEARCH_SCIENCE_PAPER: 'science-paper/search',
-    SEARCH_SCIENCE__PAPER_AUTHENTICATED: 'science-paper/authenticated/search',
-    GET_SCIENCE_PAPER: 'science-paper/get/'
+  SEARCH_SCIENCE_PAPER: 'science-paper/search',
+  SEARCH_SCIENCE__PAPER_AUTHENTICATED: 'science-paper/authenticated/search',
+  SUBMIT_SCIENCE_PAPER: "science-paper",
+  GET_SCIENCE_PAPER: 'science-paper/get/'
 }
 
 export default {
@@ -16,9 +17,9 @@ export default {
         }
     },
     get(title) {
-        console.log('here get');
-        console.log(title);
-        
         return Axios.get(ENDPOINTS.GET_SCIENCE_PAPER + title);
+    },
+    submit(sciencePaper) {
+      return Axios.post(ENDPOINTS.SUBMIT_SCIENCE_PAPER, sciencePaper, {headers: {'Content-Type': 'text/xml'}});
     }
 }
