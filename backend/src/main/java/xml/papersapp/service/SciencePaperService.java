@@ -11,6 +11,7 @@ import org.xmldb.api.modules.XPathQueryService;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperAlreadyExist;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
+import xml.papersapp.exceptions.sciencePapers.UnableToChangePaperState;
 import xml.papersapp.model.science_paper.SciencePaper;
 import xml.papersapp.model.science_paper.TState;
 import xml.papersapp.model.user.TRoles;
@@ -156,5 +157,25 @@ public class SciencePaperService {
 
         return (ByteArrayOutputStream) outputStream;
 
+    }
+
+    public SciencePaper decideOnSciencePaper(String paperTitle, boolean isAccepted) throws XMLDBException, JAXBException, SAXException, SciencePaperNotFound, UnableToChangePaperState {
+        Optional<SciencePaper> sciencePaper = sciencePaperRepository.findOneByTitle(paperTitle);
+
+        if (!sciencePaper.isPresent()) {
+            throw new SciencePaperNotFound();
+        }
+
+        if(!sciencePaper.get().getState().equals(TState.WAITING_FOR_APPROVAL)) {
+            throw new UnableToChangePaperState();
+        }
+
+        if(isAccepted) {
+            sciencePaper.get().setState(TState.ACCEPTED);
+        } else {
+            sciencePaper.get().setState(TState.REJECTED);
+        }
+
+        return sciencePaperRepository.update(sciencePaper.get());
     }
 }
