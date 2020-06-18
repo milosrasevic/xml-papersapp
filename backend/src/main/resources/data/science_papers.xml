@@ -4,10 +4,7 @@
  xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://www.tim12.com/science_papers file:/home/classicdocs/Documents/Workspace/xml/xml-papersapp/src/main/resources/data/SciencePapers.xsd">
-    <SciencePaper xmlns="http://www.tim12.com/science_paper"
-                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                  state="waiting"
-                  xsi:schemaLocation="http://www.tim12.com/science_paper file:/home/classicdocs/Documents/Workspace/xml/xml-papersapp/src/main/resources/data/SciencePaper.xsd">
+    <SciencePaper xmlns="http://www.tim12.com/science_paper" state="waiting" xsi:schemaLocation="http://www.tim12.com/science_paper file:/home/classicdocs/Documents/Workspace/xml/xml-papersapp/src/main/resources/data/SciencePaper.xsd">
         <title>title0</title>
         <authors>
             <author>
@@ -26,18 +23,20 @@
         <reviewers>
         </reviewers>
         <content>
-            <section>
-                <title>title1</title>
-                <paragraph>
+            <section id="http://www.tim12.com/naucni_rad/1/poglavlje/1">
+                <title>
+                    title1
+                </title>
+                <paragraph Id="http://www.tim12.com/naucni_rad/1/poglavlje/1/pasus/1">
                 </paragraph>
-                <paragraph>
+                <paragraph Id="http://www.tim12.com/naucni_rad/1/poglavlje/1/pasus/2">
                 </paragraph>
             </section>
-            <section>
+            <section id="http://www.tim12.com/naucni_rad/2/poglavlje/2">
                 <title>title2</title>
-                <paragraph>
+                <paragraph Id="http://www.tim12.com/naucni_rad/1/poglavlje/2/pasus/3">
                 </paragraph>
-                <paragraph>
+                <paragraph Id="http://www.tim12.com/naucni_rad/1/poglavlje/2/pasus/4">
                 </paragraph>
             </section>
         </content>

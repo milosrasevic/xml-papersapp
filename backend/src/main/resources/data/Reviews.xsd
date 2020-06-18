@@ -6,8 +6,8 @@
     <xs:import namespace="http://www.tim12.com/review" schemaLocation="Review.xsd"/>
     <xs:element name="reviews">
         <xs:complexType>
-            <xs:sequence>
-                <xs:element maxOccurs="unbounded" ref="rw:Review"/>
+            <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                <xs:element ref="rw:Review"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

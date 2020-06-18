@@ -21,6 +21,7 @@ import java.io.StringReader;
 
 import static xml.papersapp.constants.DocumentIDs.REVIEWS_ID_DOCUMENT;
 import static xml.papersapp.constants.Files.SCHEME_REVIEW_PATH;
+import static xml.papersapp.constants.Namespaces.REVIEWS_NAMESPACE;
 import static xml.papersapp.constants.Namespaces.REVIEW_NAMESPACE;
 import static xml.papersapp.constants.Packages.REVIEW_PACKAGE;
 import static xml.papersapp.util.XUpdateTemplate.APPEND;
@@ -34,7 +35,7 @@ public class ReviewRepository {
     private final XPathQueryService xPathQueryService;
     private final XQueryService xQueryService;
 
-    private final String CONTEXT_PATH_APPEND = "//Review";
+    private final String CONTEXT_PATH_APPEND = "//reviews";
 
     public TReview getReviewFromResource(String resource) throws JAXBException, XMLDBException, SAXException {
         JAXBContext context = JAXBContext.newInstance(REVIEW_PACKAGE);
@@ -75,7 +76,7 @@ public class ReviewRepository {
 
         OutputStream xml = getXMLFromObject(review, "xml.papersapp.model.review");
 
-        long mods = xUpdateQueryService.updateResource(REVIEWS_ID_DOCUMENT, String.format(APPEND, REVIEW_NAMESPACE, CONTEXT_PATH_APPEND, xml.toString()));
+        long mods = xUpdateQueryService.updateResource(REVIEWS_ID_DOCUMENT, String.format(APPEND, REVIEWS_NAMESPACE, CONTEXT_PATH_APPEND, xml.toString()));
         System.out.println("[INFO] " + mods + " modifications processed.");
 
         return review;

@@ -28,11 +28,9 @@ public class ReviewServiceImpl implements ReviewService {
     private final UsersRepository usersRepository;
     private final ReviewAssignmentRepository reviewAssignmentRepository;
 
-    @Override
-    public TReview create(String resource) throws XMLDBException, JAXBException, SAXException {
 
-        // validate xml
-        TReview review = reviewRepository.getReviewFromResource(resource);
+    @Override
+    public TReview createFromObject(TReview review) throws XMLDBException, JAXBException, SAXException {
 
         String id = createId(REVIEW_NAMESPACE);
         review.setId(id);

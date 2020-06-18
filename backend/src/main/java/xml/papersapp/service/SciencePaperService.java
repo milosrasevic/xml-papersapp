@@ -162,6 +162,12 @@ public class SciencePaperService {
 
     }
 
+    public SciencePaper getSciencePaper(String title) throws XMLDBException, JAXBException, SAXException, SciencePaperDoesntExist {
+        SciencePaper found = sciencePaperRepository.findOneByTitle(title).orElseThrow(SciencePaperDoesntExist::new);
+
+        return found;
+    }
+
     public SciencePaper decideOnSciencePaper(String paperTitle, boolean isAccepted) throws XMLDBException, JAXBException, SAXException, SciencePaperNotFound, UnableToChangePaperState {
         Optional<SciencePaper> sciencePaper = sciencePaperRepository.findOneByTitle(paperTitle);
 
