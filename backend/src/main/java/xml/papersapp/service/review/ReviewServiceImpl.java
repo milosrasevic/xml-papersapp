@@ -21,66 +21,6 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final UsersRepository usersRepository;
 
-    @Override
-    public TReview create(String resource) throws XMLDBException, JAXBException, SAXException {
-
-        // validate xml
-        TReview review = reviewRepository.getReviewFromResource(resource);
-
-        String id = createId(REVIEW_NAMESPACE);
-        review.setId(id);
-
-        TAuthors authors = new TAuthors();
-        for (TAuthor tAuthor: review.getAuthors().getAuthor()) {
-            // find that author in database
-            TUser foundUser = usersRepository.findUserByEmail(tAuthor.getEmail());
-            TAuthor foundAuthor = new TAuthor();
-            foundAuthor.setEmail(foundUser.getEmail());
-            foundAuthor.setFirstName(foundUser.getFirstName());
-            foundAuthor.setLastName(foundUser.getLastName());
-
-            authors.getAuthor().add(foundAuthor); // append found author
-        }
-
-
-        TUser foundUser = usersRepository.findUserByEmail(review.getReviewer().getEmail());
-        TReviewer foundReviewer = new TReviewer();
-        foundReviewer.setEmail(foundUser.getEmail());
-        foundReviewer.setFirstName(foundUser.getFirstName());
-        foundReviewer.setLastName(foundUser.getLastName());
-
-
-        review.setAuthors(authors);
-        review.setReviewer(foundReviewer);
-
-
-
-        switch (review.getBlinded()) {
-            case STANDARD:
-                System.out.println("Review is standard");
-                break;
-
-            case AUTHOR_BLINDED:
-                review.setReviewer(null);
-                break;
-
-            case REVIEWER_BLINDED:
-                review.setAuthors(null);
-                break;
-
-            case DOUBLE_BLINDED:
-                review.setAuthors(null);
-                review.setReviewer(null);
-                break;
-
-            default:
-                break;
-        }
-
-        reviewRepository.save(review);
-
-        return review;
-    }
 
     @Override
     public TReview createFromObject(TReview review) throws XMLDBException, JAXBException, SAXException {

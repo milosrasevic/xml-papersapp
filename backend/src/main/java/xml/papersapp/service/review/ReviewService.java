@@ -13,7 +13,5 @@ public interface ReviewService {
      * @param resource -   String representation of paper review
      * @return -   Review object representation of created review
      */
-    TReview create(String resource) throws XMLDBException, JAXBException, SAXException;
-
     TReview createFromObject(TReview resource) throws XMLDBException, JAXBException, SAXException;
 }
