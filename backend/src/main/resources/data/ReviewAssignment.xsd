@@ -15,6 +15,13 @@
             </xs:simpleType>
         </xs:attribute>
         <xs:attribute name="accepted" type="xs:boolean"/>
+        <xs:attribute name="Id">
+            <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:pattern value="http://www.tim12.com/review_assignment/.+"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
     </xs:complexType>
     <xs:element name="Reviewer" type="user:TUser"/>
     <xs:element name="sciencePaperTitle" type="xs:string"/>

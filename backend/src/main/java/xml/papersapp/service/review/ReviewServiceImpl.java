@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.XMLDBException;
 import xml.papersapp.exceptions.review.ReviewAssignmenAlreadyExists;
+import xml.papersapp.exceptions.review.ReviewAssignmentNotFound;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
 import xml.papersapp.exceptions.users.UserNotFound;
 import xml.papersapp.model.review.*;
@@ -17,6 +18,9 @@ import xml.papersapp.repository.UsersRepository;
 
 import javax.xml.bind.JAXBException;
 
+import java.util.Optional;
+
+import static xml.papersapp.constants.Namespaces.REVIEW_ASSIGNMENT_NAMESPACE;
 import static xml.papersapp.constants.Namespaces.REVIEW_NAMESPACE;
 import static xml.papersapp.util.Util.createId;
 
@@ -92,6 +96,24 @@ public class ReviewServiceImpl implements ReviewService {
             SAXException, SciencePaperDoesntExist, JAXBException, UserNotFound, ReviewAssignmenAlreadyExists {
 
         return reviewAssignmentRepository.createReviewAssignment(title, email, blinded);
+
+    }
+
+    @Override
+    public TReviewAssignment acceptReviewAssignment(String assignmentId, String email) throws XMLDBException, JAXBException, SAXException,
+            ReviewAssignmentNotFound {
+
+        Optional<TReviewAssignment> assignmentOptional = reviewAssignmentRepository.findAssignmentByIdAndEmail(assignmentId, email);
+
+        if(!assignmentOptional.isPresent()) {
+            throw new ReviewAssignmentNotFound();
+        }
+
+        TReviewAssignment assignment = assignmentOptional.get();
+
+        assignment.setAccepted(true);
+
+        return reviewAssignmentRepository.saveAssignment(assignment);
 
     }
 }
