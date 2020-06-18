@@ -114,7 +114,6 @@ public class ReviewServiceImpl implements ReviewService {
         TReviewAssignment assignment = assignmentOptional.get();
 
         assignment.setAccepted(true);
-        assignment.setSciencePaperTitle("asfasfasnfuasnfausf");
 
         return reviewAssignmentRepository.saveAssignment(assignment);
 

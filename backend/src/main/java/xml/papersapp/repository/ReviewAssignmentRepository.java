@@ -39,8 +39,7 @@ import static xml.papersapp.constants.Files.SCHEME_REVIEW_ASSIGNMENT_PATH;
 import static xml.papersapp.constants.Namespaces.*;
 import static xml.papersapp.constants.Packages.REVIEW_ASSIGNMENT_PACKAGE;
 import static xml.papersapp.util.Util.createId;
-import static xml.papersapp.util.XUpdateTemplate.APPEND;
-import static xml.papersapp.util.XUpdateTemplate.UPDATE;
+import static xml.papersapp.util.XUpdateTemplate.*;
 
 @Repository
 public class ReviewAssignmentRepository {
@@ -204,31 +203,39 @@ public class ReviewAssignmentRepository {
         OutputStream xml = getXMLFromObject(assignment, REVIEW_ASSIGNMENT_PACKAGE);
         String xmlString = xml.toString();
 
-        List<TReviewAssignment> allAssignments = getAllAssignments();
+//        List<TReviewAssignment> allAssignments = getAllAssignments();
 
-        int index = -1;
-        int counter = 0;
-        for (TReviewAssignment reviewAssignment : allAssignments) {
-            if (reviewAssignment.getId().equalsIgnoreCase(assignment.getId()) &&
-                    reviewAssignment.getReviewer().getEmail().equalsIgnoreCase(assignment.getReviewer().getEmail())) {
-                index = counter;
-            }
-            counter++;
-        }
+//        int index = -1;
+//        int counter = 0;
+//        for (TReviewAssignment reviewAssignment : allAssignments) {
+//            if (reviewAssignment.getId().equalsIgnoreCase(assignment.getId()) &&
+//                    reviewAssignment.getReviewer().getEmail().equalsIgnoreCase(assignment.getReviewer().getEmail())) {
+//                index = counter;
+//            }
+//            counter++;
+//        }
+////
+        String query = "//ras:ReviewAssignments/ra:ReviewAssignment[@Id='" + assignment.getId() + "' and ra:Reviewer[user:email='"
+                + assignment.getReviewer().getEmail() + "']]";
+
+//        if (index == -1) {
+//            throw new ReviewAssignmentNotFound();
+//        }
 //
-//        String contextPath = "//ras:ReviewAssignments/ra:ReviewAssignment[@Id='" + assignment.getId() + "' and ra:Reviewer[user:email='"
-//                + assignment.getReviewer().getEmail() + "']]";
+//        String contextPath = "//ReviewAssignments/ReviewAssignment[" + index + "]";
+//
+//
+//        long mods = xUpdateQueryService.updateResource(REVIEW_ASSIGNMENTS_ID_DOCUMENT, String.format(UPDATE,
+//                REVIEW_ASSIGNMENTS_NAMESPACE, contextPath, xmlString));
 
-        if (index == -1) {
-            throw new ReviewAssignmentNotFound();
-        }
-
-        String contextPath = "/ReviewAssignments/ReviewAssignment[" + index + "]";
-
-
-        long mods = xUpdateQueryService.updateResource(REVIEW_ASSIGNMENTS_ID_DOCUMENT, String.format(UPDATE,
-                REVIEW_ASSIGNMENT_NAMESPACE, contextPath, xmlString));
+        long mods = xUpdateQueryService.updateResource(REVIEW_ASSIGNMENTS_ID_DOCUMENT, String.format(REMOVE,
+                REVIEW_ASSIGNMENTS_NAMESPACE, query));
         System.out.println("[INFO] " + mods + " modifications processed.");
+
+        long mods1 = xUpdateQueryService.updateResource(REVIEW_ASSIGNMENTS_ID_DOCUMENT, String.format(APPEND,
+                REVIEW_ASSIGNMENTS_NAMESPACE, CONTEXT_PATH_APPEND , xmlString));
+        System.out.println("[INFO] " + mods1 + " modifications processed.");
+
 
         return assignment;
     }
@@ -246,20 +253,10 @@ public class ReviewAssignmentRepository {
 
         List<TReviewAssignment> reviewAssignments = new ArrayList<>();
 
-        while(i.hasMoreResources()) {
+        while (i.hasMoreResources()) {
             reviewAssignments.add(getReviewAssignmentFromResource(i.nextResource().getContent().toString()));
         }
 
         return reviewAssignments;
     }
-
-    // public SciencePaper update(SciencePaper sciencePaper) throws JAXBException, XMLDBException{
-    //        OutputStream xml = getXMLFromObject(sciencePaper, "xml.papersapp.model.science_paper");
-    //
-    //        long mods = xUpdateQueryService.updateResource(SCIENCE_PAPER_ID_DOCUMENT, String.format(UPDATE, SCIENCE_PAPERS_NAMESPACE, CONTEXT_PATH_APPEND, xml.toString()));
-    //        System.out.println("[INFO] " + mods + " modifications processed.");
-    //
-    //        return sciencePaper;
-    //
-    //    }
 }
