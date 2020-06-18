@@ -35,7 +35,7 @@ public class ReviewRepository {
     private final XPathQueryService xPathQueryService;
     private final XQueryService xQueryService;
 
-    private final String CONTEXT_PATH_APPEND = "//Review";
+    private final String CONTEXT_PATH_APPEND = "//reviews";
 
     public TReview getReviewFromResource(String resource) throws JAXBException, XMLDBException, SAXException {
         JAXBContext context = JAXBContext.newInstance(REVIEW_PACKAGE);
