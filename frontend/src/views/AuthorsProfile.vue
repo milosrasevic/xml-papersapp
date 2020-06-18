@@ -1,6 +1,13 @@
 <template>
   <v-container>
-    <h1>My science papers</h1>
+    <v-layout row wrap>
+      <v-flex xs10 md10>
+        <h1>My science papers</h1>
+      </v-flex>
+      <v-btn @click="goToAddPage" color="primary">
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
+    </v-layout>
     <v-text-field
       style="width: 500px"
       v-model="searchParam.text"
@@ -25,12 +32,7 @@
         ></v-text-field>
       </v-flex>
     </v-layout>
-    <v-select
-      style="width: 200px"
-      :items="stateItems"
-      v-model="searchParam.state"
-      label="State"
-    ></v-select>
+    <v-select style="width: 200px" :items="stateItems" v-model="searchParam.state" label="State"></v-select>
     <v-layout row wrap>
       <v-btn style="margin: 10px" color="success" @click="search">Search</v-btn>
       <v-btn style="margin: 10px; color: red;" color @click="discardSearch">Discard</v-btn>
@@ -43,13 +45,28 @@
       class="elevation-1"
     >
       <template v-slot:item.download="{item}">
-        <a :href="getDownloadLink('PDF', item)" download style="text-decoration: none" target="_blank">
+        <a
+          :href="getDownloadLink('PDF', item)"
+          download
+          style="text-decoration: none"
+          target="_blank"
+        >
           <v-btn color="success" @click="download('pdf', item)" style="margin-left: 5px">PDF</v-btn>
         </a>
-        <a :href="getDownloadLink('HTML', item)" download style="text-decoration: none" target="_blank">
+        <a
+          :href="getDownloadLink('HTML', item)"
+          download
+          style="text-decoration: none"
+          target="_blank"
+        >
           <v-btn color="success" @click="download('html', item)" style="margin-left: 5px">HTML</v-btn>
         </a>
-        <a :href="getDownloadLink('XML', item)" download style="text-decoration: none" target="_blank">
+        <a
+          :href="getDownloadLink('XML', item)"
+          download
+          style="text-decoration: none"
+          target="_blank"
+        >
           <v-btn color="success" @click="download('xml', item)" style="margin-left: 5px">XML</v-btn>
         </a>
       </template>
@@ -58,7 +75,6 @@
 </template>
 
 <script>
-
 import SciencePapersService from "../api-services/science-papers.service";
 
 export default {
@@ -128,41 +144,40 @@ export default {
     },
     search() {
       this.sciencePapers = [];
-      SciencePapersService.getSciencePapers(
-        this.searchParam,
-        true
-      ).then(res => {
-        res.data.forEach(el => {
-          let authors = "";
-          el.authors.author.forEach(author => {
-            authors += author.firstName + " " + author.lastName + ", ";
+      SciencePapersService.getSciencePapers(this.searchParam, true).then(
+        res => {
+          res.data.forEach(el => {
+            let authors = "";
+            el.authors.author.forEach(author => {
+              authors += author.firstName + " " + author.lastName + ", ";
+            });
+
+            if (authors !== "") {
+              authors = authors.substr(0, authors.length - 2);
+            }
+
+            let keywords = "";
+            el.abstract.keywords.keyword.forEach(kw => {
+              keywords += kw + ", ";
+            });
+
+            if (keywords !== "") {
+              keywords = keywords.substr(0, keywords.length - 2);
+            }
+
+            let sp = {
+              title: el.title,
+              type: el.abstract.type,
+              authors,
+              keywords,
+              state: el.state,
+              id: el.id
+            };
+
+            this.sciencePapers.push(sp);
           });
-
-          if (authors !== "") {
-            authors = authors.substr(0, authors.length - 2);
-          }
-
-          let keywords = "";
-          el.abstract.keywords.keyword.forEach(kw => {
-            keywords += kw + ", ";
-          });
-
-          if (keywords !== "") {
-            keywords = keywords.substr(0, keywords.length - 2);
-          }
-
-          let sp = {
-            title: el.title,
-            type: el.abstract.type,
-            authors,
-            keywords,
-            state: el.state,
-            id: el.id
-          };
-
-          this.sciencePapers.push(sp);
-        });
-      });
+        }
+      );
     },
     discardSearch() {
       this.searchParam = {
@@ -177,18 +192,20 @@ export default {
       console.log(item);
     },
     getDownloadLink(docType, item) {
-      if(item.id === null) {
+      if (item.id === null) {
         return "";
       }
       let id = item.id.split("http://www.tim12.com/science_paper/")[1];
       id = "http://localhost:8081/api/science-paper/get" + docType + "/" + id;
       console.log(id);
       return id;
+    },
+    goToAddPage() {
+      this.$router.push("/submit-paper-and-letter");
     }
   }
-}
+};
 </script>
 
 <style>
-
 </style>
