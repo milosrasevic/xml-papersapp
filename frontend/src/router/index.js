@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import Logout from '../views/Logout.vue'
 import SignIn from '../views/SignIn.vue'
+import AuthorsProfile from "../views/AuthorsProfile";
 
 Vue.use(VueRouter)
 
@@ -27,6 +28,11 @@ Vue.use(VueRouter)
     path: '/signup',
     name: 'SignIn',
     component: SignIn
+  },
+  {
+    path: '/profile',
+    name: 'AuthorsProfile',
+    component: AuthorsProfile
   }
   
 ]
