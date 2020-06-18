@@ -13,4 +13,7 @@ public class Namespaces {
     public static final String REVIEW_NAMESPACE = "http://www.tim12.com/review";
     public static final String REVIEWS_NAMESPACE = "http://www.tim12.com/reviews";
 
+    public static final String REVIEW_ASSIGNMENT_NAMESPACE = "http://www.tim12.com/review_assignment";
+    public static final String REVIEW_ASSIGNMENTS_NAMESPACE = "http://www.tim12.com/review_assignments";
+
 }

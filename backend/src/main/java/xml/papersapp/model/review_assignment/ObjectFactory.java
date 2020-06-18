@@ -8,12 +8,12 @@
 
 package xml.papersapp.model.review_assignment;
 
+import xml.papersapp.model.user.TUser;
+
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.bind.annotation.XmlRegistry;
 import javax.xml.namespace.QName;
-import com.tim12.user.TUser;
-
 
 /**
  * This object contains factory methods for each 

@@ -10,12 +10,7 @@ package xml.papersapp.model.review_assignment;
 
 import xml.papersapp.model.user.TUser;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlType;
-
+import javax.xml.bind.annotation.*;
 
 
 /**
@@ -50,6 +45,7 @@ import javax.xml.bind.annotation.XmlType;
     "sciencePaperTitle",
     "reviewer"
 })
+@XmlRootElement(name = "ReviewAssignment")
 public class TReviewAssignment {
 
     @XmlElement(required = true)

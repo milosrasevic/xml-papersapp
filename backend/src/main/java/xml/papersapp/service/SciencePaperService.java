@@ -15,6 +15,7 @@ import xml.papersapp.model.science_paper.SciencePaper;
 import xml.papersapp.model.science_paper.TState;
 import xml.papersapp.model.user.TRoles;
 import xml.papersapp.model.user.TUser;
+import xml.papersapp.repository.ReviewAssignmentRepository;
 import xml.papersapp.repository.SciencePaperRepository;
 import xml.papersapp.security.repository.UserRepository;
 import xml.papersapp.util.XSLFOTransformer;
@@ -44,12 +45,14 @@ public class SciencePaperService {
     private final SciencePaperRepository sciencePaperRepository;
     private final UserRepository userRepository;
     private final XSLFOTransformer xslfoTransformer;
+    private final ReviewAssignmentRepository reviewAssignmentRepository;
 
     public SciencePaperService(SciencePaperRepository sciencePaperRepository, UserRepository userRepository,
-                               XSLFOTransformer xslfoTransformer) {
+                               XSLFOTransformer xslfoTransformer, ReviewAssignmentRepository reviewAssignmentRepository) {
         this.sciencePaperRepository = sciencePaperRepository;
         this.userRepository = userRepository;
         this.xslfoTransformer = xslfoTransformer;
+        this.reviewAssignmentRepository = reviewAssignmentRepository;
     }
 
     public SciencePaper create(String xml) throws JAXBException, XMLDBException, SciencePaperAlreadyExist, SAXException {
@@ -124,7 +127,7 @@ public class SciencePaperService {
     }
 
     public List<SciencePaper> getPapersToReview(String email) throws XMLDBException, JAXBException, SAXException {
-        return sciencePaperRepository.getPapersToReview(email);
+        return reviewAssignmentRepository.getPapersToReview(email);
     }
 
     public ByteArrayOutputStream generateHTML(String documentId) throws XMLDBException, JAXBException, SAXException, FileNotFoundException, SciencePaperDoesntExist {
