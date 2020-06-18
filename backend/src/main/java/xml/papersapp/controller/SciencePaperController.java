@@ -1,10 +1,12 @@
 package xml.papersapp.controller;
 
 import com.itextpdf.text.DocumentException;
+import org.exist.security.PermissionRequired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.xml.sax.SAXException;
@@ -20,6 +22,7 @@ import xml.papersapp.model.user.TUser;
 import xml.papersapp.security.repository.UserRepository;
 import xml.papersapp.service.SciencePaperService;
 
+import javax.annotation.security.RolesAllowed;
 import javax.naming.Context;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -53,14 +56,33 @@ public class SciencePaperController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity searchSciencePapers(HttpServletRequest request,
-                                                   @RequestParam("text") String text,
-                                                   @RequestParam("date-from") String dateFrom,
+    public ResponseEntity searchSciencePapersNonAuthenticated(@RequestParam("text") String text, @RequestParam("date-from") String dateFrom,
                                                    @RequestParam("date-to") String dateTo) {
+
+        List<SciencePaper> paperList = null;
+        try {
+            paperList = sciencePaperService.searchForSciencePapers(text, dateFrom, dateTo);
+        } catch (XMLDBException | SAXException | JAXBException | IOException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return new ResponseEntity("Date format invalid. Must be yyyy-MM-dd", HttpStatus.BAD_REQUEST);
+        }
+
+
+        return new ResponseEntity(paperList, HttpStatus.OK);
+    }
+
+    @GetMapping("/authenticated/search")
+    public ResponseEntity searchSciencePapersAuthenticated(HttpServletRequest request,
+                                              @RequestParam("text") String text,
+                                              @RequestParam("date-from") String dateFrom,
+                                              @RequestParam("date-to") String dateTo,
+                                              @RequestParam("state") String state) {
         Principal principal = request.getUserPrincipal();
 
         String email = "";
-        String state = "";
         if (principal != null) {
             email = principal.getName();
         } else {
@@ -70,7 +92,7 @@ public class SciencePaperController {
         System.out.println(email);
         List<SciencePaper> paperList = null;
         try {
-            paperList = sciencePaperService.searchForSciencePapers(email, text, dateFrom, dateTo);
+            paperList = sciencePaperService.searchForSciencePapersAuthenticated(email, text, dateFrom, dateTo, state);
         } catch (XMLDBException | SAXException | JAXBException | IOException e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.BAD_REQUEST);

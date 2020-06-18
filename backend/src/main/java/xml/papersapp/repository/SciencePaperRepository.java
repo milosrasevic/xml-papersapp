@@ -217,6 +217,7 @@ public class SciencePaperRepository {
             papers.add(getSciencePaperFromResource(i.nextResource().getContent().toString()));
         }
 
+
         return papers;
 
 

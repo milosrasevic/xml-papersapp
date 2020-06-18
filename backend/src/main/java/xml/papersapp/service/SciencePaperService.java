@@ -81,18 +81,20 @@ public class SciencePaperService {
 
     }
 
-    public List<SciencePaper> searchForSciencePapers(String email, String text, String dateFrom, String dateTo) throws XMLDBException, JAXBException, SAXException, IOException, ParseException {
+    public List<SciencePaper> searchForSciencePapers(String text, String dateFrom, String dateTo) throws XMLDBException, JAXBException, SAXException, IOException, ParseException {
 
-        String state = "";
-        if (email.equals("")) {
-            // nonauthenticated user search only accepted sps
-            state = TState.ACCEPTED.toString().toLowerCase();
-        } else {
-            Optional<TUser> user = userRepository.findByUsername(email);
-            if (user.isPresent()) {
-                if (user.get().getRoles().getRole().contains("ROLE_EDITOR")) {
-                    email = "";
-                }
+        String state = TState.ACCEPTED.toString().toLowerCase();
+        String email = "";
+        return sciencePaperRepository.searchSciencePapers(email, text, dateFrom, dateTo, state);
+
+    }
+
+    public List<SciencePaper> searchForSciencePapersAuthenticated(String email, String text, String dateFrom, String dateTo, String state) throws XMLDBException, JAXBException, SAXException, IOException, ParseException {
+
+        Optional<TUser> user = userRepository.findByUsername(email);
+        if (user.isPresent()) {
+            if (user.get().getRoles().getRole().contains("ROLE_EDITOR")) {
+                email = "";
             }
         }
 
