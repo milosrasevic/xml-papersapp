@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
 import Logout from '../views/Logout.vue'
 import SignIn from '../views/SignIn.vue'
+import CreateReview from '../views/CreateReview.vue'
 
 Vue.use(VueRouter)
 
@@ -27,6 +28,12 @@ Vue.use(VueRouter)
     path: '/signup',
     name: 'SignIn',
     component: SignIn
+  },
+  {
+    path: '/createReview/:scipaperTitle',
+    // path: '/createReview',
+    name: 'CreateReview',
+    component: CreateReview
   }
   
 ]

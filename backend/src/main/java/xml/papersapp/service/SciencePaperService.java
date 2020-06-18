@@ -155,4 +155,10 @@ public class SciencePaperService {
         return (ByteArrayOutputStream) outputStream;
 
     }
+
+    public SciencePaper getSciencePaper(String title) throws XMLDBException, JAXBException, SAXException, SciencePaperDoesntExist {
+        SciencePaper found = sciencePaperRepository.findOneByTitle(title).orElseThrow(SciencePaperDoesntExist::new);
+
+        return found;
+    }
 }

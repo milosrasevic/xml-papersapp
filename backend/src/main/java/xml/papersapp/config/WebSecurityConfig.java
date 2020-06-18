@@ -56,6 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/science-paper/search").permitAll()
                 .antMatchers("/api/review").permitAll()
                 .antMatchers("/api/users/**").permitAll()
+                .antMatchers("/api/science-paper/**").permitAll() // Todo remove
                 .anyRequest().authenticated()
                 .and().addFilterBefore(new TokenAuthenticationFilter(tokenUtils, userService), BasicAuthenticationFilter.class);
         http.csrf().disable();

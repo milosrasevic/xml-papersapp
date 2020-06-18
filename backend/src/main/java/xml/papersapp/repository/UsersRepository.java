@@ -57,6 +57,8 @@ public class UsersRepository {
 
     public TUser findUserByEmail(String email) throws XMLDBException, JAXBException, SAXException {
 
+        xPathQueryService.setNamespace("users", USERS_NAMESPACE);
+        xPathQueryService.setNamespace("user", USER_NAMESPACE);
 
         String query = "//users:Users/user:User[user:email='" + email + "']";
 

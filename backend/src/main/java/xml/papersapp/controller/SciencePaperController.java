@@ -170,4 +170,14 @@ public class SciencePaperController {
             return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/get/{title}")
+    public ResponseEntity getSciencePaper(@PathVariable String title) {
+        try {
+            return new ResponseEntity<>(sciencePaperService.getSciencePaper(title), HttpStatus.OK);
+        } catch (XMLDBException | SAXException | JAXBException | SciencePaperDoesntExist e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }
