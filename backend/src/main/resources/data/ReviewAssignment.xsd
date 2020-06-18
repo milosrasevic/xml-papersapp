@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://www.tim12.com/review_assignment"
+    xmlns:ra="http://www.tim12.com/review_assignment" xmlns:user="http://www.tim12.com/user">
+
+    <xs:import namespace="http://www.tim12.com/user" schemaLocation="User.xsd"/>
+    <xs:complexType name="TReviewAssignment">
+        <xs:sequence>
+            <xs:element ref="ra:sciencePaperTitle"/>
+            <xs:element ref="ra:Reviewer"/>
+        </xs:sequence>
+        <xs:attribute name="blinded">
+            <xs:simpleType>
+                <xs:restriction base="ra:TBlinded"/>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="accepted" type="xs:boolean"/>
+    </xs:complexType>
+    <xs:element name="Reviewer" type="user:TUser"/>
+    <xs:element name="sciencePaperTitle" type="xs:string"/>
+    <xs:simpleType name="TBlinded">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="DOUBLE_BLINDED"/>
+            <xs:enumeration value="AUTHOR_BLINDED"/>
+            <xs:enumeration value="REVIEWER_BLINDED"/>
+            <xs:enumeration value="STANDARD"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="ReviewAssignment" type="ra:TReviewAssignment"/>
+</xs:schema>

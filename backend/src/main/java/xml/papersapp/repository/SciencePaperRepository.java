@@ -282,5 +282,4 @@ public class SciencePaperRepository {
         return sciencePaper;
 
     }
-
 }
