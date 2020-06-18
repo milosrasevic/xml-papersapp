@@ -8,4 +8,5 @@ public class Files {
 
     public static final String SCHEME_USER_PATH = "src/main/resources/data/User.xsd";
 
+    public static final String SCHEME_REVIEW_ASSIGNMENT_PATH = "src/main/resources/data/ReviewAssignment.xsd";
 }

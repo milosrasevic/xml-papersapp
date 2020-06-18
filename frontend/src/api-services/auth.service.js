@@ -24,7 +24,7 @@ export default {
         }
         _.assign(
           Axios.defaults.headers,
-          {'Authorization' : 'JWT' + localStorage.getItem('accessToken')}
+          {'Authorization' : 'Bearer ' + localStorage.getItem('accessToken')}
         );
       },
 
@@ -68,3 +68,19 @@ export default {
     },
   
 }
+
+Axios.interceptors.request.use(
+  (config) => {
+    let token = localStorage.getItem('accessToken');
+
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${ token }`;
+    }
+
+    return config;
+  }, 
+
+  (error) => {
+    return Promise.reject(error);
+  }
+);

@@ -52,10 +52,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/auth/**").permitAll()
+                .antMatchers("/api/auth/**").permitAll()
                 .antMatchers("/api/science-paper/search").permitAll()
                 .antMatchers("/api/review").permitAll()
                 .antMatchers("/api/users/**").permitAll()
+                .antMatchers("/api/science-paper/decide").permitAll()
+//                .anyRequest().authenticated()
                 .antMatchers("/api/science-paper/**").permitAll() // Todo remove
                 .anyRequest().authenticated()
                 .and().addFilterBefore(new TokenAuthenticationFilter(tokenUtils, userService), BasicAuthenticationFilter.class);

@@ -12,4 +12,7 @@ public class Packages {
     public static final String REVIEWS_PACKAGE = "xml.papersapp.model.reviews";
     public static final String REVIEW_PACKAGE = "xml.papersapp.model.review";
 
+    public static final String REVIEW_ASSIGNMENT_PACKAGE = "xml.papersapp.model.review_assignment";
+    public static final String REVIEW_ASSIGNMENTS_PACKAGE = "xml.papersapp.model.review_assignments";
+
 }

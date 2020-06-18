@@ -131,6 +131,8 @@ public class SciencePaper {
     @XmlAttribute(name = "state")
     protected TState state;
 
+
+
     /**
      * Gets the value of the title property.
      * 

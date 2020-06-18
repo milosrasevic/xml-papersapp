@@ -20,9 +20,16 @@ public class DatabaseConnection {
     private static Collection col;
 
     private static final String COLLECTION_ID = "db/apps/papersapp";
-    private static final String USERS_PATH = "src\\main\\resources\\data\\users.xml";
-    private static final String REVIEWS_PATH = "src\\main\\resources\\data\\reviews.xml";
-    private static final String SCIENCE_PAPERS_PATH = "src\\main\\resources\\data\\science_papers.xml";
+
+//    private static final String USERS_PATH = "src\\main\\resources\\data\\users.xml";
+//    private static final String REVIEWS_PATH = "src\\main\\resources\\data\\reviews.xml";
+//    private static final String SCIENCE_PAPERS_PATH = "src\\main\\resources\\data\\science_papers.xml";
+//    private static final String REVIEW_ASSIGNMENTS_PATH = "src\\main\\resources\\data\\review_assignments.xml";
+
+    private static final String USERS_PATH = "src/main/resources/data/users.xml";
+    private static final String REVIEWS_PATH = "src/main/resources/data/reviews.xml";
+    private static final String SCIENCE_PAPERS_PATH = "src/main/resources/data/science_papers.xml";
+    private static final String REVIEW_ASSIGNMENTS_PATH = "src/main/resources/data/review_assignments.xml";
 
     public static void createDBConnection() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, XMLDBException {
 
@@ -42,7 +49,7 @@ public class DatabaseConnection {
             createUsers();
             createSciencePapers();
             createReviews();
-
+            createReviewAssignments();
 
         }catch (Exception e){
             e.printStackTrace();
@@ -102,6 +109,11 @@ public class DatabaseConnection {
     private static void createSciencePapers() {
         String documentId = "science_papers.xml";
         create(documentId, SCIENCE_PAPERS_PATH);
+    }
+
+    private static void createReviewAssignments() {
+        String documentId = "review_assignments.xml";
+        create(documentId, REVIEW_ASSIGNMENTS_PATH);
     }
 
     private static Collection getOrCreateCollection(String collectionUri) throws XMLDBException {

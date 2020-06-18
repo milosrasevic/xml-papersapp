@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1>Science papers</h1>
+    <h1>My science papers</h1>
     <v-text-field
       style="width: 500px"
       v-model="searchParam.text"
@@ -26,7 +26,6 @@
       </v-flex>
     </v-layout>
     <v-select
-      v-if="isEditor"
       style="width: 200px"
       :items="stateItems"
       v-model="searchParam.state"
@@ -57,12 +56,13 @@
     </v-data-table>
   </v-container>
 </template>
+
 <script>
+
 import SciencePapersService from "../api-services/science-papers.service";
 
 export default {
-  name: "Home",
-  components: {},
+  name: "AuthorsProfile",
   data() {
     return {
       headersNonAuthUser: [
@@ -130,7 +130,7 @@ export default {
       this.sciencePapers = [];
       SciencePapersService.getSciencePapers(
         this.searchParam,
-        this.isEditor
+        true
       ).then(res => {
         res.data.forEach(el => {
           let authors = "";
@@ -186,5 +186,9 @@ export default {
       return id;
     }
   }
-};
+}
 </script>
+
+<style>
+
+</style>

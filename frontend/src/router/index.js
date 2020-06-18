@@ -5,6 +5,7 @@ import Login from '../views/Login.vue'
 import Logout from '../views/Logout.vue'
 import SignIn from '../views/SignIn.vue'
 import CreateReview from '../views/CreateReview.vue'
+import AuthorsProfile from "../views/AuthorsProfile";
 
 Vue.use(VueRouter)
 
@@ -34,6 +35,11 @@ Vue.use(VueRouter)
     // path: '/createReview',
     name: 'CreateReview',
     component: CreateReview
+  },
+  {
+    path: '/profile',
+    name: 'AuthorsProfile',
+    component: AuthorsProfile
   }
   
 ]
