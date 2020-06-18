@@ -3,9 +3,19 @@
     <v-card-title>
       <v-icon large left>mdi-message-draw</v-icon>
       <span class="title font-weight-light">
-        Create review on science paper
         <h1>{{myTitle}}</h1>
       </span>
+      <template>
+        <a :href="getDownloadLink('PDF')" download style="text-decoration: none" target="_blank">
+          <v-btn color="black" @click="download('pdf')" style="margin-left: 5px">PDF</v-btn>
+        </a>
+        <a :href="getDownloadLink('HTML')" download style="text-decoration: none" target="_blank">
+          <v-btn color="black" @click="download('html')" style="margin-left: 5px">HTML</v-btn>
+        </a>
+        <a :href="getDownloadLink('XML')" download style="text-decoration: none" target="_blank">
+          <v-btn color="black" @click="download('xml')" style="margin-left: 5px">XML</v-btn>
+        </a>
+      </template>
     </v-card-title>
     <v-card-text class="text-xs-center justify-center" style="max-width: 100%">
       <div v-if="showAuthor">
@@ -126,8 +136,10 @@
   </v-card>
 </template>
 <script>
+
 import SciencePapersService from "../api-services/science-papers.service";
 import ReviewService from "../api-services/review.service";
+import store from "@/store";
 
 export default {
   name: "CreateReviewForm",
@@ -141,6 +153,7 @@ export default {
     comments: [],
     authors: [],
 
+      
     paragraphRef: "",
     commentText: "",
     status: "ACCEPTED",
@@ -199,6 +212,19 @@ export default {
     }
   },
   methods: {
+    getDownloadLink(docType) {
+      if(this.sciencePaper.id === undefined || this.sciencePaper.id===null) {
+        return "";
+      }else {
+        let id = this.sciencePaper.id.split("http://www.tim12.com/science_paper/")[1];
+        id = "http://localhost:8081/api/science-paper/get" + docType + "/" + id;
+        console.log(id);
+        return id;
+      }
+    },
+    download(fileType, item) {
+      console.log(item);
+    },
     submitComment() {
       this.dialog = false;
 
@@ -215,7 +241,12 @@ export default {
       this.commentText = "";
     },
 
+
+
     createReview() {
+
+      console.log(store.state.user);
+
       let tAuthors = [];
       this.authors.forEach(author => {
           tAuthors.push({
@@ -230,9 +261,9 @@ export default {
           author: tAuthors
         },
         reviewer: {
-          firstName: "firstName2",
-          lastName: "lastName2",
-          email: "author3@gmail.com"
+          firstName: store.state.user.firstName,
+          lastName: store.state.user.lastName,
+          email: store.state.user.email
         },
         comments: {
           comment: this.comments
@@ -247,6 +278,7 @@ export default {
 
       ReviewService.create(review).then(response => {
           console.log(response.data);
+          this.$router.push("/");
       })
     }
   }
