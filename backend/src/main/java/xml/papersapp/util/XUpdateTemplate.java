@@ -52,8 +52,8 @@ public class XUpdateTemplate {
      * the context node for update. This select expression must evaluate to a
      * node-set.
      */
-    public static final String UPDATE = "<xu:modifications version=\"1.0\" xmlns:xu=\"" + XUpdateProcessor.XUPDATE_NS
-            + "\" xmlns=\"" + TARGET_NAMESPACE + "\">" + "<xu:update select=\"%1$s\">%2$s</xu:update>"
+    public static final String UPDATE = "<xu:modifications version=\"1.0\" xmlns:xu=\"" +XUpdateProcessor.XUPDATE_NS
+            + "\" xmlns=\"%1$s\">" + "<xu:update select=\"%2$s\">%3$s</xu:update>"
             + "</xu:modifications>";
 
     /*

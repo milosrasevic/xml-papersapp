@@ -37,8 +37,7 @@ import static xml.papersapp.constants.Namespaces.SCIENCE_PAPERS_NAMESPACE;
 import static xml.papersapp.constants.Namespaces.SCIENCE_PAPER_NAMESPACE;
 import static xml.papersapp.constants.Packages.SCIENCE_PAPER_PACKAGE;
 import static xml.papersapp.util.Util.getDateFromString;
-import static xml.papersapp.util.XUpdateTemplate.APPEND;
-import static xml.papersapp.util.XUpdateTemplate.REMOVE;
+import static xml.papersapp.util.XUpdateTemplate.*;
 
 
 @Repository
@@ -218,6 +217,7 @@ public class SciencePaperRepository {
             papers.add(getSciencePaperFromResource(i.nextResource().getContent().toString()));
         }
 
+
         return papers;
 
 
@@ -251,5 +251,35 @@ public class SciencePaperRepository {
         System.out.println("[INFO] " + mods + " modifications processed.");
 
         return getSciencePaperFromResource(resourceString);
+    }
+
+    public List<SciencePaper> getPapersToReview(String email) throws XMLDBException, JAXBException, SAXException {
+
+        xPathQueryService.setNamespace("spp", SCIENCE_PAPERS_NAMESPACE);
+        xPathQueryService.setNamespace("sp", SCIENCE_PAPER_NAMESPACE);
+
+        String query = "//spp:SciencePapers/sp:SciencePaper[./sp:reviewers//sp:reviewer[sp:email='" + email + "']]";
+
+        ResourceSet result = xPathQueryService.query(query);
+
+        ResourceIterator i = result.getIterator();
+
+        List<SciencePaper> papers = new ArrayList<>();
+
+        while(i.hasMoreResources()) {
+            papers.add(getSciencePaperFromResource(i.nextResource().getContent().toString()));
+        }
+
+        return papers;
+    }
+
+    public SciencePaper update(SciencePaper sciencePaper) throws JAXBException, XMLDBException{
+        OutputStream xml = getXMLFromObject(sciencePaper, "xml.papersapp.model.science_paper");
+
+        long mods = xUpdateQueryService.updateResource(SCIENCE_PAPER_ID_DOCUMENT, String.format(UPDATE, SCIENCE_PAPERS_NAMESPACE, CONTEXT_PATH_APPEND, xml.toString()));
+        System.out.println("[INFO] " + mods + " modifications processed.");
+
+        return sciencePaper;
+
     }
 }

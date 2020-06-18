@@ -11,6 +11,7 @@ import org.xmldb.api.modules.XPathQueryService;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperAlreadyExist;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
+import xml.papersapp.exceptions.sciencePapers.UnableToChangePaperState;
 import xml.papersapp.model.science_paper.SciencePaper;
 import xml.papersapp.model.science_paper.TState;
 import xml.papersapp.model.user.TRoles;
@@ -83,18 +84,20 @@ public class SciencePaperService {
 
     }
 
-    public List<SciencePaper> searchForSciencePapers(String email, String text, String dateFrom, String dateTo) throws XMLDBException, JAXBException, SAXException, IOException, ParseException {
+    public List<SciencePaper> searchForSciencePapers(String text, String dateFrom, String dateTo) throws XMLDBException, JAXBException, SAXException, IOException, ParseException {
 
-        String state = "";
-        if (email.equals("")) {
-            // nonauthenticated user search only accepted sps
-            state = TState.ACCEPTED.toString().toLowerCase();
-        } else {
-            Optional<TUser> user = userRepository.findByUsername(email);
-            if (user.isPresent()) {
-                if (user.get().getRoles().getRole().contains("ROLE_EDITOR")) {
-                    email = "";
-                }
+        String state = TState.ACCEPTED.toString().toLowerCase();
+        String email = "";
+        return sciencePaperRepository.searchSciencePapers(email, text, dateFrom, dateTo, state);
+
+    }
+
+    public List<SciencePaper> searchForSciencePapersAuthenticated(String email, String text, String dateFrom, String dateTo, String state) throws XMLDBException, JAXBException, SAXException, IOException, ParseException {
+
+        Optional<TUser> user = userRepository.findByUsername(email);
+        if (user.isPresent()) {
+            if (user.get().getRoles().getRole().contains("ROLE_EDITOR")) {
+                email = "";
             }
         }
 
@@ -157,5 +160,25 @@ public class SciencePaperService {
 
         return (ByteArrayOutputStream) outputStream;
 
+    }
+
+    public SciencePaper decideOnSciencePaper(String paperTitle, boolean isAccepted) throws XMLDBException, JAXBException, SAXException, SciencePaperNotFound, UnableToChangePaperState {
+        Optional<SciencePaper> sciencePaper = sciencePaperRepository.findOneByTitle(paperTitle);
+
+        if (!sciencePaper.isPresent()) {
+            throw new SciencePaperNotFound();
+        }
+
+        if(!sciencePaper.get().getState().equals(TState.WAITING_FOR_APPROVAL)) {
+            throw new UnableToChangePaperState();
+        }
+
+        if(isAccepted) {
+            sciencePaper.get().setState(TState.ACCEPTED);
+        } else {
+            sciencePaper.get().setState(TState.REJECTED);
+        }
+
+        return sciencePaperRepository.update(sciencePaper.get());
     }
 }

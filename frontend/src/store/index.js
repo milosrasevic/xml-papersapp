@@ -25,6 +25,9 @@ export default new Vuex.Store({
   },
   
   getters: {
+    isNonAuthUser: state => !state.userLoggedIn,
+    isAuthor: state => state.user ? state.user.role === "ROLE_AUTHOR" : false,
+    isEditor: state => state.user ? state.user.role === "ROLE_EDITOR" : false
   },
   
   mutations: {
@@ -33,6 +36,7 @@ export default new Vuex.Store({
     },
     logout(state) {
       state.userLoggedIn = false;
+      state.user = {}
     },
     setUserId(state, id){
       state.userId = id;
@@ -54,6 +58,6 @@ export default new Vuex.Store({
     },
     setUser(context, user){
       context.setUser(user);
-    }
+    },
   }
 });
