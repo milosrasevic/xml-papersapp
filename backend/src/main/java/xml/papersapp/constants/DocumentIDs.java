@@ -11,4 +11,6 @@ public class DocumentIDs {
     public static final String REVIEWS_ID_DOCUMENT = "reviews.xml";
 
     public static final String COVER_LETTERS_ID_DOCUMENT = "cover_letters.xml";
+
+    public static final String REVIEW_ASSIGNMENTS_ID_DOCUMENT = "review_assignments.xml";
 }

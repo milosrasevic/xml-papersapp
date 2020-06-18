@@ -153,4 +153,13 @@ public class TReviewAssignment {
         this.accepted = value;
     }
 
+    public TReviewAssignment() {
+    }
+
+    public TReviewAssignment(String sciencePaperTitle, TUser reviewer, TBlinded blinded) {
+        this.sciencePaperTitle = sciencePaperTitle;
+        this.reviewer = reviewer;
+        this.blinded = blinded;
+        this.accepted = false;
+    }
 }
