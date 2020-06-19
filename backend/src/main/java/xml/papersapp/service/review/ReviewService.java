@@ -40,4 +40,6 @@ public interface ReviewService {
     ByteArrayOutputStream generateXML(String id) throws ReviewDoesntExist, XMLDBException, JAXBException, SAXException;
 
     List<TReview> getReviewsForSciencePaperId(String paperId) throws XMLDBException, JAXBException, SAXException;
+
+    List<TReviewAssignment> getReviewAssignementsForSciencePaperId(String paperId) throws XMLDBException, JAXBException, SAXException;
 }

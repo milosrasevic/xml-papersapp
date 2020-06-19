@@ -3,7 +3,9 @@
  xmlns:user="http://www.tim12.com/user"
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  Id="http://www.tim12.com/review_assignment/123fsaf"
- xsi:schemaLocation="http://www.tim12.com/review_assignment file:/D:/Faks/XML/Projekat/xml-papersapp/backend/src/main/resources/data/ReviewAssignment.xsd">
+ xsi:schemaLocation="http://www.tim12.com/review_assignment file:/D:/Faks/XML/Projekat/xml-papersapp/backend/src/main/resources/data/ReviewAssignment.xsd"
+
+    blinded="STANDARD" accepted="false">
     <sciencePaperTitle>title0</sciencePaperTitle>
     <Reviewer>
         <user:firstName>firstName3</user:firstName>
