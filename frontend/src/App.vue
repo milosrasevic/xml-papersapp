@@ -10,6 +10,9 @@
           <v-icon>mdi-face</v-icon>
         </v-btn>
         <v-divider class="mx-4" vertical ></v-divider>
+        <v-btn @click="goTo('/myAssigments')" v-if="isAuthor">
+          <v-icon>mdi-account-clock</v-icon>
+        </v-btn>
           <v-spacer></v-spacer>
           <v-divider class="mx-4" vertical ></v-divider>
           <v-btn v-if="isLoggedIn == false" @click="goTo('/signup')">Sign up</v-btn>

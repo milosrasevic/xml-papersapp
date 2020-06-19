@@ -1,7 +1,5 @@
 package xml.papersapp.repository;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.Resource;
@@ -14,8 +12,10 @@ import xml.papersapp.exceptions.review.ReviewAssignmenAlreadyExists;
 import xml.papersapp.exceptions.review.ReviewAssignmentCantBeCreated;
 import xml.papersapp.exceptions.review.ReviewAssignmentNotFound;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
+import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
 import xml.papersapp.exceptions.users.UserNotFound;
 import xml.papersapp.model.notification.TNotification;
+import xml.papersapp.model.review.TReview;
 import xml.papersapp.model.review_assignment.TBlinded;
 import xml.papersapp.model.review_assignment.TReviewAssignment;
 import xml.papersapp.model.science_paper.SciencePaper;
@@ -38,7 +38,8 @@ import static xml.papersapp.constants.Files.SCHEME_REVIEW_ASSIGNMENT_PATH;
 import static xml.papersapp.constants.Namespaces.*;
 import static xml.papersapp.constants.Packages.REVIEW_ASSIGNMENT_PACKAGE;
 import static xml.papersapp.util.Util.createId;
-import static xml.papersapp.util.XUpdateTemplate.*;
+import static xml.papersapp.util.XUpdateTemplate.APPEND;
+import static xml.papersapp.util.XUpdateTemplate.REMOVE;
 
 @Repository
 public class ReviewAssignmentRepository {
@@ -71,6 +72,7 @@ public class ReviewAssignmentRepository {
         xPathQueryService.setNamespace("ra", REVIEW_ASSIGNMENT_NAMESPACE);
         xPathQueryService.setNamespace("user", USER_NAMESPACE);
 
+//        String query = "//ras:ReviewAssignments/ra:ReviewAssignment[ra:Reviewer[user:email='" + email + "'] and " + "@accepted=true]";
         String query = "//ras:ReviewAssignments/ra:ReviewAssignment[ra:Reviewer[user:email='" + email + "']]";
 
         ResourceSet result = xPathQueryService.query(query);
@@ -79,8 +81,13 @@ public class ReviewAssignmentRepository {
 
         List<String> titles = new ArrayList<>();
 
-        while(i.hasMoreResources()) {
-            titles.add(getReviewAssignmentFromResource(i.nextResource().getContent().toString()).getSciencePaperTitle());
+        while (i.hasMoreResources()) {
+            TReviewAssignment reviewAssignment = getReviewAssignmentFromResource(i.nextResource().getContent().toString());
+            if (reviewAssignment.isAccepted() != null) {
+                if (reviewAssignment.isAccepted()) {
+                    titles.add(reviewAssignment.getSciencePaperTitle());
+                }
+            }
         }
 
         return titles;
@@ -132,7 +139,7 @@ public class ReviewAssignmentRepository {
 
         Optional<TReviewAssignment> foundAssignment = checkIfPaperAssignedToReviewer(email, title);
 
-        if(foundAssignment.isPresent()) {
+        if (foundAssignment.isPresent()) {
             throw new ReviewAssignmenAlreadyExists();
         }
 
@@ -239,19 +246,88 @@ public class ReviewAssignmentRepository {
         System.out.println("[INFO] " + mods + " modifications processed.");
 
         long mods1 = xUpdateQueryService.updateResource(REVIEW_ASSIGNMENTS_ID_DOCUMENT, String.format(APPEND,
-                REVIEW_ASSIGNMENTS_NAMESPACE, CONTEXT_PATH_APPEND , xmlString));
+                REVIEW_ASSIGNMENTS_NAMESPACE, CONTEXT_PATH_APPEND, xmlString));
         System.out.println("[INFO] " + mods1 + " modifications processed.");
 
 
         return assignment;
     }
 
-    public List<TReviewAssignment> getAllAssignments() throws XMLDBException, JAXBException, SAXException {
+    public List<TReviewAssignment> getMyAssignments(String email) throws XMLDBException, JAXBException, SAXException {
 
         xPathQueryService.setNamespace("ras", REVIEW_ASSIGNMENTS_NAMESPACE);
         xPathQueryService.setNamespace("ra", REVIEW_ASSIGNMENT_NAMESPACE);
 
         String query = "//ras:ReviewAssignments/ra:ReviewAssignment";
+        ResourceSet result = xPathQueryService.query(query);
+
+        ResourceIterator i = result.getIterator();
+
+        List<TReviewAssignment> reviewAssignments = new ArrayList<>();
+
+        while (i.hasMoreResources()) {
+            TReviewAssignment reviewAssignment = getReviewAssignmentFromResource(i.nextResource().getContent().toString());
+            if (reviewAssignment.getReviewer().getEmail().equals(email) && reviewAssignment.isAccepted() == null) {
+                reviewAssignments.add(reviewAssignment);
+            }
+        }
+
+        return reviewAssignments;
+    }
+
+    public TReviewAssignment delete(String title, String email) throws XMLDBException, SciencePaperNotFound, JAXBException, SAXException {
+
+        xPathQueryService.setNamespace("ras", REVIEW_ASSIGNMENTS_NAMESPACE);
+        xPathQueryService.setNamespace("ra", REVIEW_ASSIGNMENT_NAMESPACE);
+
+        String query = "//ras:ReviewAssignments/ra:ReviewAssignment[ra:sciencePaperTitle='" + title + "' and ra:Reviewer[user:email='"
+                + email + "']]";
+        ResourceSet result = xPathQueryService.query(query);
+
+        ResourceIterator i = result.getIterator();
+        Resource res = i.nextResource();
+
+        if (res == null) {
+            throw new SciencePaperNotFound();
+        }
+
+        String resourceString = res.getContent().toString();
+
+        long mods = xUpdateQueryService.updateResource(REVIEW_ASSIGNMENTS_ID_DOCUMENT, String.format(REMOVE,
+                REVIEW_ASSIGNMENT_NAMESPACE, query));
+        System.out.println("[INFO] " + mods + " modifications processed.");
+
+        return getReviewAssignmentFromResource(resourceString);
+    }
+
+    public List<TReviewAssignment> getBySciencePaperTitle(String title) throws XMLDBException, JAXBException, SAXException {
+
+        xPathQueryService.setNamespace("ras", REVIEW_ASSIGNMENTS_NAMESPACE);
+        xPathQueryService.setNamespace("ra", REVIEW_ASSIGNMENT_NAMESPACE);
+
+        String query = "//ras:ReviewAssignments/ra:ReviewAssignment";
+        ResourceSet result = xPathQueryService.query(query);
+
+        ResourceIterator i = result.getIterator();
+
+        List<TReviewAssignment> reviewAssignments = new ArrayList<>();
+
+        while (i.hasMoreResources()) {
+            TReviewAssignment reviewAssignment = getReviewAssignmentFromResource(i.nextResource().getContent().toString());
+            if (reviewAssignment.getSciencePaperTitle().equals(title)) {
+                reviewAssignments.add(reviewAssignment);
+            }
+        }
+
+        return reviewAssignments;
+    }
+
+    public List<TReviewAssignment> getReviewAssignementsForSciencePaperId(String paperTitle) throws XMLDBException, JAXBException, SAXException {
+
+        xPathQueryService.setNamespace("ras", REVIEW_ASSIGNMENTS_NAMESPACE);
+        xPathQueryService.setNamespace("ra", REVIEW_ASSIGNMENT_NAMESPACE);
+
+        String query = "//ras:ReviewAssignments/ra:ReviewAssignment[ra:sciencePaperTitle='" + paperTitle + "']";
 
         ResourceSet result = xPathQueryService.query(query);
 
@@ -264,5 +340,6 @@ public class ReviewAssignmentRepository {
         }
 
         return reviewAssignments;
+
     }
 }

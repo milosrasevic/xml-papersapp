@@ -8,6 +8,11 @@ import org.xmldb.api.base.Resource;
 import org.xmldb.api.base.ResourceSet;
 import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XPathQueryService;
+import xml.papersapp.exceptions.sciencePapers.SciencePaperAlreadyExist;
+import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
+import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
+import xml.papersapp.exceptions.sciencePapers.UnableToChangePaperState;
+import xml.papersapp.model.review_assignment.TReviewAssignment;
 import xml.papersapp.exceptions.sciencePapers.*;
 import xml.papersapp.model.science_paper.SciencePaper;
 import xml.papersapp.model.science_paper.TState;
@@ -184,6 +189,11 @@ public class SciencePaperService {
 
         return sciencePaperRepository.update(sciencePaper.get());
     }
+
+    public List<TReviewAssignment> getMyAssigments(String email) throws XMLDBException, JAXBException, SAXException {
+        return reviewAssignmentRepository.getMyAssignments(email);
+    }
+
 
     public SciencePaper sendToRevision(String title) throws XMLDBException, JAXBException, SAXException, SciencePaperCantBeSentToRevision, SciencePaperDoesntExist {
 
