@@ -16,6 +16,7 @@ import xml.papersapp.model.review_assignment.TReviewAssignment;
 import xml.papersapp.service.review.ReviewService;
 
 import javax.xml.bind.JAXBException;
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,7 +44,7 @@ public class ReviewController {
             return new ResponseEntity<TReviewAssignment>(reviewAssignment, HttpStatus.OK);
         } catch (SciencePaperDoesntExist | UserNotFound | ReviewAssignmenAlreadyExists  e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (SAXException | XMLDBException | JAXBException e) {
+        } catch (SAXException | XMLDBException | JAXBException | IOException e) {
             e.printStackTrace();
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

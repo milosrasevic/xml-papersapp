@@ -17,6 +17,8 @@ import xml.papersapp.repository.UsersRepository;
 
 import javax.xml.bind.JAXBException;
 
+import java.io.IOException;
+
 import static xml.papersapp.constants.Namespaces.REVIEW_NAMESPACE;
 import static xml.papersapp.util.Util.createId;
 
@@ -89,7 +91,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public TReviewAssignment createReviewAssignment(String title, String email, TBlinded blinded) throws XMLDBException,
-            SAXException, SciencePaperDoesntExist, JAXBException, UserNotFound, ReviewAssignmenAlreadyExists {
+            SAXException, SciencePaperDoesntExist, JAXBException, UserNotFound, ReviewAssignmenAlreadyExists, IOException {
 
         return reviewAssignmentRepository.createReviewAssignment(title, email, blinded);
 
