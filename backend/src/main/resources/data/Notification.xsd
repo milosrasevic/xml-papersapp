@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://www.tim12.com/notification"
+    xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" vc:minVersion="1.0" vc:maxVersion="1.1"
+    xmlns:ntf="http://www.tim12.com/notification">
+    <xs:element name="Notification" type="ntf:TNotification"/>
+    <xs:complexType name="TNotification">
+        <xs:sequence>
+            <xs:element name="sciencePaperTitle">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern value=".+(\s.+){0,15}"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="content" type="xs:string"/>
+            <xs:element name="reviewerEmail">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:pattern
+                            value="([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})"
+                        />
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

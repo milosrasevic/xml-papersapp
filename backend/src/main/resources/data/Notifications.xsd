@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+    targetNamespace="http://www.tim12.com/notifications"
+    xmlns:ntf="http://www.tim12.com/notification" xmlns:ntfs="http://www.tim12.com/notifications">
+    <xs:import namespace="http://www.tim12.com/notification" schemaLocation="Notification.xsd"/>
+    <xs:element name="Notifications">
+        <xs:complexType>
+            <xs:sequence maxOccurs="unbounded" minOccurs="0">
+                <xs:element name="Notification" type="ntf:TNotification"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

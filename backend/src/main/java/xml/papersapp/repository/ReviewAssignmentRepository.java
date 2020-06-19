@@ -14,6 +14,7 @@ import xml.papersapp.exceptions.review.ReviewAssignmenAlreadyExists;
 import xml.papersapp.exceptions.review.ReviewAssignmentNotFound;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
 import xml.papersapp.exceptions.users.UserNotFound;
+import xml.papersapp.model.notification.TNotification;
 import xml.papersapp.model.review_assignment.TBlinded;
 import xml.papersapp.model.review_assignment.TReviewAssignment;
 import xml.papersapp.model.science_paper.SciencePaper;
@@ -46,17 +47,20 @@ public class ReviewAssignmentRepository {
     private final XUpdateQueryService xUpdateQueryService;
 
     private final AssigmentEmailService assigmentEmailService;
+    private final NotificationRepository notificationRepository;
 
 
     private final String CONTEXT_PATH_APPEND = "//ReviewAssignments";
 
     public ReviewAssignmentRepository(XPathQueryService xPathQueryService, SciencePaperRepository sciencePaperRepository
-            , UserRepository userRepository, XUpdateQueryService xUpdateQueryService, AssigmentEmailService assigmentEmailService) {
+            , UserRepository userRepository, XUpdateQueryService xUpdateQueryService,
+                                      AssigmentEmailService assigmentEmailService, NotificationRepository notificationRepository) {
         this.xPathQueryService = xPathQueryService;
         this.sciencePaperRepository = sciencePaperRepository;
         this.userRepository = userRepository;
         this.xUpdateQueryService = xUpdateQueryService;
         this.assigmentEmailService = assigmentEmailService;
+        this.notificationRepository = notificationRepository;
     }
 
     public List<String> findTitlesOfPapersToReview(String email) throws XMLDBException, JAXBException, SAXException {
@@ -144,6 +148,12 @@ public class ReviewAssignmentRepository {
         System.out.println("[INFO] " + mods + " modifications processed.");
 
         assigmentEmailService.sendEmailForPurchasedTickets(user.get().getEmail(), title);
+        TNotification notification = new TNotification();
+        notification.setReviewerEmail(user.get().getEmail());
+        notification.setSciencePaperTitle(title);
+        notification.setContent("Review assigment");
+        notificationRepository.save(notification);
+
         return reviewAssignment;
     }
 

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ntfs:Notifications xmlns:ntfs="http://www.tim12.com/notifications"
+    xmlns:ntf="http://www.tim12.com/notification"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.tim12.com/notifications Notifications.xsd">
+    
+</ntfs:Notifications>
