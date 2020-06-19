@@ -2,10 +2,8 @@ package xml.papersapp.service.review;
 
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.XMLDBException;
-import xml.papersapp.exceptions.review.ReviewAssignmenAlreadyExists;
-import xml.papersapp.exceptions.review.ReviewAssignmentAlreadyAccepted;
-import xml.papersapp.exceptions.review.ReviewAssignmentAlreadyDenied;
-import xml.papersapp.exceptions.review.ReviewAssignmentNotFound;
+import xml.papersapp.dto.reviewAssignment.ReviewAssignmentsDTO;
+import xml.papersapp.exceptions.review.*;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
 import xml.papersapp.exceptions.users.UserNotFound;
 import xml.papersapp.model.review.TReview;
@@ -25,8 +23,8 @@ public interface ReviewService {
      */
     TReview createFromObject(TReview resource) throws XMLDBException, JAXBException, SAXException;
 
-    TReviewAssignment createReviewAssignment(String title, String email, TBlinded blinded) throws XMLDBException,
-            SAXException, SciencePaperDoesntExist, JAXBException, UserNotFound, ReviewAssignmenAlreadyExists, IOException;
+    List<TReviewAssignment> createReviewAssignment(ReviewAssignmentsDTO reviewAssignmentsDTO) throws XMLDBException,
+            SAXException, SciencePaperDoesntExist, JAXBException, UserNotFound, ReviewAssignmenAlreadyExists, IOException, ReviewAssignmentCantBeCreated;
 
     TReviewAssignment acceptReviewAssignment(String assignmentId, String email, boolean accept) throws XMLDBException,
             JAXBException, SAXException, ReviewAssignmentNotFound, ReviewAssignmentAlreadyAccepted, ReviewAssignmentAlreadyDenied;

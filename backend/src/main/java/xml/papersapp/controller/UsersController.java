@@ -29,4 +29,12 @@ public class UsersController {
         }
     }
 
+    @GetMapping("/getAuthors")
+    public ResponseEntity<?> getAuthors() {
+        try {
+            return new ResponseEntity<>(usersService.getAuthors(), HttpStatus.OK);
+        } catch (XMLDBException | JAXBException | SAXException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

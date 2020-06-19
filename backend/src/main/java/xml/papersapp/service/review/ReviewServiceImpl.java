@@ -4,22 +4,25 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.XMLDBException;
-import xml.papersapp.exceptions.review.ReviewAssignmenAlreadyExists;
-import xml.papersapp.exceptions.review.ReviewAssignmentAlreadyAccepted;
-import xml.papersapp.exceptions.review.ReviewAssignmentAlreadyDenied;
-import xml.papersapp.exceptions.review.ReviewAssignmentNotFound;
+import xml.papersapp.dto.reviewAssignment.ReviewAssignmentDTO;
+import xml.papersapp.dto.reviewAssignment.ReviewAssignmentsDTO;
+import xml.papersapp.exceptions.review.*;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
 import xml.papersapp.exceptions.users.UserNotFound;
 import xml.papersapp.model.review.*;
 import xml.papersapp.model.review_assignment.TBlinded;
 import xml.papersapp.model.review_assignment.TReviewAssignment;
+import xml.papersapp.model.science_paper.SciencePaper;
+import xml.papersapp.model.science_paper.TState;
 import xml.papersapp.model.user.TUser;
 import xml.papersapp.repository.ReviewAssignmentRepository;
 import xml.papersapp.repository.ReviewRepository;
+import xml.papersapp.repository.SciencePaperRepository;
 import xml.papersapp.repository.UsersRepository;
 
 import javax.xml.bind.JAXBException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +38,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final UsersRepository usersRepository;
     private final ReviewAssignmentRepository reviewAssignmentRepository;
-
+    private final SciencePaperRepository sciencePaperRepository;
 
     @Override
     public TReview createFromObject(TReview review) throws XMLDBException, JAXBException, SAXException {
@@ -96,11 +99,33 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public TReviewAssignment createReviewAssignment(String title, String email, TBlinded blinded) throws XMLDBException,
-            SAXException, SciencePaperDoesntExist, JAXBException, UserNotFound, ReviewAssignmenAlreadyExists, IOException {
+    public List<TReviewAssignment> createReviewAssignment(ReviewAssignmentsDTO reviewAssignmentsDTO) throws XMLDBException,
+            SAXException, SciencePaperDoesntExist, JAXBException, UserNotFound, ReviewAssignmenAlreadyExists, IOException, ReviewAssignmentCantBeCreated {
 
-        return reviewAssignmentRepository.createReviewAssignment(title, email, blinded);
+        Optional<SciencePaper> sciencePaper = sciencePaperRepository.findOneByTitle(reviewAssignmentsDTO.getTitle());
 
+        if (!sciencePaper.isPresent()) {
+            throw new SciencePaperDoesntExist();
+        }
+
+        SciencePaper paper = sciencePaper.get();
+
+        if (!paper.getState().equals(TState.WAITING)) {
+            throw new ReviewAssignmentCantBeCreated();
+        }
+
+        List<TReviewAssignment> assignments = new ArrayList<>();
+
+        for (ReviewAssignmentDTO reviewAssignmentDTO : reviewAssignmentsDTO.getReviewAssignmentDTO()) {
+            assignments.add(reviewAssignmentRepository.createReviewAssignment(reviewAssignmentsDTO.getTitle(),
+                    reviewAssignmentDTO.getEmail(), reviewAssignmentDTO.getBlinded()));
+        }
+
+        paper.setState(TState.REVIEW_IN_PROGRESS);
+
+        sciencePaperRepository.update(paper);
+
+        return assignments;
     }
 
     @Override

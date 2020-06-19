@@ -3,6 +3,7 @@
  xmlns:user="http://www.tim12.com/user"
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  Id="http://www.tim12.com/review_assignment/123fsaf"
+                  accepted="true"
  xsi:schemaLocation="http://www.tim12.com/review_assignment file:/D:/Faks/XML/Projekat/xml-papersapp/backend/src/main/resources/data/ReviewAssignment.xsd">
     <sciencePaperTitle>title0</sciencePaperTitle>
     <Reviewer>

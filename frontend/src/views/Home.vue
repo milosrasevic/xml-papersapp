@@ -38,7 +38,7 @@
     </v-layout>
     <h1 v-if="isNonAuthUser">Science papers</h1>
     <v-data-table
-      :headers="isNonAuthUser ? headersNonAuthUser : headersAuthor"
+      :headers="isNonAuthUser ? headersNonAuthUser : (isAuthor ? headersAuthor : headersEditor)"
       :items="sciencePapers"
       :items-per-page="5"
       class="elevation-1"
@@ -53,6 +53,11 @@
         <a :href="getDownloadLink('XML', item)" download style="text-decoration: none" target="_blank">
           <v-btn color="success" @click="download('xml', item)" style="margin-left: 5px">XML</v-btn>
         </a>
+      </template>
+      <template v-slot:item.action="{item}">
+        <!-- <a :href="assignReviewers(item)" style="text-decoration: none" target="_blank"> -->
+          <v-btn v-if="stateWaiting(item.state)" color="success" @click="assignReviewers(item)" style="margin-left: 5px">Assign reviewers</v-btn>
+        <!-- </a> -->
       </template>
     </v-data-table>
   </v-container>
@@ -89,6 +94,20 @@ export default {
         { text: "Keywords", value: "keywords", align: "center" },
         { text: "State", value: "state", align: "center" },
         { text: "Download", value: "download", align: "center" }
+      ],
+      headersEditor: [
+        {
+          text: "Title",
+          align: "start",
+          sortable: false,
+          value: "title"
+        },
+        { text: "Authors", value: "authors", align: "center" },
+        { text: "Type", value: "type", align: "center" },
+        { text: "Keywords", value: "keywords", align: "center" },
+        { text: "State", value: "state", align: "center" },
+        { text: "Download", value: "download", align: "center" },
+        { text: "Action", value: "action", align: "center" }
       ],
       sciencePapers: [],
       searchParam: {
@@ -184,6 +203,13 @@ export default {
       let id = "http://localhost:8081/api/science-paper/get" + docType + "/" + item.title;
       console.log(id);
       return id;
+    },
+    assignReviewers(item) {
+      this.$router.push("/assign-reviewers/" + item.title);
+      console.log(item);
+    },
+    stateWaiting(state) {
+      return state == "WAITING";
     }
   }
 };

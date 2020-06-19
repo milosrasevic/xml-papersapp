@@ -14,4 +14,6 @@ public interface UsersService {
      * @return
      */
     Users getAll() throws XMLDBException, JAXBException, SAXException;
+
+    Users getAuthors() throws XMLDBException, JAXBException, SAXException;
 }
