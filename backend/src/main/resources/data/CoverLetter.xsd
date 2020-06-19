@@ -2,14 +2,15 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
     targetNamespace="http://www.tim12.com/cover_letter" xmlns:cl="http://www.tim12.com/cover_letter"
     xmlns:us="http://www.tim12.com/user" xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
-    jxb:version="2.0">
+    jxb:version="2.0" xmlns:sp="http://www.tim12.com/science_paper">
     <xs:import namespace="http://www.tim12.com/user" schemaLocation="User.xsd"/>
+    <xs:import namespace="http://www.tim12.com/science_paper" schemaLocation="SciencePaper.xsd"/>
     <xs:element name="CoverLetter">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="author" type="us:TUser"/>
+                <xs:element name="author" type="sp:TAuthor"/>
                 <xs:element name="content" type="xs:string"/>
-                <xs:element name="editor" type="us:TUser"/>
+                <xs:element name="editor" type="sp:TAuthor"/>
             </xs:sequence>
             <xs:attribute name="date">
                 <xs:simpleType>
