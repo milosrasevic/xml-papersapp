@@ -4,7 +4,7 @@
  xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://www.tim12.com/science_papers file:/home/classicdocs/Documents/Workspace/xml/xml-papersapp/src/main/resources/data/SciencePapers.xsd">
-    <SciencePaper xmlns="http://www.tim12.com/science_paper" state="waiting" xsi:schemaLocation="http://www.tim12.com/science_paper file:/home/classicdocs/Documents/Workspace/xml/xml-papersapp/src/main/resources/data/SciencePaper.xsd">
+    <SciencePaper xmlns="http://www.tim12.com/science_paper" state="waiting_for_approval" xsi:schemaLocation="http://www.tim12.com/science_paper file:/home/classicdocs/Documents/Workspace/xml/xml-papersapp/src/main/resources/data/SciencePaper.xsd">
         <title>title0</title>
         <authors>
             <author>
