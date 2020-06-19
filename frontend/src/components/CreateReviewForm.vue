@@ -228,8 +228,16 @@ export default {
     submitComment() {
       this.dialog = false;
 
+
+      let wholeId = "";
+      this.paragraphIds.forEach(element => {
+        if(element.includes(this.paragraphRef)) {
+          wholeId = element;
+        }
+      });
+
       let comment = {
-        paragraphRef: this.paragraphRef,
+        paragraphRef: wholeId,
         value: this.commentText
       };
       const index = this.paragraphRefs.indexOf(comment.paragraphRef);
@@ -255,6 +263,9 @@ export default {
             email: author.email
           })
       });
+
+
+
 
       let review = {
         authors: {
