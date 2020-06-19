@@ -22,6 +22,7 @@ import xml.papersapp.service.review.ReviewService;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -68,6 +69,18 @@ public class ReviewController {
             e.printStackTrace();
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (ReviewAssignmentNotFound | ReviewAssignmentAlreadyAccepted | ReviewAssignmentAlreadyDenied e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value = "/all")
+    @PreAuthorize("hasRole('ROLE_EDITOR')")
+    public ResponseEntity<?> getReviews() {
+        try {
+            List<TReview> reviews = reviewService.getReviews();
+            return new ResponseEntity<List<TReview>>(reviews, HttpStatus.OK);
+        } catch (XMLDBException | SAXException | JAXBException e) {
+            e.printStackTrace();
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ntfs:Notifications xmlns:ntfs="http://www.tim12.com/notifications"
-    xmlns:ntf="http://www.tim12.com/notification"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.tim12.com/notifications Notifications.xsd">
-    
-</ntfs:Notifications>
+<Notifications xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+ xmlns:ntf="http://www.tim12.com/notification"
+ xmlns="http://www.tim12.com/notifications"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.tim12.com/notifications file:/D:/Faks/XML/Projekat/xml-papersapp/backend/src/main/resources/data/Notifications.xsd"/>
