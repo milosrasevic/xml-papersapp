@@ -13,7 +13,7 @@
           style="text-decoration: none"
           target="_blank"
         >
-          <v-btn color="success"  style="margin-left: 5px">PDF</v-btn>
+          <v-btn color="success" style="margin-left: 5px">PDF</v-btn>
         </a>
         <a
           :href="getDownloadLink('HTML', item)"
@@ -21,7 +21,7 @@
           style="text-decoration: none"
           target="_blank"
         >
-          <v-btn color="success"  style="margin-left: 5px">HTML</v-btn>
+          <v-btn color="success" style="margin-left: 5px">HTML</v-btn>
         </a>
         <a
           :href="getDownloadLink('XML', item)"
@@ -29,8 +29,19 @@
           style="text-decoration: none"
           target="_blank"
         >
-          <v-btn color="success"  style="margin-left: 5px">XML</v-btn>
+          <v-btn color="success" style="margin-left: 5px">XML</v-btn>
         </a>
+      </template>
+    </v-data-table>
+    <h1>Assigned for review</h1>
+    <v-data-table
+      :headers="headersAssignements"
+      :items="reviewAssignments"
+      :items-per-page="5"
+      class="elevation-1"
+    >
+    <template v-slot:item.reviewer="{item}">
+        <td>{{item.reviewer.firstName}} {{item.reviewer.lastName}}</td>
       </template>
     </v-data-table>
   </v-container>
@@ -44,6 +55,7 @@ export default {
   data() {
     return {
       reviews: [],
+      reviewAssignments: [],
       paperTitle: "",
       headers: [
         {
@@ -55,6 +67,16 @@ export default {
         { text: "Blinded", value: "blinded", align: "center" },
         { text: "Date created", value: "dateCreated", align: "center" },
         { text: "View", value: "view", align: "center" }
+      ],
+      headersAssignements: [
+        {
+          text: "Reviewer",
+          align: "start",
+          sortable: false,
+          value: "reviewer"
+        },
+        { text: "Blinded", value: "blinded", align: "center" },
+        { text: "Accepted", value: "accepted", align: "center" }
       ]
     };
   },
@@ -63,6 +85,8 @@ export default {
     this.paperTitle = paperTitle;
     let paperId = this.$router.history.current.params.id;
     this.getReviews(paperId);
+
+    this.getReviewAssignemnts(paperTitle);
   },
   methods: {
     getReviews(paperId) {
@@ -81,8 +105,13 @@ export default {
       console.log(id);
       return id;
     },
-  },
-  
+    getReviewAssignemnts(paperTitle) {
+      ReviewService.getReviewAssignementsForSciencePaperId(paperTitle).then(res => {
+        this.reviewAssignments = res.data;
+        console.log(this.reviewAssignments);
+      });
+    }
+  }
 };
 </script>
 

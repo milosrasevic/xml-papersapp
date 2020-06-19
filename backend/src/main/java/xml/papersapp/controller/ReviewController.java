@@ -97,6 +97,17 @@ public class ReviewController {
         }
     }
 
+    @GetMapping(value = "/assignments/science-paper/{paperTitle}")
+    @PreAuthorize("hasRole('ROLE_EDITOR')")
+    public ResponseEntity<?> getReviewAssignementsForSciencePaperId(@PathVariable String paperTitle) {
+        try {
+            List<TReviewAssignment> reviews = reviewService.getReviewAssignementsForSciencePaperId(paperTitle);
+            return new ResponseEntity<List<TReviewAssignment>>(reviews, HttpStatus.OK);
+        } catch (XMLDBException | SAXException | JAXBException e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @GetMapping(path = "getHTML/{id}", produces = MediaType.APPLICATION_XHTML_XML_VALUE)
     public ResponseEntity<?> generateHTML(@PathVariable String id) {

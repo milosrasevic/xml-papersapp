@@ -11,7 +11,6 @@ import xml.papersapp.exceptions.users.UserNotFound;
 import xml.papersapp.model.review.*;
 import xml.papersapp.model.review_assignment.TBlinded;
 import xml.papersapp.model.review_assignment.TReviewAssignment;
-import xml.papersapp.model.science_paper.SciencePaper;
 import xml.papersapp.model.user.TUser;
 import xml.papersapp.repository.ReviewAssignmentRepository;
 import xml.papersapp.repository.ReviewRepository;
@@ -31,7 +30,6 @@ import java.io.IOException;
 import static xml.papersapp.constants.Namespaces.REVIEW_NAMESPACE;
 import static xml.papersapp.constants.Namespaces.SCIENCE_PAPER_NAMESPACE;
 import static xml.papersapp.constants.Packages.REVIEW_PACKAGE;
-import static xml.papersapp.constants.Packages.SCIENCE_PAPER_PACKAGE;
 import static xml.papersapp.util.Util.createId;
 
 @Service
@@ -142,15 +140,19 @@ public class ReviewServiceImpl implements ReviewService {
     public List<TReview> getReviews() throws XMLDBException, JAXBException, SAXException {
 
         return reviewRepository.getReviews();
-
     }
-
 
     @Override
     public List<TReview> getReviewsForSciencePaperId(String paperId) throws XMLDBException, JAXBException, SAXException {
 
         paperId = SCIENCE_PAPER_NAMESPACE + "/" + paperId;
         return reviewRepository.getReviewsForSciencePaperId(paperId);
+    }
+
+    @Override
+    public List<TReviewAssignment> getReviewAssignementsForSciencePaperId(String paperTitle) throws XMLDBException, JAXBException, SAXException {
+
+        return reviewAssignmentRepository.getReviewAssignementsForSciencePaperId(paperTitle);
     }
 
     public ByteArrayOutputStream generateHTML(String id) throws JAXBException, XMLDBException, SAXException, ReviewDoesntExist, FileNotFoundException {
