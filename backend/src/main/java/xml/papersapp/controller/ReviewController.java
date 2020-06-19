@@ -13,6 +13,7 @@ import xml.papersapp.exceptions.review.ReviewAssignmentAlreadyAccepted;
 import xml.papersapp.exceptions.review.ReviewAssignmentAlreadyDenied;
 import xml.papersapp.exceptions.review.ReviewAssignmentNotFound;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
+import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
 import xml.papersapp.exceptions.users.UserNotFound;
 import xml.papersapp.model.review.TReview;
 import xml.papersapp.model.review_assignment.TBlinded;
@@ -34,7 +35,7 @@ public class ReviewController {
     public ResponseEntity create(@RequestBody TReview resource) {
         try {
             return new ResponseEntity<>(reviewService.createFromObject(resource), HttpStatus.OK);
-        } catch (XMLDBException | JAXBException | SAXException e) {
+        } catch (XMLDBException | JAXBException | SAXException | SciencePaperNotFound | SciencePaperDoesntExist e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

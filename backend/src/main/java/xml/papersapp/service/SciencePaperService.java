@@ -12,6 +12,7 @@ import xml.papersapp.exceptions.sciencePapers.SciencePaperAlreadyExist;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
 import xml.papersapp.exceptions.sciencePapers.UnableToChangePaperState;
+import xml.papersapp.model.review_assignment.TReviewAssignment;
 import xml.papersapp.model.science_paper.SciencePaper;
 import xml.papersapp.model.science_paper.TState;
 import xml.papersapp.model.user.TRoles;
@@ -187,4 +188,9 @@ public class SciencePaperService {
 
         return sciencePaperRepository.update(sciencePaper.get());
     }
+
+    public List<TReviewAssignment> getMyAssigments(String email) throws XMLDBException, JAXBException, SAXException {
+        return reviewAssignmentRepository.getMyAssignments(email);
+    }
+
 }

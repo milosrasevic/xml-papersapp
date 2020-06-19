@@ -254,10 +254,19 @@ public class SciencePaperRepository {
     }
 
     public SciencePaper update(SciencePaper sciencePaper) throws JAXBException, XMLDBException{
-        OutputStream xml = getXMLFromObject(sciencePaper, "xml.papersapp.model.science_paper");
+        OutputStream xml = getXMLFromObject(sciencePaper, SCIENCE_PAPER_PACKAGE);
+        String xmlString = xml.toString();
 
-        long mods = xUpdateQueryService.updateResource(SCIENCE_PAPER_ID_DOCUMENT, String.format(UPDATE, SCIENCE_PAPERS_NAMESPACE, CONTEXT_PATH_APPEND, xml.toString()));
+        String query = "//spp:SciencePapers/sp:SciencePaper[sp:title='" + sciencePaper.getTitle() + "']";
+
+
+        long mods = xUpdateQueryService.updateResource(SCIENCE_PAPER_ID_DOCUMENT, String.format(REMOVE,
+                SCIENCE_PAPERS_NAMESPACE, query));
         System.out.println("[INFO] " + mods + " modifications processed.");
+
+        long mods1 = xUpdateQueryService.updateResource(SCIENCE_PAPER_ID_DOCUMENT, String.format(APPEND,
+                SCIENCE_PAPERS_NAMESPACE, CONTEXT_PATH_APPEND , xmlString));
+        System.out.println("[INFO] " + mods1 + " modifications processed.");
 
         return sciencePaper;
 

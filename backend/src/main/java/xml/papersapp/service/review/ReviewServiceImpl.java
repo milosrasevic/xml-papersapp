@@ -9,18 +9,24 @@ import xml.papersapp.exceptions.review.ReviewAssignmentAlreadyAccepted;
 import xml.papersapp.exceptions.review.ReviewAssignmentAlreadyDenied;
 import xml.papersapp.exceptions.review.ReviewAssignmentNotFound;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
+import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
 import xml.papersapp.exceptions.users.UserNotFound;
 import xml.papersapp.model.review.*;
 import xml.papersapp.model.review_assignment.TBlinded;
 import xml.papersapp.model.review_assignment.TReviewAssignment;
+import xml.papersapp.model.science_paper.SciencePaper;
+import xml.papersapp.model.science_paper.TState;
 import xml.papersapp.model.user.TUser;
 import xml.papersapp.repository.ReviewAssignmentRepository;
 import xml.papersapp.repository.ReviewRepository;
+import xml.papersapp.repository.SciencePaperRepository;
 import xml.papersapp.repository.UsersRepository;
 
 import javax.xml.bind.JAXBException;
 
+import java.util.Calendar;
 import java.util.Optional;
+import java.util.List;
 
 import java.io.IOException;
 
@@ -34,10 +40,11 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final UsersRepository usersRepository;
     private final ReviewAssignmentRepository reviewAssignmentRepository;
+    private final SciencePaperRepository sciencePaperRepository;
 
 
     @Override
-    public TReview createFromObject(TReview review) throws XMLDBException, JAXBException, SAXException {
+    public TReview createFromObject(TReview review) throws XMLDBException, JAXBException, SAXException, SciencePaperDoesntExist, SciencePaperNotFound {
 
         String id = createId(REVIEW_NAMESPACE);
         review.setId(id);
@@ -64,6 +71,7 @@ public class ReviewServiceImpl implements ReviewService {
 
         review.setAuthors(authors);
         review.setReviewer(foundReviewer);
+        review.setDateCreated(Calendar.getInstance().getTime());
 
 
 
@@ -89,9 +97,44 @@ public class ReviewServiceImpl implements ReviewService {
                 break;
         }
 
+        // create Review
         reviewRepository.save(review);
+        SciencePaper sciencePaper = sciencePaperRepository.findOneByDocumentId(review.getSciencePaperId())
+                .orElseThrow(SciencePaperDoesntExist::new);
+
+        // delete ReviewAssigment
+        reviewAssignmentRepository.delete(sciencePaper.getTitle(), review.getReviewer().getEmail());
+
+        // change science paper status
+        checkSciencePaperStatus(sciencePaper);
 
         return review;
+    }
+
+    private void checkSciencePaperStatus(SciencePaper sciencePaper) throws XMLDBException, JAXBException, SAXException {
+        List<TReviewAssignment> reviewAssignmentList = reviewAssignmentRepository.getBySciencePaperTitle(sciencePaper.getTitle());
+
+        if(reviewAssignmentList.size() == 0) {
+            // all reviews are done
+            sciencePaper.setState(TState.WAITING_FOR_APPROVAL);
+        } else {
+            // not all reviews are done
+            boolean allAreRejected = true;
+            for (TReviewAssignment reviewAssigment: reviewAssignmentList) {
+                // check if some of reviews are pending or accepted
+                if (reviewAssigment.isAccepted() == null || reviewAssigment.isAccepted() == true) {
+                    allAreRejected = false;
+                }
+            }
+
+            if(allAreRejected) {
+                // all remaining reviewers have rejected
+                sciencePaper.setState(TState.WAITING_FOR_APPROVAL);
+            }
+        }
+
+        sciencePaperRepository.update(sciencePaper);
+
     }
 
     @Override
@@ -124,9 +167,40 @@ public class ReviewServiceImpl implements ReviewService {
             }
         }
 
+        // if false, i nema vise assigmenta koji su null ili true, ide na waiting
         assignment.setAccepted(accept);
 
         return reviewAssignmentRepository.saveAssignment(assignment);
+
+    }
+
+    private void checkSciencePaperStatus(String title) throws XMLDBException, JAXBException, SAXException, SciencePaperDoesntExist {
+        SciencePaper sciencePaper = sciencePaperRepository.findOneByTitle(title).orElseThrow(SciencePaperDoesntExist::new);
+
+
+        List<TReviewAssignment> reviewAssignmentList = reviewAssignmentRepository.getBySciencePaperTitle(sciencePaper.getTitle());
+
+        if(reviewAssignmentList.size() == 0) {
+            // all reviews are done
+            sciencePaper.setState(TState.WAITING_FOR_APPROVAL);
+        } else {
+            // not all reviews are done
+            boolean allAreRejected = true;
+            for (TReviewAssignment reviewAssigment: reviewAssignmentList) {
+                // check if some of reviews are pending or accepted
+                if (reviewAssigment.isAccepted() == null || reviewAssigment.isAccepted() == true) {
+                    allAreRejected = false;
+                }
+            }
+
+            if(allAreRejected) {
+                // all remaining reviewers have rejected
+                sciencePaper.setState(TState.WAITING);
+            }
+        }
+
+        sciencePaperRepository.update(sciencePaper);
+
 
     }
 }

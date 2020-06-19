@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto" color="dark" dark shaped>
+  <v-card class="mx-auto" shaped>
     <v-card-title>
       <v-icon large left>mdi-message-draw</v-icon>
       <span class="title font-weight-light">
@@ -7,18 +7,18 @@
       </span>
       <template>
         <a :href="getDownloadLink('PDF')" download style="text-decoration: none" target="_blank">
-          <v-btn color="black" @click="download('pdf')" style="margin-left: 5px">PDF</v-btn>
+          <v-btn color="blue" @click="download('pdf')" style="margin-left: 5px">PDF</v-btn>
         </a>
         <a :href="getDownloadLink('HTML')" download style="text-decoration: none" target="_blank">
-          <v-btn color="black" @click="download('html')" style="margin-left: 5px">HTML</v-btn>
+          <v-btn color="blue" @click="download('html')" style="margin-left: 5px">HTML</v-btn>
         </a>
         <a :href="getDownloadLink('XML')" download style="text-decoration: none" target="_blank">
-          <v-btn color="black" @click="download('xml')" style="margin-left: 5px">XML</v-btn>
+          <v-btn color="blue" @click="download('xml')" style="margin-left: 5px">XML</v-btn>
         </a>
       </template>
     </v-card-title>
-    <v-card-text class="text-xs-center justify-center" style="max-width: 100%">
-      <div v-if="showAuthor">
+    <v-card-text class="text-xs-center justify-center" style="max-width: 100%;">
+      <div v-if="showAuthor" >
         <h1>Authors</h1>
         <v-container v-for="author in authors" :key="author.email">
           Author
