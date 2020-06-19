@@ -74,8 +74,19 @@
 	<target name="generate_review_assignments" depends="init">
 		<xjc schema="${data.dir}/ReviewAssignments.xsd" destdir="${gen.dir}"/>
 	</target>
+
+
+	<target name="generate_notification" depends="init">
+		<xjc schema="${data.dir}/Notification.xsd" destdir="${gen.dir}"/>
+	</target>
+
+
+	<target name="generate_notifications" depends="init">
+		<xjc schema="${data.dir}/Notifications.xsd" destdir="${gen.dir}"/>
+	</target>
 <!--	<target name="generate_all" depends="generate_user, generate_science_paper, generate_cover_letter, generate_science_papers, generate_users"/>-->
-	<target name="generate_all" depends="generate_review, generate_reviews, generate_review_assignment, generate_review_assignments, generate_cover_letters"/>
+<!--	<target name="generate_all" depends="generate_review, generate_reviews, generate_review_assignment, generate_review_assignments, generate_cover_letters"/>-->
+	<target name="generate_all" depends="generate_notification, generate_notifications"/>
 
 	<target name="main" depends="generate_all"/>
   
