@@ -4,10 +4,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.XMLDBException;
 import xml.papersapp.exceptions.review.ReviewAssignmenAlreadyExists;
+import xml.papersapp.exceptions.review.ReviewAssignmentAlreadyAccepted;
+import xml.papersapp.exceptions.review.ReviewAssignmentAlreadyDenied;
 import xml.papersapp.exceptions.review.ReviewAssignmentNotFound;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
 import xml.papersapp.exceptions.users.UserNotFound;
@@ -38,6 +41,7 @@ public class ReviewController {
     }
 
     @PostMapping(value = "/assign-a-reviewer")
+    @PreAuthorize("hasRole('ROLE_EDITOR')")
     public ResponseEntity<?> assignAReviewer(@RequestParam("title") String title, @RequestParam("email") String email,
                                              @RequestParam("blinded") TBlinded blinded) {
 
@@ -53,16 +57,18 @@ public class ReviewController {
     }
 
     @PostMapping(value = "/accept-review")
-    public ResponseEntity<?> acceptAReview(HttpServletRequest request, @RequestParam("assignmentId") String assignmentId) {
+    @PreAuthorize("hasRole('ROLE_AUTHOR')")
+    public ResponseEntity<?> acceptAReview(HttpServletRequest request, @RequestParam("assignmentId") String assignmentId,
+                                           @RequestParam("accept") boolean accept) {
         try {
             String email = request.getUserPrincipal().getName();
-            TReviewAssignment reviewAssignment = reviewService.acceptReviewAssignment(assignmentId, email);
+            TReviewAssignment reviewAssignment = reviewService.acceptReviewAssignment(assignmentId, email, accept);
             return new ResponseEntity<TReviewAssignment>(reviewAssignment, HttpStatus.OK);
         } catch (XMLDBException | SAXException | JAXBException e) {
             e.printStackTrace();
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (ReviewAssignmentNotFound reviewAssignmentNotFound) {
-            return new ResponseEntity<String>(reviewAssignmentNotFound.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (ReviewAssignmentNotFound | ReviewAssignmentAlreadyAccepted | ReviewAssignmentAlreadyDenied e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

@@ -3,6 +3,8 @@ package xml.papersapp.service.review;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.XMLDBException;
 import xml.papersapp.exceptions.review.ReviewAssignmenAlreadyExists;
+import xml.papersapp.exceptions.review.ReviewAssignmentAlreadyAccepted;
+import xml.papersapp.exceptions.review.ReviewAssignmentAlreadyDenied;
 import xml.papersapp.exceptions.review.ReviewAssignmentNotFound;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
 import xml.papersapp.exceptions.users.UserNotFound;
@@ -25,6 +27,6 @@ public interface ReviewService {
     TReviewAssignment createReviewAssignment(String title, String email, TBlinded blinded) throws XMLDBException,
             SAXException, SciencePaperDoesntExist, JAXBException, UserNotFound, ReviewAssignmenAlreadyExists, IOException;
 
-    TReviewAssignment acceptReviewAssignment(String assignmentId, String email) throws XMLDBException,
-            JAXBException, SAXException, ReviewAssignmentNotFound;
+    TReviewAssignment acceptReviewAssignment(String assignmentId, String email, boolean accept) throws XMLDBException,
+            JAXBException, SAXException, ReviewAssignmentNotFound, ReviewAssignmentAlreadyAccepted, ReviewAssignmentAlreadyDenied;
 }

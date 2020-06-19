@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.XMLDBException;
 import xml.papersapp.exceptions.review.ReviewAssignmenAlreadyExists;
+import xml.papersapp.exceptions.review.ReviewAssignmentAlreadyAccepted;
+import xml.papersapp.exceptions.review.ReviewAssignmentAlreadyDenied;
 import xml.papersapp.exceptions.review.ReviewAssignmentNotFound;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
 import xml.papersapp.exceptions.users.UserNotFound;
@@ -20,7 +22,6 @@ import javax.xml.bind.JAXBException;
 
 import java.util.Optional;
 
-import static xml.papersapp.constants.Namespaces.REVIEW_ASSIGNMENT_NAMESPACE;
 import java.io.IOException;
 
 import static xml.papersapp.constants.Namespaces.REVIEW_NAMESPACE;
@@ -102,8 +103,8 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public TReviewAssignment acceptReviewAssignment(String assignmentId, String email) throws XMLDBException, JAXBException, SAXException,
-            ReviewAssignmentNotFound {
+    public TReviewAssignment acceptReviewAssignment(String assignmentId, String email, boolean accept) throws XMLDBException, JAXBException, SAXException,
+            ReviewAssignmentNotFound, ReviewAssignmentAlreadyAccepted, ReviewAssignmentAlreadyDenied {
 
         Optional<TReviewAssignment> assignmentOptional = reviewAssignmentRepository.findAssignmentByIdAndEmail(assignmentId, email);
 
@@ -113,7 +114,17 @@ public class ReviewServiceImpl implements ReviewService {
 
         TReviewAssignment assignment = assignmentOptional.get();
 
-        assignment.setAccepted(true);
+        if (assignment.isAccepted() != null) {
+            if(assignment.isAccepted()) {
+                throw new ReviewAssignmentAlreadyAccepted();
+            }
+
+            if(!assignment.isAccepted()) {
+                throw new ReviewAssignmentAlreadyDenied();
+            }
+        }
+
+        assignment.setAccepted(accept);
 
         return reviewAssignmentRepository.saveAssignment(assignment);
 
