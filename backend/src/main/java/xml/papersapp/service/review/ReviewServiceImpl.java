@@ -228,7 +228,7 @@ public class ReviewServiceImpl implements ReviewService {
 
             if(allAreRejected) {
                 // all remaining reviewers have rejected
-                sciencePaper.setState(TState.WAITING);
+                sciencePaper.setState(TState.WAITING_FOR_APPROVAL);
             }
         }
 
