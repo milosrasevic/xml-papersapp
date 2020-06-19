@@ -7,6 +7,7 @@ import SignIn from '../views/SignIn.vue'
 import CreateReview from '../views/CreateReview.vue'
 import AuthorsProfile from "../views/AuthorsProfile";
 import SubmitPaperAndLetter from "../views/SubmitPaperAndLetter";
+import AssignReviewers from "../views/AssignReviewers";
 import AuthorReviewAssigments from "../views/AuthorReviewAssigments";
 import SciencePaperReviews from "../views/SciencePaperReviews";
 
@@ -48,6 +49,11 @@ Vue.use(VueRouter)
     path: '/submit-paper-and-letter',
     name: 'SubmitPaperAndLetter',
     component: SubmitPaperAndLetter
+  },
+  {
+    path: '/assign-reviewers/:sciencePaperTitle',
+    name: 'AssignReviewers',
+    component: AssignReviewers
   },
   {
     path: '/myAssigments',

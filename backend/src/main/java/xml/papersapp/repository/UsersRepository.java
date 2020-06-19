@@ -90,4 +90,23 @@ public class UsersRepository {
 
         return users;
     }
+
+    public Users getAuthors() throws XMLDBException, JAXBException, SAXException {
+        xPathQueryService.setNamespace("users", USERS_NAMESPACE);
+        xPathQueryService.setNamespace("user", USER_NAMESPACE);
+
+        String query = "//users:Users/user:User[user:roles[contains(user:role, 'ROLE_AUTHOR')]]";
+
+        ResourceSet result = xPathQueryService.query(query);
+
+        ResourceIterator i = result.getIterator();
+
+        Users users = new Users();
+
+        while(i.hasMoreResources()) {
+            users.getUser().add(getUserFromResource(i.nextResource().getContent().toString()));
+        }
+
+        return users;
+    }
 }

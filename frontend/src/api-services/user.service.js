@@ -7,5 +7,8 @@ const ENDPOINTS = {
 export default {
     getUser(id) {
         return Axios.get(ENDPOINTS.GET_USER + '/' + id);
+    },
+    getUsers() {
+        return Axios.get(ENDPOINTS.GET_USER + '/getAuthors');
     }
 }

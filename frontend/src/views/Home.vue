@@ -60,12 +60,12 @@
         </v-btn>
       </template>
       <template v-slot:item.actions="{item}">
+        <v-btn v-if="stateWaiting(item.state)" color="success" @click="assignReviewers(item)" style="margin-left: 5px">Assign reviewers</v-btn>
         <div v-if="item.state === 'WAITING_FOR_APPROVAL'">
             <v-btn color="success" @click="action('true', item)" style="margin-left: 5px">Accept</v-btn>
         <v-btn color="warning"  style="margin-left: 5px">Revise</v-btn>
         <v-btn color="error" @click="action('false', item)" style="margin-left: 5px">Reject</v-btn>
         </div>
-      
       </template>
     </v-data-table>
      <v-snackbar v-model="snackbar.show" :timeout="5000" :color="snackbar.color" :top="true">
@@ -223,6 +223,13 @@ export default {
       let id = "http://localhost:8081/api/science-paper/get" + docType + "/" + item.title;
       console.log(id);
       return id;
+    },
+    assignReviewers(item) {
+      this.$router.push("/assign-reviewers/" + item.title);
+      console.log(item);
+    },
+    stateWaiting(state) {
+      return state == "WAITING";
     },
     getHeaders() {
       if (this.isEditor) {

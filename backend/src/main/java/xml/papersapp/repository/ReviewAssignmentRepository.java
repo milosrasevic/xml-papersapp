@@ -9,6 +9,7 @@ import org.xmldb.api.base.XMLDBException;
 import org.xmldb.api.modules.XPathQueryService;
 import org.xmldb.api.modules.XUpdateQueryService;
 import xml.papersapp.exceptions.review.ReviewAssignmenAlreadyExists;
+import xml.papersapp.exceptions.review.ReviewAssignmentCantBeCreated;
 import xml.papersapp.exceptions.review.ReviewAssignmentNotFound;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
@@ -18,6 +19,7 @@ import xml.papersapp.model.review.TReview;
 import xml.papersapp.model.review_assignment.TBlinded;
 import xml.papersapp.model.review_assignment.TReviewAssignment;
 import xml.papersapp.model.science_paper.SciencePaper;
+import xml.papersapp.model.science_paper.TState;
 import xml.papersapp.model.user.TUser;
 import xml.papersapp.security.repository.UserRepository;
 import xml.papersapp.service.mail.AssigmentEmailService;
@@ -127,18 +129,12 @@ public class ReviewAssignmentRepository {
     }
 
     public TReviewAssignment createReviewAssignment(String title, String email, TBlinded blinded) throws JAXBException,
-            XMLDBException, SAXException, SciencePaperDoesntExist, UserNotFound, ReviewAssignmenAlreadyExists, IOException {
+            XMLDBException, SAXException, SciencePaperDoesntExist, UserNotFound, ReviewAssignmenAlreadyExists, IOException, ReviewAssignmentCantBeCreated {
 
         Optional<TUser> user = userRepository.findByUsername(email);
 
         if (!user.isPresent()) {
             throw new UserNotFound();
-        }
-
-        Optional<SciencePaper> sciencePaper = sciencePaperRepository.findOneByTitle(title);
-
-        if (!sciencePaper.isPresent()) {
-            throw new SciencePaperDoesntExist();
         }
 
         Optional<TReviewAssignment> foundAssignment = checkIfPaperAssignedToReviewer(email, title);

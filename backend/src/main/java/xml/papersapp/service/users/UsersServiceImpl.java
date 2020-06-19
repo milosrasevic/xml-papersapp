@@ -19,4 +19,9 @@ public class UsersServiceImpl implements UsersService {
     public Users getAll() throws XMLDBException, JAXBException, SAXException {
         return usersRepository.getAll();
     }
+
+    @Override
+    public Users getAuthors() throws XMLDBException, JAXBException, SAXException {
+        return usersRepository.getAuthors();
+    }
 }

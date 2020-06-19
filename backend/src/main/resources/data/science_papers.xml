@@ -10,7 +10,7 @@
                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                      xsi:schemaLocation="http://www.tim12.com/science_paper file:/home/classicdocs/Documents/Workspace/xml/xml-papersapp/backend/src/main/resources/data/SciencePaper.xsd"
                      id="http://www.tim12.com/science_paper/1"
-                     state="accepted"
+                     state="waiting"
     >
         <sp:title>title0</sp:title>
         <sp:authors>

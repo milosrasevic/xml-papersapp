@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.XMLDBException;
+import xml.papersapp.dto.reviewAssignment.ReviewAssignmentsDTO;
 import xml.papersapp.exceptions.review.*;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
@@ -42,15 +43,14 @@ public class ReviewController {
         }
     }
 
-    @PostMapping(value = "/assign-a-reviewer")
+    @PostMapping(value = "/assign-reviewers")
     @PreAuthorize("hasRole('ROLE_EDITOR')")
-    public ResponseEntity<?> assignAReviewer(@RequestParam("title") String title, @RequestParam("email") String email,
-                                             @RequestParam("blinded") TBlinded blinded) {
+    public ResponseEntity<?> assignReviewers(@RequestBody ReviewAssignmentsDTO reviewAssignmentsDTO) {
 
         try {
-            TReviewAssignment reviewAssignment = reviewService.createReviewAssignment(title, email, blinded);
-            return new ResponseEntity<TReviewAssignment>(reviewAssignment, HttpStatus.OK);
-        } catch (SciencePaperDoesntExist | UserNotFound | ReviewAssignmenAlreadyExists  e) {
+            List<TReviewAssignment> reviewAssignments = reviewService.createReviewAssignment(reviewAssignmentsDTO);
+            return new ResponseEntity<List<TReviewAssignment>>(reviewAssignments, HttpStatus.OK);
+        } catch (SciencePaperDoesntExist | UserNotFound | ReviewAssignmenAlreadyExists | ReviewAssignmentCantBeCreated  e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (SAXException | XMLDBException | JAXBException | IOException e) {
             e.printStackTrace();
