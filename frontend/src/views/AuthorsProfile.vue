@@ -1,10 +1,10 @@
 <template>
-  <v-container>
+  <div style="margin: 0 100px 0 100px">
     <v-layout row wrap>
       <v-flex xs10 md10>
         <h1>My science papers</h1>
       </v-flex>
-      <v-btn @click="goToAddPage" color="primary">
+      <v-btn @click="goToAddPage" color="primary" style="margin-top: 10px">
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </v-layout>
@@ -78,7 +78,7 @@
       {{snackbar.msg}}
       <v-btn dark @click="snackbar.show = false">Close</v-btn>
     </v-snackbar>
-  </v-container>
+  </div>
   
 </template>
 

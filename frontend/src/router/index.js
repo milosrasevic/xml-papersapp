@@ -7,6 +7,7 @@ import SignIn from '../views/SignIn.vue'
 import CreateReview from '../views/CreateReview.vue'
 import AuthorsProfile from "../views/AuthorsProfile";
 import SubmitPaperAndLetter from "../views/SubmitPaperAndLetter";
+import SciencePaperReviews from "../views/SciencePaperReviews";
 
 Vue.use(VueRouter)
 
@@ -46,6 +47,11 @@ Vue.use(VueRouter)
     path: '/submit-paper-and-letter',
     name: 'SubmitPaperAndLetter',
     component: SubmitPaperAndLetter
+  },
+  {
+    path: '/science-paper/:id/:title/reviews',
+    name: 'SciencePaperReviews',
+    component: SciencePaperReviews
   }
   
 ]

@@ -29,6 +29,7 @@ import java.util.Optional;
 import java.io.IOException;
 
 import static xml.papersapp.constants.Namespaces.REVIEW_NAMESPACE;
+import static xml.papersapp.constants.Namespaces.SCIENCE_PAPER_NAMESPACE;
 import static xml.papersapp.constants.Packages.REVIEW_PACKAGE;
 import static xml.papersapp.constants.Packages.SCIENCE_PAPER_PACKAGE;
 import static xml.papersapp.util.Util.createId;
@@ -144,6 +145,14 @@ public class ReviewServiceImpl implements ReviewService {
 
     }
 
+
+    @Override
+    public List<TReview> getReviewsForSciencePaperId(String paperId) throws XMLDBException, JAXBException, SAXException {
+
+        paperId = SCIENCE_PAPER_NAMESPACE + "/" + paperId;
+        return reviewRepository.getReviewsForSciencePaperId(paperId);
+    }
+
     public ByteArrayOutputStream generateHTML(String id) throws JAXBException, XMLDBException, SAXException, ReviewDoesntExist, FileNotFoundException {
 
         id = REVIEW_NAMESPACE +  "/" + id;
@@ -172,7 +181,7 @@ public class ReviewServiceImpl implements ReviewService {
         System.out.println(id);
         TReview found = reviewRepository.findOneById(id).orElseThrow(ReviewDoesntExist::new);
 
-        OutputStream outputStream = reviewRepository.getXMLFromObject(found, SCIENCE_PAPER_PACKAGE);
+        OutputStream outputStream = reviewRepository.getXMLFromObject(found, REVIEW_PACKAGE);
 
         return (ByteArrayOutputStream) outputStream;
 
