@@ -216,8 +216,8 @@ export default {
       if(this.sciencePaper.id === undefined || this.sciencePaper.id===null) {
         return "";
       }else {
-        let id = this.sciencePaper.id.split("http://www.tim12.com/science_paper/")[1];
-        id = "http://localhost:8081/api/science-paper/get" + docType + "/" + id;
+
+        let id = "http://localhost:8081/api/science-paper/get" + docType + "/" + this.sciencePaper.title;
         console.log(id);
         return id;
       }
