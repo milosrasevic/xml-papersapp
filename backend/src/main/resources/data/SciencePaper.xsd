@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
-    xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
-    jxb:version="2.0"
+    xmlns:jxb="http://java.sun.com/xml/ns/jaxb" jxb:version="2.0"
     targetNamespace="http://www.tim12.com/science_paper"
     xmlns:sp="http://www.tim12.com/science_paper">
     <xs:element name="SciencePaper">
@@ -158,7 +157,7 @@
     </xs:complexType>
     <xs:complexType name="TReferences">
         <xs:sequence>
-            <xs:element maxOccurs="unbounded" name="Referenca" type="sp:TReference"/>
+            <xs:element maxOccurs="unbounded" name="Referenca" type="sp:TReference" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
     <xs:complexType name="TTable">
@@ -235,7 +234,7 @@
     </xs:complexType>
     <xs:complexType name="TReference">
         <xs:sequence>
-            <xs:element name="name" type="xs:string"/>
+            <xs:element name="referenceName" type="sp:TReferenceName"/>
             <xs:element name="type" type="sp:TReferenceType"/>
         </xs:sequence>
     </xs:complexType>
@@ -254,4 +253,10 @@
             <xs:enumeration value="data"/>
         </xs:restriction>
     </xs:simpleType>
+    <xs:complexType name="TReferenceName">
+        <xs:sequence>
+            <xs:element maxOccurs="unbounded" name="authorsName" type="xs:string"/>
+            <xs:element name="paperTitle" type="xs:string"/>
+        </xs:sequence>
+    </xs:complexType>
 </xs:schema>

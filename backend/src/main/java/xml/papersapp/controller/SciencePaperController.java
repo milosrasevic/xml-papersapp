@@ -128,13 +128,11 @@ public class SciencePaperController {
     }
 
 
-    @GetMapping(path = "getHTML/{documentId}", produces = MediaType.APPLICATION_XHTML_XML_VALUE)
-    public ResponseEntity<?> generateHTML(@PathVariable String documentId) {
-
-        documentId = "http://www.tim12.com/science_paper/" + documentId;
+    @GetMapping(path = "getHTML/{title}", produces = MediaType.APPLICATION_XHTML_XML_VALUE)
+    public ResponseEntity<?> generateHTML(@PathVariable String title) {
 
         try {
-            ByteArrayOutputStream out = sciencePaperService.generateHTML(documentId);
+            ByteArrayOutputStream out = sciencePaperService.generateHTML(title);
             InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(out.toByteArray()));
             return ResponseEntity.ok()
                     .contentLength(out.size())
@@ -149,13 +147,12 @@ public class SciencePaperController {
         }
     }
 
-    @GetMapping(path = "getPDF/{documentId}", produces = MediaType.APPLICATION_XHTML_XML_VALUE)
-    public ResponseEntity<?> generatePDF(@PathVariable String documentId) {
+    @GetMapping(path = "getPDF/{title}", produces = MediaType.APPLICATION_XHTML_XML_VALUE)
+    public ResponseEntity<?> generatePDF(@PathVariable String title) {
 
-        documentId = "http://www.tim12.com/science_paper/" + documentId;
 
         try {
-            ByteArrayOutputStream out = sciencePaperService.generatePDF(documentId);
+            ByteArrayOutputStream out = sciencePaperService.generatePDF(title);
             InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(out.toByteArray()));
             return ResponseEntity.ok()
                     .contentLength(out.size())
@@ -171,13 +168,11 @@ public class SciencePaperController {
 
     }
 
-    @GetMapping(path = "getXML/{documentId}", produces = MediaType.APPLICATION_XHTML_XML_VALUE)
-    public ResponseEntity<?> generateXML(@PathVariable String documentId) {
-
-        documentId = "http://www.tim12.com/science_paper/" + documentId;
+    @GetMapping(path = "getXML/{title}", produces = MediaType.APPLICATION_XHTML_XML_VALUE)
+    public ResponseEntity<?> generateXML(@PathVariable String title) {
 
         try {
-            ByteArrayOutputStream out = sciencePaperService.generateXML(documentId);
+            ByteArrayOutputStream out = sciencePaperService.generateXML(title);
             InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(out.toByteArray()));
             return ResponseEntity.ok()
                     .contentLength(out.size())

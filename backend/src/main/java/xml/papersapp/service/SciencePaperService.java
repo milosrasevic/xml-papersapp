@@ -130,9 +130,9 @@ public class SciencePaperService {
         return reviewAssignmentRepository.getPapersToReview(email);
     }
 
-    public ByteArrayOutputStream generateHTML(String documentId) throws XMLDBException, JAXBException, SAXException, FileNotFoundException, SciencePaperDoesntExist {
+    public ByteArrayOutputStream generateHTML(String title) throws XMLDBException, JAXBException, SAXException, FileNotFoundException, SciencePaperDoesntExist {
 
-        SciencePaper found = sciencePaperRepository.findOneByDocumentId(documentId).orElseThrow(SciencePaperDoesntExist::new);
+        SciencePaper found = sciencePaperRepository.findOneByTitle(title).orElseThrow(SciencePaperDoesntExist::new);
 
         OutputStream outputStream = sciencePaperRepository.getXMLFromObject(found, SCIENCE_PAPER_PACKAGE);
         String xslPath = "src/main/resources/xsl/science_paper_html.xsl";
@@ -140,18 +140,18 @@ public class SciencePaperService {
 
     }
 
-    public ByteArrayOutputStream generatePDF(String documentId) throws XMLDBException, JAXBException, SAXException, IOException, DocumentException, SciencePaperDoesntExist {
+    public ByteArrayOutputStream generatePDF(String title) throws XMLDBException, JAXBException, SAXException, IOException, DocumentException, SciencePaperDoesntExist {
 
-        ByteArrayOutputStream html = generateHTML(documentId);
+        ByteArrayOutputStream html = generateHTML(title);
 
 
         return xslfoTransformer.generatePDF(html);
 
     }
 
-    public ByteArrayOutputStream generateXML(String documentId) throws XMLDBException, JAXBException, SAXException, SciencePaperDoesntExist {
+    public ByteArrayOutputStream generateXML(String title) throws XMLDBException, JAXBException, SAXException, SciencePaperDoesntExist {
 
-        SciencePaper found = sciencePaperRepository.findOneByDocumentId(documentId).orElseThrow(SciencePaperDoesntExist::new);
+        SciencePaper found = sciencePaperRepository.findOneByTitle(title).orElseThrow(SciencePaperDoesntExist::new);
 
         OutputStream outputStream = sciencePaperRepository.getXMLFromObject(found, SCIENCE_PAPER_PACKAGE);
 

@@ -207,11 +207,11 @@ export default {
       console.log(item);
     },
     getDownloadLink(docType, item) {
-      if (item.id === null) {
+      if (item.title === null) {
         return "";
       }
-      let id = item.id.split("http://www.tim12.com/science_paper/")[1];
-      id = "http://localhost:8081/api/science-paper/get" + docType + "/" + id;
+
+      let id = "http://localhost:8081/api/science-paper/get" + docType + "/" + item.title;
       console.log(id);
       return id;
     },
