@@ -153,7 +153,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public TReviewAssignment acceptReviewAssignment(String assignmentId, String email, boolean accept) throws XMLDBException, JAXBException, SAXException,
-            ReviewAssignmentNotFound, ReviewAssignmentAlreadyAccepted, ReviewAssignmentAlreadyDenied {
+            ReviewAssignmentNotFound, ReviewAssignmentAlreadyAccepted, ReviewAssignmentAlreadyDenied, SciencePaperDoesntExist {
 
         Optional<TReviewAssignment> assignmentOptional = reviewAssignmentRepository.findAssignmentByIdAndEmail(assignmentId, email);
 
@@ -174,13 +174,16 @@ public class ReviewServiceImpl implements ReviewService {
         }
 
         // if false, i nema vise assigmenta koji su null ili true, ide na waiting
+        if(!accept) {
+            checkSciencePaperStatusAfterDeny(assignment.getSciencePaperTitle());
+        }
         assignment.setAccepted(accept);
 
         return reviewAssignmentRepository.saveAssignment(assignment);
 
     }
 
-    private void checkSciencePaperStatus(String title) throws XMLDBException, JAXBException, SAXException, SciencePaperDoesntExist {
+    private void checkSciencePaperStatusAfterDeny(String title) throws XMLDBException, JAXBException, SAXException, SciencePaperDoesntExist {
         SciencePaper sciencePaper = sciencePaperRepository.findOneByTitle(title).orElseThrow(SciencePaperDoesntExist::new);
 
 

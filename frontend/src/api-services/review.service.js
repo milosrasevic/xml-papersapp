@@ -1,7 +1,7 @@
 import Axios from 'axios';
 const ENDPOINTS = {
     CREATE: 'review',
-    ACCEPT_REVIEW: "review/accept-review"
+    ACCEPT_REVIEW: "review/accept-review",
     GET_REVIEWS_FOR_SP: "review/science-paper/",
     GET_REVIEW_ASSIGNEMETS_FOR_SP: "review/assignments/science-paper/"
 }
