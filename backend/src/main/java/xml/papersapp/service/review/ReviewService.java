@@ -1,11 +1,9 @@
 package xml.papersapp.service.review;
 
+import com.itextpdf.text.DocumentException;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.XMLDBException;
-import xml.papersapp.exceptions.review.ReviewAssignmenAlreadyExists;
-import xml.papersapp.exceptions.review.ReviewAssignmentAlreadyAccepted;
-import xml.papersapp.exceptions.review.ReviewAssignmentAlreadyDenied;
-import xml.papersapp.exceptions.review.ReviewAssignmentNotFound;
+import xml.papersapp.exceptions.review.*;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
 import xml.papersapp.exceptions.users.UserNotFound;
@@ -14,7 +12,10 @@ import xml.papersapp.model.review_assignment.TBlinded;
 import xml.papersapp.model.review_assignment.TReviewAssignment;
 
 import javax.xml.bind.JAXBException;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 public interface ReviewService {
     /**
@@ -30,4 +31,16 @@ public interface ReviewService {
 
     TReviewAssignment acceptReviewAssignment(String assignmentId, String email, boolean accept) throws XMLDBException,
             JAXBException, SAXException, ReviewAssignmentNotFound, ReviewAssignmentAlreadyAccepted, ReviewAssignmentAlreadyDenied;
+
+    List<TReview> getReviews() throws XMLDBException, JAXBException, SAXException;
+
+    ByteArrayOutputStream generateHTML(String id) throws JAXBException, XMLDBException, SAXException, ReviewDoesntExist, FileNotFoundException;
+
+    ByteArrayOutputStream generatePDF(String id) throws XMLDBException, JAXBException, SAXException, ReviewDoesntExist, IOException, DocumentException;
+
+    ByteArrayOutputStream generateXML(String id) throws ReviewDoesntExist, XMLDBException, JAXBException, SAXException;
+
+    List<TReview> getReviewsForSciencePaperId(String paperId) throws XMLDBException, JAXBException, SAXException;
+
+    List<TReviewAssignment> getReviewAssignementsForSciencePaperId(String paperId) throws XMLDBException, JAXBException, SAXException;
 }

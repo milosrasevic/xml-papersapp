@@ -8,6 +8,7 @@ import CreateReview from '../views/CreateReview.vue'
 import AuthorsProfile from "../views/AuthorsProfile";
 import SubmitPaperAndLetter from "../views/SubmitPaperAndLetter";
 import AuthorReviewAssigments from "../views/AuthorReviewAssigments";
+import SciencePaperReviews from "../views/SciencePaperReviews";
 
 Vue.use(VueRouter)
 
@@ -52,6 +53,11 @@ Vue.use(VueRouter)
     path: '/myAssigments',
     name: 'AuthorReviewAssigments',
     component: AuthorReviewAssigments
+  },
+  {
+    path: '/science-paper/:id/:title/reviews',
+    name: 'SciencePaperReviews',
+    component: SciencePaperReviews
   }
   
 ]

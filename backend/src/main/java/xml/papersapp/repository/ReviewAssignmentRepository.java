@@ -14,6 +14,7 @@ import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
 import xml.papersapp.exceptions.users.UserNotFound;
 import xml.papersapp.model.notification.TNotification;
+import xml.papersapp.model.review.TReview;
 import xml.papersapp.model.review_assignment.TBlinded;
 import xml.papersapp.model.review_assignment.TReviewAssignment;
 import xml.papersapp.model.science_paper.SciencePaper;
@@ -323,5 +324,26 @@ public class ReviewAssignmentRepository {
         }
 
         return reviewAssignments;
+    }
+
+    public List<TReviewAssignment> getReviewAssignementsForSciencePaperId(String paperTitle) throws XMLDBException, JAXBException, SAXException {
+
+        xPathQueryService.setNamespace("ras", REVIEW_ASSIGNMENTS_NAMESPACE);
+        xPathQueryService.setNamespace("ra", REVIEW_ASSIGNMENT_NAMESPACE);
+
+        String query = "//ras:ReviewAssignments/ra:ReviewAssignment[ra:sciencePaperTitle='" + paperTitle + "']";
+
+        ResourceSet result = xPathQueryService.query(query);
+
+        ResourceIterator i = result.getIterator();
+
+        List<TReviewAssignment> reviewAssignments = new ArrayList<>();
+
+        while (i.hasMoreResources()) {
+            reviewAssignments.add(getReviewAssignmentFromResource(i.nextResource().getContent().toString()));
+        }
+
+        return reviewAssignments;
+
     }
 }

@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+<div style="margin: 0 100px 0 100px">
     <h1>Science papers</h1>
     <v-text-field
       style="width: 500px"
@@ -38,7 +38,7 @@
     </v-layout>
     <h1 v-if="isNonAuthUser">Science papers</h1>
     <v-data-table
-      :headers="isNonAuthUser ? headersNonAuthUser : headersAuthor"
+      :headers="getHeaders()"
       :items="sciencePapers"
       :items-per-page="5"
       class="elevation-1"
@@ -54,8 +54,25 @@
           <v-btn color="success" @click="download('xml', item)" style="margin-left: 5px">XML</v-btn>
         </a>
       </template>
+      <template v-slot:item.reviews="{item}">
+        <v-btn @click="viewReviews(item)">
+          <v-icon>mdi-playlist-check</v-icon>
+        </v-btn>
+      </template>
+      <template v-slot:item.actions="{item}">
+        <div v-if="item.state === 'WAITING_FOR_APPROVAL'">
+            <v-btn color="success" @click="action('true', item)" style="margin-left: 5px">Accept</v-btn>
+        <v-btn color="warning"  style="margin-left: 5px">Revise</v-btn>
+        <v-btn color="error" @click="action('false', item)" style="margin-left: 5px">Reject</v-btn>
+        </div>
+      
+      </template>
     </v-data-table>
-  </v-container>
+     <v-snackbar v-model="snackbar.show" :timeout="5000" :color="snackbar.color" :top="true">
+      {{snackbar.msg}}
+      <v-btn dark @click="snackbar.show = false">Close</v-btn>
+    </v-snackbar>
+  </div>
 </template>
 <script>
 import SciencePapersService from "../api-services/science-papers.service";
@@ -90,6 +107,21 @@ export default {
         { text: "State", value: "state", align: "center" },
         { text: "Download", value: "download", align: "center" }
       ],
+       headersEditor: [
+        {
+          text: "Title",
+          align: "start",
+          sortable: false,
+          value: "title"
+        },
+        { text: "Authors", value: "authors", align: "center" },
+        { text: "Type", value: "type", align: "center" },
+        { text: "Keywords", value: "keywords", align: "center" },
+        { text: "State", value: "state", align: "center" },
+        { text: "Download", value: "download", align: "center" },
+        { text: "Reviews", value: "reviews", align: "center" },
+        { text: "Actions", value: "actions", align: "center" }
+      ],
       sciencePapers: [],
       searchParam: {
         text: "",
@@ -105,7 +137,12 @@ export default {
         { text: "deleted", value: "deleted" },
         { text: "waiting_for_approval", value: "waiting_for_approval" },
         { text: "revision_needed", value: "revision_needed" }
-      ]
+      ],
+       snackbar: {
+      show: false,
+      color: "",
+      msg: ""
+    }
     };
   },
   computed: {
@@ -177,14 +214,43 @@ export default {
       console.log(item);
     },
     getDownloadLink(docType, item) {
-      if(item.id === null) {
+
+      console.log(item);
+      if (item.title === null) {
         return "";
       }
-      let id = item.id.split("http://www.tim12.com/science_paper/")[1];
-      id = "http://localhost:8081/api/science-paper/get" + docType + "/" + id;
+
+      let id = "http://localhost:8081/api/science-paper/get" + docType + "/" + item.title;
       console.log(id);
       return id;
-    }
+    },
+    getHeaders() {
+      if (this.isEditor) {
+        return this.headersEditor;
+      } else if (this.isAuthor) {
+        return this.headersAuthor;
+      }
+
+      return this.headersNonAuthUser;
+    },
+    viewReviews(item) {
+      let id = item.id.split("http://www.tim12.com/science_paper/")[1];
+      this.$router.push("/science-paper/" + id + "/" +  item.title +  "/reviews");
+    },
+    action(accepted, item) {
+    
+      SciencePapersService.decide(item.title, accepted).then(() => {
+        this.showSnackbar("Science paper successfully modified", "success");
+        this.search();
+      }).catch(() => {
+        this.showSnackbar("Error occured! Try again.", "error");
+      })
+    },
+    showSnackbar(message, color) {
+      this.snackbar.color = color;
+      this.snackbar.msg = message;
+      this.snackbar.show = true;
+    },
   }
 };
 </script>

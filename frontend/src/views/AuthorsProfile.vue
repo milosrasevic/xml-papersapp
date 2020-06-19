@@ -1,10 +1,10 @@
 <template>
-  <v-container>
+  <div style="margin: 0 100px 0 100px">
     <v-layout row wrap>
       <v-flex xs10 md10>
         <h1>My science papers</h1>
       </v-flex>
-      <v-btn @click="goToAddPage" color="primary">
+      <v-btn @click="goToAddPage" color="primary" style="margin-top: 10px">
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </v-layout>
@@ -78,7 +78,7 @@
       {{snackbar.msg}}
       <v-btn dark @click="snackbar.show = false">Close</v-btn>
     </v-snackbar>
-  </v-container>
+  </div>
   
 </template>
 
@@ -207,11 +207,11 @@ export default {
       console.log(item);
     },
     getDownloadLink(docType, item) {
-      if (item.id === null) {
+      if (item.title === null) {
         return "";
       }
-      let id = item.id.split("http://www.tim12.com/science_paper/")[1];
-      id = "http://localhost:8081/api/science-paper/get" + docType + "/" + id;
+
+      let id = "http://localhost:8081/api/science-paper/get" + docType + "/" + item.title;
       console.log(id);
       return id;
     },

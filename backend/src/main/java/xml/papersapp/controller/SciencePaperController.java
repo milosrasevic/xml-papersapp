@@ -12,10 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.XMLDBException;
 import xml.papersapp.dto.sciencePaper.DecisionDto;
-import xml.papersapp.exceptions.sciencePapers.SciencePaperAlreadyExist;
-import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
-import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
-import xml.papersapp.exceptions.sciencePapers.UnableToChangePaperState;
+import xml.papersapp.exceptions.sciencePapers.*;
 import xml.papersapp.model.science_paper.SciencePaper;
 import xml.papersapp.model.science_paper.TState;
 import xml.papersapp.model.user.TUser;
@@ -140,13 +137,11 @@ public class SciencePaperController {
         }
     }
 
-    @GetMapping(path = "getHTML/{documentId}", produces = MediaType.APPLICATION_XHTML_XML_VALUE)
-    public ResponseEntity<?> generateHTML(@PathVariable String documentId) {
-
-        documentId = "http://www.tim12.com/science_paper/" + documentId;
+    @GetMapping(path = "getHTML/{title}", produces = MediaType.APPLICATION_XHTML_XML_VALUE)
+    public ResponseEntity<?> generateHTML(@PathVariable String title) {
 
         try {
-            ByteArrayOutputStream out = sciencePaperService.generateHTML(documentId);
+            ByteArrayOutputStream out = sciencePaperService.generateHTML(title);
             InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(out.toByteArray()));
             return ResponseEntity.ok()
                     .contentLength(out.size())
@@ -161,13 +156,12 @@ public class SciencePaperController {
         }
     }
 
-    @GetMapping(path = "getPDF/{documentId}", produces = MediaType.APPLICATION_XHTML_XML_VALUE)
-    public ResponseEntity<?> generatePDF(@PathVariable String documentId) {
+    @GetMapping(path = "getPDF/{title}", produces = MediaType.APPLICATION_XHTML_XML_VALUE)
+    public ResponseEntity<?> generatePDF(@PathVariable String title) {
 
-        documentId = "http://www.tim12.com/science_paper/" + documentId;
 
         try {
-            ByteArrayOutputStream out = sciencePaperService.generatePDF(documentId);
+            ByteArrayOutputStream out = sciencePaperService.generatePDF(title);
             InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(out.toByteArray()));
             return ResponseEntity.ok()
                     .contentLength(out.size())
@@ -183,13 +177,11 @@ public class SciencePaperController {
 
     }
 
-    @GetMapping(path = "getXML/{documentId}", produces = MediaType.APPLICATION_XHTML_XML_VALUE)
-    public ResponseEntity<?> generateXML(@PathVariable String documentId) {
-
-        documentId = "http://www.tim12.com/science_paper/" + documentId;
+    @GetMapping(path = "getXML/{title}", produces = MediaType.APPLICATION_XHTML_XML_VALUE)
+    public ResponseEntity<?> generateXML(@PathVariable String title) {
 
         try {
-            ByteArrayOutputStream out = sciencePaperService.generateXML(documentId);
+            ByteArrayOutputStream out = sciencePaperService.generateXML(title);
             InputStreamResource resource = new InputStreamResource(new ByteArrayInputStream(out.toByteArray()));
             return ResponseEntity.ok()
                     .contentLength(out.size())
@@ -224,6 +216,20 @@ public class SciencePaperController {
             return new ResponseEntity<>(sciencePaperService.getSciencePaper(title), HttpStatus.OK);
         } catch (XMLDBException | SAXException | JAXBException | SciencePaperDoesntExist e) {
             e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/send-to-revision")
+    @PreAuthorize("hasRole('ROLE_EDITOR')")
+    public ResponseEntity<?> sendToRevision(@RequestParam("title") String title) {
+        try {
+            SciencePaper paper = sciencePaperService.sendToRevision(title);
+            return new ResponseEntity<SciencePaper>(paper, HttpStatus.OK);
+        } catch (XMLDBException | SAXException | JAXBException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (SciencePaperDoesntExist | SciencePaperCantBeSentToRevision e ) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }

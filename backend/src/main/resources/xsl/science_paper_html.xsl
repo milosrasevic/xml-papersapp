@@ -62,7 +62,7 @@
                     <xsl:value-of select="sp:SciencePaper/sp:title"/>
                 </h1>
                 <div>
-                    <ul style="text-align: center;">
+                    <ul style="text-align: center; list-style-type: none">
                         <xsl:for-each select="sp:SciencePaper/sp:authors">
                             <li style="list-style-type: none;">
                                 <xsl:value-of select="sp:author/sp:firstName"/>
@@ -129,8 +129,34 @@
                 </div>
 
                 <div>
-                    <h3 style="text-align: center;">References</h3>
-                    <xsl:apply-templates select="sp:SciencePaper/sp:references"/>
+                    <xsl:if test="count(sp:SciencePaper/sp:references/sp:Referenca) &gt; 0">
+                        <h3 style="text-align: center;">References</h3>
+
+                        <xsl:apply-templates select="sp:SciencePaper/sp:references"/>
+                        <xsl:for-each select="sp:SciencePaper/sp:references">
+                            <p>
+                                <a>
+
+                                    <xsl:attribute name="href">
+                                        <xsl:text>http://localhost:8081/api/science-paper/getPDF/</xsl:text>
+                                        <xsl:value-of select="sp:Referenca/sp:referenceName/sp:paperTitle"></xsl:value-of>
+                                    </xsl:attribute>
+
+                                    <xsl:attribute name="target">
+                                        <xsl:text>_blank</xsl:text>
+                                    </xsl:attribute>
+
+                                    <xsl:value-of select="sp:Referenca/sp:referenceName/sp:paperTitle"></xsl:value-of>
+                                </a>
+
+                                <xsl:text> </xsl:text>
+                                <xsl:for-each select="sp:Referenca/sp:referenceName/sp:authorsName">
+                                    <xsl:text>, </xsl:text>
+                                    <xsl:value-of select="text()"></xsl:value-of>
+                                </xsl:for-each>
+                            </p>
+                        </xsl:for-each>
+                    </xsl:if>
                 </div>
             </body>
         </html>

@@ -3,8 +3,7 @@ package xml.papersapp.repository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.xml.sax.SAXException;
-import org.xmldb.api.base.Collection;
-import org.xmldb.api.base.XMLDBException;
+import org.xmldb.api.base.*;
 import org.xmldb.api.modules.XPathQueryService;
 import org.xmldb.api.modules.XQueryService;
 import org.xmldb.api.modules.XUpdateQueryService;
@@ -18,11 +17,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.OutputStream;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static xml.papersapp.constants.DocumentIDs.REVIEWS_ID_DOCUMENT;
 import static xml.papersapp.constants.Files.SCHEME_REVIEW_PATH;
-import static xml.papersapp.constants.Namespaces.REVIEWS_NAMESPACE;
-import static xml.papersapp.constants.Namespaces.REVIEW_NAMESPACE;
+import static xml.papersapp.constants.Namespaces.*;
+import static xml.papersapp.constants.Namespaces.SCIENCE_PAPER_NAMESPACE;
 import static xml.papersapp.constants.Packages.REVIEW_PACKAGE;
 import static xml.papersapp.util.XUpdateTemplate.APPEND;
 
@@ -58,7 +60,7 @@ public class ReviewRepository {
     /*
      *   duplicated
      * */
-    private OutputStream getXMLFromObject(Object object, String pckg) throws JAXBException {
+    public OutputStream getXMLFromObject(Object object, String pckg) throws JAXBException {
 
         JAXBContext context = JAXBContext.newInstance(pckg);
         Marshaller marshaller = context.createMarshaller();
@@ -82,4 +84,63 @@ public class ReviewRepository {
         return review;
 
     }
+
+    public List<TReview> getReviews() throws XMLDBException, JAXBException, SAXException {
+
+        xPathQueryService.setNamespace("rws", REVIEWS_NAMESPACE);
+        xPathQueryService.setNamespace("rw", REVIEW_NAMESPACE);
+
+        String query = "//rws:reviews/rw:Review";
+
+        ResourceSet result = xPathQueryService.query(query);
+
+        ResourceIterator i = result.getIterator();
+
+        List<TReview> reviews = new ArrayList<>();
+
+        while (i.hasMoreResources()) {
+            reviews.add(getReviewFromResource(i.nextResource().getContent().toString()));
+        }
+
+        return reviews;
+    }
+
+
+    public List<TReview> getReviewsForSciencePaperId(String paperId) throws XMLDBException, JAXBException, SAXException {
+
+        xPathQueryService.setNamespace("rws", REVIEWS_NAMESPACE);
+        xPathQueryService.setNamespace("rw", REVIEW_NAMESPACE);
+
+        String query = "//rws:reviews/rw:Review[@sciencePaperId='" + paperId + "']";
+
+        ResourceSet result = xPathQueryService.query(query);
+
+        ResourceIterator i = result.getIterator();
+
+        List<TReview> reviews = new ArrayList<>();
+
+        while (i.hasMoreResources()) {
+            reviews.add(getReviewFromResource(i.nextResource().getContent().toString()));
+        }
+
+        return reviews;
+
+    }
+
+    public Optional<TReview> findOneById(String id) throws XMLDBException, JAXBException, SAXException {
+
+        xPathQueryService.setNamespace("rw", REVIEW_NAMESPACE);
+        xPathQueryService.setNamespace("rws", REVIEWS_NAMESPACE);
+
+        String query = "//rws:reviews/rw:Review[@Id='" + id + "']";
+
+        ResourceSet result = xPathQueryService.query(query);
+
+        ResourceIterator i = result.getIterator();
+        Resource res = i.nextResource();
+
+        return res != null ? Optional.of(getReviewFromResource(res.getContent().toString())) : Optional.empty();
+    }
+
+
 }

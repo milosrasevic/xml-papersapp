@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rws:reviews xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
-             xmlns:rw="http://www.tim12.com/review"
-             xmlns:rws="http://www.tim12.com/reviews"
-             xmlns:user="http://www.tim12.com/user"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://www.tim12.com/reviews file:/home/classicdocs/Documents/Workspace/xml/xml-papersapp/backend/src/main/resources/data/Reviews.xsd"/>
+<reviews xmlns:rw="http://www.tim12.com/review"
+ xmlns:user="http://www.tim12.com/user"
+ xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+ xmlns="http://www.tim12.com/reviews"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.tim12.com/reviews file:/D:/Faks/XML/Projekat/xml-papersapp/backend/src/main/resources/data/Reviews.xsd">
+ 
+</reviews>

@@ -1,13 +1,11 @@
 package xml.papersapp.service.review;
 
+import com.itextpdf.text.DocumentException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.XMLDBException;
-import xml.papersapp.exceptions.review.ReviewAssignmenAlreadyExists;
-import xml.papersapp.exceptions.review.ReviewAssignmentAlreadyAccepted;
-import xml.papersapp.exceptions.review.ReviewAssignmentAlreadyDenied;
-import xml.papersapp.exceptions.review.ReviewAssignmentNotFound;
+import xml.papersapp.exceptions.review.*;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
 import xml.papersapp.exceptions.users.UserNotFound;
@@ -21,9 +19,14 @@ import xml.papersapp.repository.ReviewAssignmentRepository;
 import xml.papersapp.repository.ReviewRepository;
 import xml.papersapp.repository.SciencePaperRepository;
 import xml.papersapp.repository.UsersRepository;
+import xml.papersapp.util.XSLFOTransformer;
 
 import javax.xml.bind.JAXBException;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.OutputStream;
+import java.util.List;
 import java.util.Calendar;
 import java.util.Optional;
 import java.util.List;
@@ -31,6 +34,8 @@ import java.util.List;
 import java.io.IOException;
 
 import static xml.papersapp.constants.Namespaces.REVIEW_NAMESPACE;
+import static xml.papersapp.constants.Namespaces.SCIENCE_PAPER_NAMESPACE;
+import static xml.papersapp.constants.Packages.REVIEW_PACKAGE;
 import static xml.papersapp.util.Util.createId;
 
 @Service
@@ -40,6 +45,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final UsersRepository usersRepository;
     private final ReviewAssignmentRepository reviewAssignmentRepository;
+    private final XSLFOTransformer xslfoTransformer;
     private final SciencePaperRepository sciencePaperRepository;
 
 
@@ -201,6 +207,59 @@ public class ReviewServiceImpl implements ReviewService {
 
         sciencePaperRepository.update(sciencePaper);
 
+
+    }
+
+    @Override
+    public List<TReview> getReviews() throws XMLDBException, JAXBException, SAXException {
+
+        return reviewRepository.getReviews();
+    }
+
+    @Override
+    public List<TReview> getReviewsForSciencePaperId(String paperId) throws XMLDBException, JAXBException, SAXException {
+
+        paperId = SCIENCE_PAPER_NAMESPACE + "/" + paperId;
+        return reviewRepository.getReviewsForSciencePaperId(paperId);
+    }
+
+    @Override
+    public List<TReviewAssignment> getReviewAssignementsForSciencePaperId(String paperTitle) throws XMLDBException, JAXBException, SAXException {
+
+        return reviewAssignmentRepository.getReviewAssignementsForSciencePaperId(paperTitle);
+    }
+
+    public ByteArrayOutputStream generateHTML(String id) throws JAXBException, XMLDBException, SAXException, ReviewDoesntExist, FileNotFoundException {
+
+        id = REVIEW_NAMESPACE +  "/" + id;
+
+        System.out.println(id);
+        TReview found = reviewRepository.findOneById(id).orElseThrow(ReviewDoesntExist::new);
+
+        OutputStream outputStream = reviewRepository.getXMLFromObject(found, REVIEW_PACKAGE);
+        String xslPath = "src/main/resources/xsl/review_html.xsl";
+        return xslfoTransformer.generateHTML(outputStream, xslPath);
+
+    }
+
+    public ByteArrayOutputStream generatePDF(String id) throws XMLDBException, SAXException, ReviewDoesntExist, JAXBException, IOException, DocumentException {
+
+        ByteArrayOutputStream html = generateHTML(id);
+
+        return xslfoTransformer.generatePDF(html);
+
+    }
+
+    public ByteArrayOutputStream generateXML(String id) throws XMLDBException, JAXBException, SAXException, ReviewDoesntExist {
+
+        id = REVIEW_NAMESPACE +  "/" + id;
+
+        System.out.println(id);
+        TReview found = reviewRepository.findOneById(id).orElseThrow(ReviewDoesntExist::new);
+
+        OutputStream outputStream = reviewRepository.getXMLFromObject(found, REVIEW_PACKAGE);
+
+        return (ByteArrayOutputStream) outputStream;
 
     }
 }

@@ -6,7 +6,7 @@
 //
 
 
-package com.tim12.user;
+package com.tim12.science_paper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,23 +17,17 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Java class for TRoles complex type.
+ * <p>Java class for TReferenceName complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="TRoles">
+ * &lt;complexType name="TReferenceName">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence maxOccurs="unbounded">
- *         &lt;element name="role">
- *           &lt;simpleType>
- *             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *               &lt;enumeration value="ROLE_AUTHOR"/>
- *               &lt;enumeration value="ROLE_EDITOR"/>
- *             &lt;/restriction>
- *           &lt;/simpleType>
- *         &lt;/element>
+ *       &lt;sequence>
+ *         &lt;element name="authorsName" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded"/>
+ *         &lt;element name="paperTitle" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -43,27 +37,30 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "TRoles", propOrder = {
-    "role"
+@XmlType(name = "TReferenceName", propOrder = {
+    "authorsName",
+    "paperTitle"
 })
-public class TRoles {
+public class TReferenceName {
 
-    @XmlElement(required = true, defaultValue = "ROLE_AUTHOR")
-    protected List<String> role;
+    @XmlElement(required = true)
+    protected List<String> authorsName;
+    @XmlElement(required = true)
+    protected String paperTitle;
 
     /**
-     * Gets the value of the role property.
+     * Gets the value of the authorsName property.
      * 
      * <p>
      * This accessor method returns a reference to the live list,
      * not a snapshot. Therefore any modification you make to the
      * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the role property.
+     * This is why there is not a <CODE>set</CODE> method for the authorsName property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
      * <pre>
-     *    getRole().add(newItem);
+     *    getAuthorsName().add(newItem);
      * </pre>
      * 
      * 
@@ -73,11 +70,35 @@ public class TRoles {
      * 
      * 
      */
-    public List<String> getRole() {
-        if (role == null) {
-            role = new ArrayList<String>();
+    public List<String> getAuthorsName() {
+        if (authorsName == null) {
+            authorsName = new ArrayList<String>();
         }
-        return this.role;
+        return this.authorsName;
+    }
+
+    /**
+     * Gets the value of the paperTitle property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getPaperTitle() {
+        return paperTitle;
+    }
+
+    /**
+     * Sets the value of the paperTitle property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setPaperTitle(String value) {
+        this.paperTitle = value;
     }
 
 }

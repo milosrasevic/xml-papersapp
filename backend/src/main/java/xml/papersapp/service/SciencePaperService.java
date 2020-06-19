@@ -13,6 +13,7 @@ import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
 import xml.papersapp.exceptions.sciencePapers.UnableToChangePaperState;
 import xml.papersapp.model.review_assignment.TReviewAssignment;
+import xml.papersapp.exceptions.sciencePapers.*;
 import xml.papersapp.model.science_paper.SciencePaper;
 import xml.papersapp.model.science_paper.TState;
 import xml.papersapp.model.user.TRoles;
@@ -134,9 +135,9 @@ public class SciencePaperService {
         return reviewAssignmentRepository.getPapersToReview(email);
     }
 
-    public ByteArrayOutputStream generateHTML(String documentId) throws XMLDBException, JAXBException, SAXException, FileNotFoundException, SciencePaperDoesntExist {
+    public ByteArrayOutputStream generateHTML(String title) throws XMLDBException, JAXBException, SAXException, FileNotFoundException, SciencePaperDoesntExist {
 
-        SciencePaper found = sciencePaperRepository.findOneByDocumentId(documentId).orElseThrow(SciencePaperDoesntExist::new);
+        SciencePaper found = sciencePaperRepository.findOneByTitle(title).orElseThrow(SciencePaperDoesntExist::new);
 
         OutputStream outputStream = sciencePaperRepository.getXMLFromObject(found, SCIENCE_PAPER_PACKAGE);
         String xslPath = "src/main/resources/xsl/science_paper_html.xsl";
@@ -144,18 +145,18 @@ public class SciencePaperService {
 
     }
 
-    public ByteArrayOutputStream generatePDF(String documentId) throws XMLDBException, JAXBException, SAXException, IOException, DocumentException, SciencePaperDoesntExist {
+    public ByteArrayOutputStream generatePDF(String title) throws XMLDBException, JAXBException, SAXException, IOException, DocumentException, SciencePaperDoesntExist {
 
-        ByteArrayOutputStream html = generateHTML(documentId);
+        ByteArrayOutputStream html = generateHTML(title);
 
 
         return xslfoTransformer.generatePDF(html);
 
     }
 
-    public ByteArrayOutputStream generateXML(String documentId) throws XMLDBException, JAXBException, SAXException, SciencePaperDoesntExist {
+    public ByteArrayOutputStream generateXML(String title) throws XMLDBException, JAXBException, SAXException, SciencePaperDoesntExist {
 
-        SciencePaper found = sciencePaperRepository.findOneByDocumentId(documentId).orElseThrow(SciencePaperDoesntExist::new);
+        SciencePaper found = sciencePaperRepository.findOneByTitle(title).orElseThrow(SciencePaperDoesntExist::new);
 
         OutputStream outputStream = sciencePaperRepository.getXMLFromObject(found, SCIENCE_PAPER_PACKAGE);
 
@@ -193,4 +194,24 @@ public class SciencePaperService {
         return reviewAssignmentRepository.getMyAssignments(email);
     }
 
+
+    public SciencePaper sendToRevision(String title) throws XMLDBException, JAXBException, SAXException, SciencePaperCantBeSentToRevision, SciencePaperDoesntExist {
+
+        Optional<SciencePaper> sciencePaperOptional = sciencePaperRepository.findOneByTitle(title);
+
+        if(!sciencePaperOptional.isPresent()) {
+            throw new SciencePaperDoesntExist();
+        }
+
+        SciencePaper paper = sciencePaperOptional.get();
+
+        if(!paper.getState().equals(TState.WAITING_FOR_APPROVAL)) {
+            throw new SciencePaperCantBeSentToRevision();
+        }
+
+        paper.setState(TState.REVISION_NEEDED);
+
+        return sciencePaperRepository.update(paper);
+
+    }
 }

@@ -33,8 +33,7 @@ import java.util.Optional;
 
 import static xml.papersapp.constants.DocumentIDs.SCIENCE_PAPER_ID_DOCUMENT;
 import static xml.papersapp.constants.Files.SCHEME_SCIENCE_PAPER_PATH;
-import static xml.papersapp.constants.Namespaces.SCIENCE_PAPERS_NAMESPACE;
-import static xml.papersapp.constants.Namespaces.SCIENCE_PAPER_NAMESPACE;
+import static xml.papersapp.constants.Namespaces.*;
 import static xml.papersapp.constants.Packages.SCIENCE_PAPER_PACKAGE;
 import static xml.papersapp.util.Util.getDateFromString;
 import static xml.papersapp.util.XUpdateTemplate.*;
