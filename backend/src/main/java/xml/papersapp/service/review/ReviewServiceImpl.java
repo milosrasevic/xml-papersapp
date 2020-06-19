@@ -20,6 +20,7 @@ import xml.papersapp.repository.UsersRepository;
 
 import javax.xml.bind.JAXBException;
 
+import java.util.List;
 import java.util.Optional;
 
 import java.io.IOException;
@@ -127,6 +128,13 @@ public class ReviewServiceImpl implements ReviewService {
         assignment.setAccepted(accept);
 
         return reviewAssignmentRepository.saveAssignment(assignment);
+
+    }
+
+    @Override
+    public List<TReview> getReviews() throws XMLDBException, JAXBException, SAXException {
+
+        return reviewRepository.getReviews();
 
     }
 }

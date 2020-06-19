@@ -14,6 +14,7 @@ import xml.papersapp.model.review_assignment.TReviewAssignment;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
+import java.util.List;
 
 public interface ReviewService {
     /**
@@ -29,4 +30,6 @@ public interface ReviewService {
 
     TReviewAssignment acceptReviewAssignment(String assignmentId, String email, boolean accept) throws XMLDBException,
             JAXBException, SAXException, ReviewAssignmentNotFound, ReviewAssignmentAlreadyAccepted, ReviewAssignmentAlreadyDenied;
+
+    List<TReview> getReviews() throws XMLDBException, JAXBException, SAXException;
 }
