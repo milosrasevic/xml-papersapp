@@ -57,4 +57,22 @@
             <user:role>ROLE_EDITOR</user:role>
         </user:roles>
     </user:User>
+    <user:User id="htttp://www.tim12.com/user/4">
+        <user:firstName>firstName4</user:firstName>
+        <user:lastName>lastName4</user:lastName>
+        <user:password>$2y$10$.ZAq.U1LwJmwUe/coeW5wuCqFT/IynNNbtTc3dTlW3WMI1hSBgI3m</user:password>
+        <user:profession>profession1</user:profession>
+        <user:workplace>
+            <user:name>name4</user:name>
+            <user:address>address4</user:address>
+            <user:country>country4</user:country>
+            <user:city>city4</user:city>
+            <user:zip>0</user:zip>
+        </user:workplace>
+        <user:phoneNumber>000-000-0000</user:phoneNumber>
+        <user:email>author3@gmail.com</user:email>
+        <user:roles>
+            <user:role>ROLE_AUTHOR</user:role>
+        </user:roles>
+    </user:User>
 </users:Users>

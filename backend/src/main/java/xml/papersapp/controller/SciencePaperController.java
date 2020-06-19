@@ -127,6 +127,15 @@ public class SciencePaperController {
         }
     }
 
+    @GetMapping("/my-assigments")
+    public ResponseEntity getMyAssigments(HttpServletRequest request) {
+        try {
+            return new ResponseEntity<>(sciencePaperService.getMyAssigments(request.getUserPrincipal().getName()), HttpStatus.OK);
+        } catch (SAXException | JAXBException | XMLDBException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @GetMapping(path = "getHTML/{title}", produces = MediaType.APPLICATION_XHTML_XML_VALUE)
     public ResponseEntity<?> generateHTML(@PathVariable String title) {

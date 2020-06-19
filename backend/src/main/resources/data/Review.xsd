@@ -98,7 +98,7 @@
     </xs:complexType>
     <xs:complexType name="TComments">
         <xs:sequence>
-            <xs:element ref="rw:Comment" maxOccurs="unbounded" minOccurs="1"/>
+            <xs:element ref="rw:Comment" maxOccurs="unbounded" minOccurs="0"/>
         </xs:sequence>
     </xs:complexType>
     <xs:element name="Authors" type="rw:TAuthors"/>

@@ -11,6 +11,7 @@ import org.xml.sax.SAXException;
 import org.xmldb.api.base.XMLDBException;
 import xml.papersapp.exceptions.review.*;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
+import xml.papersapp.exceptions.sciencePapers.SciencePaperNotFound;
 import xml.papersapp.exceptions.users.UserNotFound;
 import xml.papersapp.model.review.TReview;
 import xml.papersapp.model.review_assignment.TBlinded;
@@ -35,7 +36,7 @@ public class ReviewController {
     public ResponseEntity create(@RequestBody TReview resource) {
         try {
             return new ResponseEntity<>(reviewService.createFromObject(resource), HttpStatus.OK);
-        } catch (XMLDBException | JAXBException | SAXException e) {
+        } catch (XMLDBException | JAXBException | SAXException | SciencePaperNotFound | SciencePaperDoesntExist e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
@@ -68,7 +69,7 @@ public class ReviewController {
         } catch (XMLDBException | SAXException | JAXBException e) {
             e.printStackTrace();
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (ReviewAssignmentNotFound | ReviewAssignmentAlreadyAccepted | ReviewAssignmentAlreadyDenied e) {
+        } catch (ReviewAssignmentNotFound | ReviewAssignmentAlreadyAccepted | ReviewAssignmentAlreadyDenied | SciencePaperDoesntExist e) {
             return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
