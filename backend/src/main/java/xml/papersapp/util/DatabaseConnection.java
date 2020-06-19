@@ -32,6 +32,7 @@ public class DatabaseConnection {
     private static final String SCIENCE_PAPERS_PATH = "src/main/resources/data/science_papers.xml";
     private static final String REVIEW_ASSIGNMENTS_PATH = "src/main/resources/data/review_assignments.xml";
     private static final String COVER_LETTERS_PATH = "src/main/resources/data/cover_letters.xml";
+    private static final String NOTIFICATIONS_PATH = "src/main/resources/data/notifications.xml";
 
     public static void createDBConnection() throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, XMLDBException {
 
@@ -53,6 +54,7 @@ public class DatabaseConnection {
             createReviews();
             createReviewAssignments();
             createCoverLetters();
+            createNotifications();
 
         }catch (Exception e){
             e.printStackTrace();
@@ -97,6 +99,11 @@ public class DatabaseConnection {
                 }
             }
         }
+    }
+
+    private static void createNotifications() {
+        String documentId = "notifications.xml";
+        create(documentId, NOTIFICATIONS_PATH);
     }
 
     private static void createReviews() {

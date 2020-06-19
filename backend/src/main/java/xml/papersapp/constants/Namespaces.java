@@ -19,4 +19,8 @@ public class Namespaces {
     public static final String COVER_LETTER_NAMESPACE = "http://www.tim12.com/cover_letter";
     public static final String COVER_LETTERS_NAMESPACE = "http://www.tim12.com/cover_letters";
 
+
+    public static final String NOTIFICATION_NAMESPACE = "http://www.tim12.com/notification";
+    public static final String NOTIFICATIONS_NAMESPACE = "http://www.tim12.com/notifications";
+
 }
