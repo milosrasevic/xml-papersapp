@@ -1,7 +1,7 @@
 package xml.papersapp.repository;
 
-import org.checkerframework.checker.nullness.Opt;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.xml.sax.SAXException;
 import org.xmldb.api.base.Resource;
@@ -14,26 +14,22 @@ import xml.papersapp.exceptions.review.ReviewAssignmenAlreadyExists;
 import xml.papersapp.exceptions.review.ReviewAssignmentNotFound;
 import xml.papersapp.exceptions.sciencePapers.SciencePaperDoesntExist;
 import xml.papersapp.exceptions.users.UserNotFound;
-import xml.papersapp.model.review.TReview;
 import xml.papersapp.model.review_assignment.TBlinded;
 import xml.papersapp.model.review_assignment.TReviewAssignment;
 import xml.papersapp.model.science_paper.SciencePaper;
 import xml.papersapp.model.user.TUser;
 import xml.papersapp.security.repository.UserRepository;
+import xml.papersapp.service.mail.AssigmentEmailService;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.*;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.OutputStream;
-import java.io.StringReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static xml.papersapp.constants.DocumentIDs.REVIEWS_ID_DOCUMENT;
 import static xml.papersapp.constants.DocumentIDs.REVIEW_ASSIGNMENTS_ID_DOCUMENT;
 import static xml.papersapp.constants.Files.SCHEME_REVIEW_ASSIGNMENT_PATH;
 import static xml.papersapp.constants.Namespaces.*;
@@ -49,15 +45,18 @@ public class ReviewAssignmentRepository {
     private final UserRepository userRepository;
     private final XUpdateQueryService xUpdateQueryService;
 
+    private final AssigmentEmailService assigmentEmailService;
+
 
     private final String CONTEXT_PATH_APPEND = "//ReviewAssignments";
 
     public ReviewAssignmentRepository(XPathQueryService xPathQueryService, SciencePaperRepository sciencePaperRepository
-            , UserRepository userRepository, XUpdateQueryService xUpdateQueryService) {
+            , UserRepository userRepository, XUpdateQueryService xUpdateQueryService, AssigmentEmailService assigmentEmailService) {
         this.xPathQueryService = xPathQueryService;
         this.sciencePaperRepository = sciencePaperRepository;
         this.userRepository = userRepository;
         this.xUpdateQueryService = xUpdateQueryService;
+        this.assigmentEmailService = assigmentEmailService;
     }
 
     public List<String> findTitlesOfPapersToReview(String email) throws XMLDBException, JAXBException, SAXException {
@@ -108,7 +107,7 @@ public class ReviewAssignmentRepository {
 
         for (String title : titles) {
             Optional<SciencePaper> sp = sciencePaperRepository.findOneByTitle(title);
-            if(sp.isPresent()) {
+            if (sp.isPresent()) {
                 papers.add(sp.get());
             }
         }
@@ -117,17 +116,17 @@ public class ReviewAssignmentRepository {
     }
 
     public TReviewAssignment createReviewAssignment(String title, String email, TBlinded blinded) throws JAXBException,
-            XMLDBException, SAXException, SciencePaperDoesntExist, UserNotFound, ReviewAssignmenAlreadyExists {
+            XMLDBException, SAXException, SciencePaperDoesntExist, UserNotFound, ReviewAssignmenAlreadyExists, IOException {
 
         Optional<TUser> user = userRepository.findByUsername(email);
 
-        if(!user.isPresent()) {
+        if (!user.isPresent()) {
             throw new UserNotFound();
         }
 
         Optional<SciencePaper> sciencePaper = sciencePaperRepository.findOneByTitle(title);
 
-        if(!sciencePaper.isPresent()) {
+        if (!sciencePaper.isPresent()) {
             throw new SciencePaperDoesntExist();
         }
 
@@ -144,6 +143,7 @@ public class ReviewAssignmentRepository {
         long mods = xUpdateQueryService.updateResource(REVIEW_ASSIGNMENTS_ID_DOCUMENT, String.format(APPEND, REVIEW_ASSIGNMENTS_NAMESPACE, CONTEXT_PATH_APPEND, xml.toString()));
         System.out.println("[INFO] " + mods + " modifications processed.");
 
+        assigmentEmailService.sendEmailForPurchasedTickets(user.get().getEmail(), title);
         return reviewAssignment;
     }
 

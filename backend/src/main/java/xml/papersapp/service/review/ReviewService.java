@@ -11,6 +11,7 @@ import xml.papersapp.model.review_assignment.TBlinded;
 import xml.papersapp.model.review_assignment.TReviewAssignment;
 
 import javax.xml.bind.JAXBException;
+import java.io.IOException;
 
 public interface ReviewService {
     /**
@@ -22,7 +23,7 @@ public interface ReviewService {
     TReview createFromObject(TReview resource) throws XMLDBException, JAXBException, SAXException;
 
     TReviewAssignment createReviewAssignment(String title, String email, TBlinded blinded) throws XMLDBException,
-            SAXException, SciencePaperDoesntExist, JAXBException, UserNotFound, ReviewAssignmenAlreadyExists;
+            SAXException, SciencePaperDoesntExist, JAXBException, UserNotFound, ReviewAssignmenAlreadyExists, IOException;
 
     TReviewAssignment acceptReviewAssignment(String assignmentId, String email) throws XMLDBException,
             JAXBException, SAXException, ReviewAssignmentNotFound;
