@@ -85,6 +85,18 @@ public class ReviewController {
         }
     }
 
+    @GetMapping(value = "/science-paper/{paperId}")
+    @PreAuthorize("hasRole('ROLE_EDITOR')")
+    public ResponseEntity<?> getReviewsForSciencePaperId(@PathVariable String paperId) {
+        try {
+            List<TReview> reviews = reviewService.getReviewsForSciencePaperId(paperId);
+            return new ResponseEntity<List<TReview>>(reviews, HttpStatus.OK);
+        } catch (XMLDBException | SAXException | JAXBException e) {
+            e.printStackTrace();
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
     @GetMapping(path = "getHTML/{id}", produces = MediaType.APPLICATION_XHTML_XML_VALUE)
     public ResponseEntity<?> generateHTML(@PathVariable String id) {

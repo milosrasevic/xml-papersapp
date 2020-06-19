@@ -4,7 +4,8 @@ const ENDPOINTS = {
   SEARCH_SCIENCE__PAPER_AUTHENTICATED: 'science-paper/authenticated/search',
   SUBMIT_SCIENCE_PAPER: "science-paper",
   GET_SCIENCE_PAPER: 'science-paper/get/',
-  CANCEL_SUBMITION: "science-paper/cancel-submission"
+  CANCEL_SUBMITION: "science-paper/cancel-submission",
+  DECIDE: "science-paper/decide"
 }
 
 export default {
@@ -25,5 +26,8 @@ export default {
     },
     cancel(title){
         return Axios.delete(ENDPOINTS.CANCEL_SUBMITION + "?title=" + title);
+    },
+    decide(paperTitle, accepted) {
+        return Axios.post(ENDPOINTS.DECIDE, {paperTitle, accepted});
     }
 }

@@ -106,6 +106,27 @@ public class ReviewRepository {
     }
 
 
+    public List<TReview> getReviewsForSciencePaperId(String paperId) throws XMLDBException, JAXBException, SAXException {
+
+        xPathQueryService.setNamespace("rws", REVIEWS_NAMESPACE);
+        xPathQueryService.setNamespace("rw", REVIEW_NAMESPACE);
+
+        String query = "//rws:reviews/rw:Review[@sciencePaperId='" + paperId + "']";
+
+        ResourceSet result = xPathQueryService.query(query);
+
+        ResourceIterator i = result.getIterator();
+
+        List<TReview> reviews = new ArrayList<>();
+
+        while (i.hasMoreResources()) {
+            reviews.add(getReviewFromResource(i.nextResource().getContent().toString()));
+        }
+
+        return reviews;
+
+    }
+
     public Optional<TReview> findOneById(String id) throws XMLDBException, JAXBException, SAXException {
 
         xPathQueryService.setNamespace("rw", REVIEW_NAMESPACE);
